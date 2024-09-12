@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - target:
+      kind: "Deployment"
+      name: "httpbin"
+    path: "oauth2-proxy.yaml"
+  - target:
+      kind: "Service"
+      name: "httpbin"
+    patch: |
+      - op: "replace"
+        path: "/spec/ports/0/targetPort"
+        value: "oauth2-proxy"
+configMapGenerator:
+  - name: "oauth2-proxy"
+    envs:
+      - "oauth2-proxy.properties"

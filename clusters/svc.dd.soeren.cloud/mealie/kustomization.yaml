@@ -1,0 +1,46 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: mealie
+resources:
+  - ../../../apps/mealie
+  - namespace.yaml
+  - mealie-pv.yaml
+  - postgres-pv.yaml
+  - sops-secret-mealie.yaml
+  - sops-secret-mealie-postgres.yaml
+components:
+  - ../../../apps/mealie/components/mealie-pvc
+  - ../../../apps/mealie/components/oidc
+  - ../../../apps/mealie/components/istio
+  - ../../../apps/mealie/components/restic-pvc
+  - ../../../apps/mealie/components/restic-postgres
+  - ../../../apps/mealie/components/postgres
+  - ../../../apps/mealie/components/postgres-pvc
+patches:
+  - target:
+      kind: Deployment
+      name: mealie
+    patch: |-
+      - op: add
+        path: /spec/template/spec/priorityClassName
+        value: prod-low-prio
+  - target:
+      kind: VirtualService
+      name: mealie
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - mealie.svc.dd.soeren.cloud
+configMapGenerator:
+  - name: "mealie"
+    behavior: "merge"
+    literals:
+      - "BASE_URL=https://mealie.svc.dd.soeren.cloud"
+  - name: "mealie-oidc"  # TODO: https://github.com/kubernetes-sigs/kustomize/issues/4402
+    literals:
+      - "OIDC_CONFIGURATION_URL=https://keycloak.svc.dd.soeren.cloud/realms/myrealm/.well-known/openid-configuration"
+      - "OIDC_USER_GROUP=mealie_user"
+      - "OIDC_ADMIN_GROUP=mealie_admin"
+      - "OIDC_PROVIDER_NAME=keycloak"

@@ -1,0 +1,18 @@
+---
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "VirtualService"
+metadata:
+  name: "alertmanager-cluster"
+spec:
+  hosts:
+    - "alertmanager"
+  gateways:
+    - "istio-system/gateway"
+  tcp:
+    - match:
+        - port: 9094
+      route:
+        - destination:
+            host: "alertmanager"
+            port:
+              number: 9094

@@ -1,0 +1,19 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: "lidarr"
+spec:
+  hosts:
+    - "lidarr"
+  gateways:
+    - "istio-system/gateway"
+  http:
+    - match:
+        - uri:
+            prefix: "/"
+      route:
+        - destination:
+            host: "lidarr"
+            port:
+              number: 80

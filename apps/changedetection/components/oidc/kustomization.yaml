@@ -1,0 +1,30 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
+patches:
+  - target:
+      kind: "Deployment"
+      name: "changedetection"
+    path: "oauth2-proxy-deployment.yaml"
+  - target:
+      kind: "Service"
+      name: "changedetection"
+    patch: |
+      - op: "replace"
+        path: "/spec/ports/0/targetPort"
+        value: "oauth2-proxy"
+  - target:
+      kind: "NetworkPolicy"
+      name: "changedetection"
+    patch: |-
+      - op: replace
+        path: "/spec/ingress/0/ports"
+        value:
+          - protocol: "TCP"
+            port: "oauth2-proxy"
+configMapGenerator:
+  - name: "oauth2-proxy"
+    options:
+      disableNameSuffixHash: true
+    envs:
+      - "oauth2-proxy.properties"

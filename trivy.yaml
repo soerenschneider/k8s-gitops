@@ -1,0 +1,18 @@
+---
+quiet: true
+ignore:
+  files:
+    - clusters/svc.dd.soeren.cloud/argocd/patch.yaml
+cache-dir: $HOME/.cache/trivy
+exit-code: 1
+scan:
+  scanners:
+    - vuln
+    - secret
+    - misconfig
+ignorefile: .trivyignore.yaml
+severity:
+  - LOW
+  - MEDIUM
+  - HIGH
+  - CRITICAL

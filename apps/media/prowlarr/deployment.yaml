@@ -1,0 +1,111 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "prowlarr"
+  labels:
+    app.kubernetes.io/name: "prowlarr"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "prowlarr"
+  strategy:
+    type: "Recreate"
+  template:
+    metadata:
+      labels:
+        app: "prowlarr"
+        app.kubernetes.io/name: "prowlarr"
+        app.kubernetes.io/instance: "media-prod"
+        app.kubernetes.io/component: "prowlarr"
+        app.kubernetes.io/part-of: "arr"
+    spec:
+      securityContext:
+        fsGroup: 20568
+        runAsUser: 20568
+        runAsGroup: 20568
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "ghcr.io/onedr0p/prowlarr:1.17.2"
+          imagePullPolicy: "IfNotPresent"
+          name: "prowlarr"
+          ports:
+            - containerPort: 9696
+              name: "prowlarr"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 20568
+            runAsGroup: 20568
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "196Mi"
+              cpu: "10m"
+            limits:
+              memory: "384Mi"
+          readinessProbe:
+            httpGet:
+              path: "/ping"
+              port: "prowlarr"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: "/ping"
+              port: "prowlarr"
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          env:
+            - name: "COMPlus_EnableDiagnostics"
+              value: "0"
+            - name: "TZ"
+              value: "UTC"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/config"
+            - name: "tmp"
+              mountPath: "/tmp"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 5
+              preference:
+                matchExpressions:
+                  - key: "cpu_speed"
+                    operator: "In"
+                    values:
+                      - "slow"
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "media"
+                topologyKey: "kubernetes.io/hostname"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "512Mi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "1Gi"

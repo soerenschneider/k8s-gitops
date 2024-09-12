@@ -1,0 +1,1 @@
+../../../apps/mealie/components/restic-postgres/upsert-secret-mealie-restic-postgres.sh

@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: container-registry
+  labels:
+    app.kubernetes.io/name: container-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: container-registry
+  template:
+    metadata:
+      labels:
+        app: container-registry
+        app.kubernetes.io/name: container-registry
+        app.kubernetes.io/instance: container-registry-prod
+        app.kubernetes.io/component: registry
+        app.kubernetes.io/part-of: container-registry
+      annotations:
+        prometheus.io/port: "5001"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 45454
+        runAsGroup: 45454
+        fsGroup: 45454
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: registry
+          image: registry:2.8.3
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 45454
+            runAsGroup: 45454
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - containerPort: 5000
+              name: registry
+            - containerPort: 5001
+              name: debug
+          envFrom:
+            - configMapRef:
+                name: config
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "25m"
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: debug
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: debug
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lib/registry
+            - name: config-volume
+              mountPath: /etc/docker/registry
+      volumes:
+        - name: storage
+          emptyDir:
+            sizeLimit: 5Gi
+        - name: config-volume
+          configMap:
+            defaultMode: 420
+            name: config

@@ -1,0 +1,1 @@
+../../../apps/immich/upsert-secret-immich.sh

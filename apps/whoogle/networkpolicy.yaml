@@ -1,0 +1,15 @@
+---
+apiVersion: "networking.k8s.io/v1"
+kind: "NetworkPolicy"
+metadata:
+  name: "whoogle"
+spec:
+  podSelector: {}
+  policyTypes:
+    - "Ingress"
+  ingress:
+    - ports:
+        - protocol: "TCP"
+          port: "whoogle"
+      from: []
+  egress: []

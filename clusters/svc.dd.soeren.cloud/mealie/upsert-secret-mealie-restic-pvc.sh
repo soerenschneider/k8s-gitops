@@ -1,0 +1,1 @@
+../../../apps/mealie/components/restic-pvc/upsert-secret-mealie-restic-pvc.sh

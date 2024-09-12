@@ -1,0 +1,90 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: firefly
+  labels:
+    app.kubernetes.io/name: firefly
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: firefly
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: firefly
+        app.kubernetes.io/instance: firefly-prod
+        app.kubernetes.io/component: server
+        app.kubernetes.io/part-of: firefly
+      annotations:
+        prometheus.io/port: "3000"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: fireflyiii/core:version-6.1.10
+          imagePullPolicy: IfNotPresent
+          name: firefly
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          env:
+            - name: "DEFAULT_LANGUAGE"
+              value: en_US
+            - name: CACHE_DRIVER
+              value: redis
+            - name: SESSION_DRIVER
+              value: redis
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+          resources:
+            requests:
+              memory: "196Mi"
+              cpu: "50m"
+            limits:
+              memory: "384Mi"
+          ports:
+            - containerPort: 8080
+              name: firefly
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: var-www-html-storage
+              mountPath: /var/www/html/storage
+            - name: var-run
+              mountPath: /var/run
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 50Mi
+        - name: var-www-html-storage
+          emptyDir:
+            sizeLimit: 50Mi
+        - name: var-run
+          emptyDir:
+            sizeLimit: 5Mi

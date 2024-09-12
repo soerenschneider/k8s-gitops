@@ -1,0 +1,113 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio
+  labels:
+    app.kubernetes.io/name: minio
+    app.kubernetes.io/instance: minio-prod
+    app.kubernetes.io/component: server
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+        app.kubernetes.io/name: minio
+        app.kubernetes.io/instance: minio-prod
+        app.kubernetes.io/component: minio
+        app.kubernetes.io/part-of: minio
+      annotations:
+        prometheus.io/port_1: "9000"
+        prometheus.io/scrape_1: "true"
+        prometheus.io/path_1: "minio/v2/metrics/bucket"
+        prometheus.io/port_2: "9000"
+        prometheus.io/scrape_2: "true"
+        prometheus.io/path_2: "minio/v2/metrics/node"
+    spec:
+      securityContext:
+        runAsUser: 53731
+        runAsGroup: 53731
+        fsGroup: 53731
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        # renovate: datasource=github-releases depName=minio/minio versioning="regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})"
+        - image: "quay.io/minio/minio:RELEASE.2024-06-13T22-53-53Z"
+          imagePullPolicy: IfNotPresent
+          name: minio
+          command:
+            - minio
+            - server
+            - --console-address=:9001
+          ports:
+            - containerPort: 9000
+              name: minio-api
+            - containerPort: 9001
+              name: minio-console
+          securityContext:
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 53731
+            runAsGroup: 53731
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "100m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: "/minio/health/live"
+              port: "minio-api"
+          readinessProbe:
+            httpGet:
+              path: "/minio/health/ready"
+              port: "minio-api"
+          envFrom:
+            - configMapRef:
+                name: "minio-config"
+            - secretRef:
+                name: "minio-config"
+                optional: true
+          env:
+            - name: MINIO_PROMETHEUS_AUTH_TYPE
+              value: public
+          volumeMounts:
+            - name: storage
+              mountPath: /data
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - minio
+              topologyKey: location
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 20
+              preference:
+                matchExpressions:
+                  - key: "cpu_speed"
+                    operator: "In"
+                    values:
+                      - "fast"
+      volumes:
+        - name: "storage"
+          emptyDir: {}

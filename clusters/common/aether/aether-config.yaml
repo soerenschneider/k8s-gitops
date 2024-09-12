@@ -1,0 +1,33 @@
+---
+datasources:
+  - endpoint: https://radicale.svc.dd.soeren.cloud
+    password_file: "/etc/aether-secrets/caldav_password"
+    type: caldav
+    username: soeren
+  - endpoint: https://radicale.svc.dd.soeren.cloud
+    password_file: "/etc/aether-secrets/carddav_password"
+    type: carddav
+    username: soeren
+  - type: taskwarrior
+    taskrc_file: "/home/aether/.taskrc"
+  - apikey_file: "/etc/aether-secrets/weather_apikey"
+    latitude: '51.2277'
+    longitude: '6.7735'
+    type: weather
+  - cached: true
+    symbols:
+      - VGWL.DE
+      - 22UA.F
+    type: stocks
+  - apikey_file: "/etc/aether-secrets/weather_apikey"
+    latitude: '41.1579'
+    longitude: '-8.6291'
+    type: weather
+email:
+  at: 06:00
+  from_file: "/etc/aether-secrets/email_from"
+  host: smtp.strato.de:587
+  is_utc: true
+  password_file: "/etc/aether-secrets/email_password"
+  recipient_file: "/etc/aether-secrets/email_to"
+  username_file: "/etc/aether-secrets/email_username"

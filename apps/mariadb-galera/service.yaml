@@ -1,0 +1,22 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "mariadb"
+spec:
+  selector:
+    app: "mariadb"
+  ports:
+    - protocol: "TCP"
+      name: mariadb
+      port: 3306
+      targetPort: "mariadb"
+    - protocol: "TCP"
+      name: iss
+      port: 4568
+      targetPort: "iss"
+    - protocol: "TCP"
+      name: sst
+      port: 4444
+      targetPort: "sst"
+  type: "ClusterIP"

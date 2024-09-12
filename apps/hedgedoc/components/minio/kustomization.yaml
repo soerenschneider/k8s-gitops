@@ -1,0 +1,10 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
+configMapGenerator:
+  - name: "hedgedoc"
+    behavior: "merge"
+    literals:
+      - "CMD_IMAGE_UPLOAD_TYPE=minio"
+      - "CMD_MINIO_PORT=443"
+      - "CMD_MINIO_SECURE=true"

@@ -1,0 +1,35 @@
+include /home/tasksyncer/.taskd_credentials
+
+data.location=/task-data
+
+taskd.ca=/certs/ca.crt
+taskd.certificate=/certs/tls.crt
+taskd.key=/certs/tls.key
+taskd.server=taskd.svc.dd.soeren.cloud:53589
+taskd.ciphers=SECURE256:-VERS-ALL:+VERS-TLS1.3
+
+context.work=+rd or +work
+context.private=-rd -work
+
+search.case.sensitive=no
+
+report.in.columns           = id,description
+report.in.description       = Inbox
+report.in.filter            = status:pending limit:page (+in)
+report.in.labels            = ID,Description
+
+urgency.user.tag.inbox.coefficient=10
+urgency.user.tag.in.coefficient=10
+urgency.user.tag.someday.coefficient=-15
+urgency.user.tag.next.coefficient=3
+urgency.blocking.coefficient=2
+urgency.uda.priority.L.coefficient=-10
+
+uda.reviewed.type=date
+uda.reviewed.label=Reviewed
+
+report._reviewed.description=Tasksh review report.  Adjust the filter to your needs.
+report._reviewed.columns=uuid
+report._reviewed.sort=reviewed+,modified+
+report._reviewed.filter=( reviewed.none: or reviewed.before:now-6days ) and ( +PENDING or +WAITING )
+news.version=2.6.0

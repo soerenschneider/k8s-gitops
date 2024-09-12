@@ -1,0 +1,96 @@
+---
+apiVersion: "apps/v1"
+kind: "StatefulSet"
+metadata:
+  name: "mariadb"
+spec:
+  serviceName: "mariadb"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "mariadb"
+  template:
+    metadata:
+      labels:
+        app: "mariadb"
+    spec:
+      terminationGracePeriodSeconds: 180
+      securityContext:
+        runAsUser: 45538
+        runAsGroup: 45538
+        fsGroup: 45538
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "mariadb"
+          image: "bitnami/mariadb-galera:11.3.2"
+          envFrom:
+            - configMapRef:
+                name: "mariadb-galera"
+            - secretRef:
+                name: "mariadb-galera"
+                optional: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 45538
+            runAsGroup: 45538
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          ports:
+            - containerPort: 3306
+              name: "mariadb"
+            - containerPort: 4567
+              protocol: "TCP"
+              name: "replicate-tcp"
+            - containerPort: 4567
+              protocol: "UDP"
+              name: "replicate-udp"
+            - containerPort: 4568
+              name: "iss"
+            - containerPort: 4444
+              name: "sst"
+          livenessProbe:
+            periodSeconds: 15
+            timeoutSeconds: 3
+            failureThreshold: 2
+            tcpSocket:
+              port: "mariadb"
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "50m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/bitnami/mariadb"
+            - name: "tmp"
+              mountPath: "/tmp"
+            - name: "run"
+              mountPath: "/run/mysqld"
+            - name: "opt"
+              mountPath: "/opt/bitnami/mariadb/conf"
+            - name: "opt-tmp"
+              mountPath: "/opt/bitnami/mariadb/tmp"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "50Mi"
+        - name: "opt"
+          emptyDir:
+            sizeLimit: "50Mi"
+        - name: "opt-tmp"
+          emptyDir: {}
+        - name: "run"
+          emptyDir:
+            sizeLimit: "5Mi"

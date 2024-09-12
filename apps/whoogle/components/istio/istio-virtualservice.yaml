@@ -1,0 +1,19 @@
+---
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "VirtualService"
+metadata:
+  name: "whoogle"
+spec:
+  hosts:
+    - "whoogle"
+  gateways:
+    - "istio-system/gateway"
+  http:
+    - match:
+        - uri:
+            prefix: "/"
+      route:
+        - destination:
+            host: "whoogle"
+            port:
+              number: 80

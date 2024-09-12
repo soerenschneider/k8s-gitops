@@ -1,0 +1,93 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: jellyfin
+  labels:
+    app.kubernetes.io/name: jellyfin
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jellyfin
+  serviceName: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+        app.kubernetes.io/name: jellyfin
+        app.kubernetes.io/instance: jellyfin-prod
+        app.kubernetes.io/component: jellyfin
+        app.kubernetes.io/part-of: jellyfin
+    spec:
+      securityContext:
+        runAsUser: 45538
+        runAsGroup: 45538
+        fsGroup: 45538
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: "jellyfin/jellyfin:10.9.11"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 45538
+            runAsGroup: 45538
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          imagePullPolicy: IfNotPresent
+          name: jellyfin
+          env:
+            - name: "COMPlus_EnableDiagnostics"
+              value: "0"
+            - name: "JELLYFIN_DATA_DIR"
+              value: "/config"
+            - name: "JELLYFIN_CACHE_DIR"
+              value: "/cache"
+          resources:
+            requests:
+              memory: 512Mi
+              cpu: 200m
+            limits:
+              memory: 2048Mi
+          ports:
+            - containerPort: 8096
+              name: jellyfin
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: jellyfin
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: jellyfin
+            initialDelaySeconds: 5
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: cache
+              mountPath: /cache
+            - name: media
+              readOnly: true
+              mountPath: /media
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: config
+          emptyDir: {}
+        - name: cache
+          emptyDir: {}
+        - name: media
+          emptyDir: {}

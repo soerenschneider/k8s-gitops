@@ -1,0 +1,63 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "whoogle"
+  labels:
+    app.kubernetes.io/name: "whoogle"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "whoogle"
+  strategy:
+    type: "RollingUpdate"
+  template:
+    metadata:
+      labels:
+        app: "whoogle"
+        app.kubernetes.io/name: "whoogle"
+        app.kubernetes.io/component: "whoogle"
+        app.kubernetes.io/part-of: "whoogle"
+    spec:
+      securityContext:
+        runAsUser: 45346
+        runAsGroup: 45346
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "whoogle"
+          image: "ghcr.io/benbusby/whoogle-search:0.8.4"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 45346
+            runAsGroup: 45346
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "148Mi"
+              cpu: "10m"
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 5000
+              name: "whoogle"
+          volumeMounts:
+            - name: "tmp"
+              mountPath: "/whoogle/app/static/build/"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: "location"
+          whenUnsatisfiable: "ScheduleAnyway"
+      volumes:
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "100Mi"

@@ -1,0 +1,77 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: paperless-ngx
+spec:
+  podSelector: {}  # Selects all pods in the same namespace
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: paperless-ngx
+      from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+          podSelector:
+            matchLabels:
+              istio: ingressgateway
+    - ports:
+        - protocol: TCP
+          port: gotenberg
+        - protocol: TCP
+          port: redis
+        - protocol: TCP
+          port: tika
+      from:
+        - podSelector:
+            matchLabels:
+              app: paperless-ngx
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 192.168.0.0/16
+      ports:
+        - port: 3306
+          protocol: TCP
+        - port: 3307
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: keycloak
+        - ipBlock:
+            cidr: 192.168.65.0/24
+        - ipBlock:
+            cidr: 192.168.2.0/24
+        - ipBlock:
+            cidr: 192.168.73.0/24
+      ports:
+        - port: 443
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector: {}
+      ports:
+        - port: 53
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+          podSelector: {}
+      ports:
+        - port: 15012
+          protocol: TCP

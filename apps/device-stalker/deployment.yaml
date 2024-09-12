@@ -1,0 +1,80 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: device-stalker
+  labels:
+    app: device-stalker
+  annotations:
+    ignore-check.kube-linter.io/unsafe-sysctls: "device-stalker needs sysctl parameters to perform ICMP as non-root user"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "device-stalker"
+  template:
+    metadata:
+      labels:
+        app: "device-stalker"
+        app.kubernetes.io/name: device-stalker
+        app.kubernetes.io/instance: device-stalker-prod
+        app.kubernetes.io/component: device-stalker
+        app.kubernetes.io/part-of: monitoring
+      annotations:
+        prometheus.io/port: "9224"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 47454
+        runAsGroup: 47454
+        fsGroup: 47454
+        runAsNonRoot: true
+        sysctls:
+          - name: "net.ipv4.ping_group_range"
+            value: "0 2147483647"
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: "device-stalker"
+          image: "ghcr.io/soerenschneider/device-stalker:1.0.0"
+          imagePullPolicy: "IfNotPresent"
+          args: []
+          env:
+            - name: "DEVICE_STALKER_PINGER_PRIVILEGED"
+              value: "false"
+            - name: "DEVICE_STALKER_METRICS_ADDR"
+              value: "0.0.0.0:9224"
+          ports:
+            - containerPort: 9224
+              name: "metrics"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 47454
+            runAsGroup: 47454
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              cpu: "5m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+          volumeMounts: []
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: In
+                    values:
+                      - slow
+      volumes: []

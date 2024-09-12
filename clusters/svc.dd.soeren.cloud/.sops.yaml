@@ -1,0 +1,5 @@
+---
+creation_rules:
+  - age: "age16r9mm6m7559ukcaf9ceher6slnexwahfdtxdre3p9tcttfmqn92q8xetes"
+    pgp: "875FB36D1EE07C0DF7D5E0DA5ADFB1F470E97637"
+    hc_vault_transit_uri: "https://vault.ha.soeren.cloud/v1/transit/sops_kubernetes/keys/svc-dd"

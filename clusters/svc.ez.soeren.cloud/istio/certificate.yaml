@@ -1,0 +1,15 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ingress-cert
+  namespace: istio-system
+spec:
+  secretName: ingress-cert
+  commonName: '*.svc.ez.soeren.cloud'
+  dnsNames:
+    - '*.svc.ez.soeren.cloud'
+  issuerRef:
+    name: letsencrypt-dns-prod
+    kind: ClusterIssuer
+    group: cert-manager.io

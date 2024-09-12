@@ -1,0 +1,13 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: minio-console
+spec:
+  host: minio-console.rs.soeren.cloud
+  trafficPolicy:
+    portLevelSettings:
+      - port:
+          number: 443
+        loadBalancer:
+          simple: LEAST_CONN

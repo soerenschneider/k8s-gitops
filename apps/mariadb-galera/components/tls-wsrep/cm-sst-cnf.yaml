@@ -1,0 +1,12 @@
+---
+apiVersion: "v1"
+kind: "ConfigMap"
+metadata:
+  name: "mariadb-sst-conf"
+data:
+  sst.cnf: |
+    [sst]
+    encrypt=4
+    tkey=/tls/wsrep-tls.key
+    tcert=/tls/wsrep-tls.crt
+    tca=/tls/wsrep-ca.crt

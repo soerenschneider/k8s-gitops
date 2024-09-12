@@ -1,0 +1,94 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: miniflux
+  labels:
+    app.kubernetes.io/name: miniflux
+    app.kubernetes.io/instance: miniflux-prod
+    app.kubernetes.io/component: server
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: miniflux
+  template:
+    metadata:
+      labels:
+        app: "miniflux"
+        app.kubernetes.io/name: "miniflux"
+        app.kubernetes.io/instance: "miniflux-prod"
+        app.kubernetes.io/component: "miniflux"
+        app.kubernetes.io/part-of: "miniflux"
+      annotations:
+        prometheus.io/port: "3333"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: "miniflux/miniflux:2.1.3"
+          imagePullPolicy: "IfNotPresent"
+          name: "miniflux"
+          ports:
+            - containerPort: 3333
+              name: "miniflux"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          startupProbe:
+            httpGet:
+              path: "/healthcheck"
+              port: "miniflux"
+            failureThreshold: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/healthcheck"
+              port: "miniflux"
+            initialDelaySeconds: 1
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: "/healthcheck"
+              port: "miniflux"
+            timeoutSeconds: 10
+            initialDelaySeconds: 15
+          resources:
+            requests:
+              memory: "48Mi"
+              cpu: "5m"
+            limits:
+              memory: "196Mi"
+          env:
+            - name: LISTEN_ADDR
+              value: ":3333"
+            - name: METRICS_ALLOWED_NETWORKS
+              value: "10.0.0.0/8"
+            - name: METRICS_COLLECTOR
+              value: "1"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 20
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: NotIn
+                    values:
+                      - fast

@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: consul
+resources:
+  - ../../../apps/consul
+  - namespace.yaml
+components:
+  - ../../../apps/consul/components/istio
+patches:
+  - target:
+      kind: VirtualService
+      name: consul
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - consul.svc.ez.soeren.cloud

@@ -1,0 +1,36 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: jellyfin
+resources:
+  - ../../common/jellyfin
+  - pv.yaml
+  - sops-secret-smbcreds.yaml
+  - nas-media-minio-pv.yaml
+  - nas-media-microbin-minio-pvc.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: jellyfin
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/volumes/2
+        value:
+          name: media
+          persistentVolumeClaim:
+            claimName: jellyfin-nas
+  - target:
+      kind: PersistentVolumeClaim
+      name: jellyfin
+    patch: |
+      - op: replace
+        path: /spec/storageClassName
+        value: local-storage
+  - target:
+      kind: VirtualService
+      name: jellyfin
+    patch: |
+      - op: replace
+        path: /spec/hosts
+        value:
+          - jellyfin.svc.dd.soeren.cloud

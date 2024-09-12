@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "redis"
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: "redis"
+  policyTypes:
+    - Egress
+    - Ingress
+  egress: []
+  ingress:
+    - ports:
+        - protocol: "TCP"
+          port: "redis"
+      from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: "ghostfolio"

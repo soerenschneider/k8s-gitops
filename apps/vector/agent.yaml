@@ -1,0 +1,28 @@
+---
+data_dir: /vector-data-dir
+sources:
+  kubernetes_logs:
+    type: kubernetes_logs
+  host_metrics:
+    filesystem:
+      devices:
+        excludes: [binfmt_misc]
+      filesystems:
+        excludes: [binfmt_misc]
+      mountPoints:
+        excludes: ["*/proc/sys/fs/binfmt_misc"]
+    type: host_metrics
+  internal_metrics:
+    type: internal_metrics
+transforms:
+  k8s:
+    type: remap
+    inputs:
+      - kubernetes_logs
+    source: |
+      if exists(.kubernetes.pod_labels."app.kubernetes.io/name") {
+        .app = .kubernetes.pod_labels."app.kubernetes.io/name"
+      }
+      if exists(.kubernetes.pod_labels."app.kubernetes.io/instance") {
+        .instance = .kubernetes.pod_labels."app.kubernetes.io/instance"
+      }

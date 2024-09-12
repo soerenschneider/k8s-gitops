@@ -1,0 +1,16 @@
+---
+apiVersion: "networking.k8s.io/v1"
+kind: "NetworkPolicy"
+metadata:
+  name: "string-is"
+spec:
+  podSelector: {}
+  policyTypes:
+    - "Egress"
+    - "Ingress"
+  ingress:
+    - ports:
+        - protocol: "TCP"
+          port: "string-is"
+      from: []
+  egress: []

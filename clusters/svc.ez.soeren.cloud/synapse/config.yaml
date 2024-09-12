@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: synapse-config
+  namespace: synapse
+data:
+  homeserver.yaml: |
+    server_name: "your-synapse-server.com"
+    metrics_port: 9092
+    # Add other configuration options as needed

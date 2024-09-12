@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - immich-server-deployment.yaml
+  - immich-server-service.yaml
+  - immich-machinelearning-deployment.yaml
+  - immich-machinelearning-service.yaml
+  - redis-deployment.yaml
+  - redis-service.yaml
+configMapGenerator:
+  - name: immich
+    envs:
+      - immich.properties

@@ -1,0 +1,34 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+configMapGenerator:
+  - name: healthcheck
+    files:
+      - healthcheck.sh
+patches:
+  - target:
+      kind: StatefulSet
+      name: jellyfin
+    patch: |
+
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: healthcheck
+          configMap:
+            name: healthcheck
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: healthcheck
+          mountPath: /healthcheck.sh
+          subPath: "healthcheck.sh"
+      - op: replace
+        path: /spec/template/spec/containers/0/livenessProbe
+        value:
+          exec:
+            command:
+              - sh
+              - /healthcheck.sh
+          initialDelaySeconds: 15
+          periodSeconds: 60

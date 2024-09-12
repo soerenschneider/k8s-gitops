@@ -1,0 +1,75 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+resources:
+  - "../../../apps/mariadb-galera"
+  - "configmap-ca.yaml"
+  - "../../../apps/mysqld-exporter"
+components:
+  - "../../../apps/mariadb-galera/components/istio"
+  - "../../../apps/mariadb-galera/components/restic-mariadb"
+  - "../../../apps/mariadb-galera/components/pvc"
+  - "../../../apps/mariadb-galera/components/tls"
+  - "../../../apps/mariadb-galera/components/tls-wsrep"
+configMapGenerator:
+  - name: "mariadb-galera-restic-mariadb"
+    literals:
+      - "RETENTION_DAYS=7"
+      - "RETENTION_WEEKS=4"
+      - "RETENTION_MONTHS=6"
+      - "RESTIC_BACKUP_ID=mariadb-cluster"
+      - "MARIADB_HOST=mariadb"
+patches:
+  - target:
+      kind: "StatefulSet"
+      name: "mariadb"
+    patch: |-
+      - op: "add"
+        path: "/spec/template/spec/volumes/-"
+        value:
+          name: "pki-ca"
+          configMap:
+            name: "mariadb-ca"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "pki-ca"
+          mountPath: "/tls/tls-ca.crt"
+          subPath: "ca.crt"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "pki-ca"
+          mountPath: "/tls/wsrep-ca.crt"
+          subPath: "ca.crt"
+  - target:
+      kind: "CronJob"
+      name: "restic-mariadb-backup"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 6 * * *"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "mariadb-cluster-prod"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "mariadb-galera-restic-mariadb"
+          - secretRef:
+              name: "mariadb-galera-restic-mariadb"
+  - target:
+      kind: "CronJob"
+      name: "restic-mariadb-prune"
+    patch: |-
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "linkding"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "mariadb-galera-restic-mariadb"
+          - secretRef:
+              name: "mariadb-galera-restic-mariadb"

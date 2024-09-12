@@ -1,0 +1,8 @@
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: dev-low-prio
+value: 1000
+globalDefault: false
+description: "Development default priority workloads"

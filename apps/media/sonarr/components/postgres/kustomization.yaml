@@ -1,0 +1,38 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - target:
+      kind: Deployment
+      name: sonarr
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES_HOST
+          value: postgres
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES_MAIN_DB
+          value: sonarr
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: media-sonarr-postgres
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: media-sonarr-postgres
+  - target:
+      kind: Deployment
+      name: sonarr
+    path: patch-initcontainer.yaml

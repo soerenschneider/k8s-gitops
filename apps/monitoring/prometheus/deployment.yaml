@@ -1,0 +1,112 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: prometheus
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+        app.kubernetes.io/name: prometheus
+        app.kubernetes.io/instance: prometheus-prod
+        app.kubernetes.io/component: prometheus
+        app.kubernetes.io/part-of: monitoring
+    spec:
+      serviceAccountName: prometheus
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: prometheus
+          image: quay.io/prometheus/prometheus:v2.52.0
+          args:
+            - "--storage.tsdb.retention.time=24h"
+            - "--storage.tsdb.path=/prometheus/"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - containerPort: 9090
+              name: prometheus
+          resources:
+            requests:
+              cpu: 50m
+              memory: 512Mi
+            limits:
+              memory: 1280Mi
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /-/healthy
+              port: prometheus
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /-/ready
+              port: prometheus
+              scheme: HTTP
+            initialDelaySeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 4
+          volumeMounts:
+            - name: storage
+              mountPath: /prometheus/
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "monitoring"
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              preference:
+                matchExpressions:
+                  - key: location
+                    operator: NotIn
+                    values:
+                      - ez
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: NotIn
+                    values:
+                      - slow
+      volumes:
+        - name: storage
+          emptyDir: {}

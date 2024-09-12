@@ -1,0 +1,1 @@
+../../../apps/grafana/upsert-secret-grafana.sh

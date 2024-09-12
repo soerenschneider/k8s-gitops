@@ -1,0 +1,62 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: radicale
+resources:
+  - ../../../apps/radicale
+  - namespace.yaml
+  - pv.yaml
+  - config-cm.yaml
+  - sops-secret-radicale.yaml
+  - sops-secret-radicale-restic-pvc.yaml
+components:
+  - ../../../apps/radicale/components/istio
+  - ../../../apps/radicale/components/istio-proxy
+  - ../../../apps/radicale/components/pvc
+  - ../../../apps/radicale/components/restic-pvc
+patches:
+  - target:
+      kind: VirtualService
+      name: radicale
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "radicale.svc.dd.soeren.cloud"
+  - target:
+      kind: Deployment
+      name: radicale
+    patch: |-
+      - op: add
+        path: /spec/template/spec/priorityClassName
+        value: prod-default-prio
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: config
+          mountPath: /config
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: config
+          configMap:
+            name: radicale
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: users
+          mountPath: /etc/radicale/users
+          subPath: users
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: users
+          secret:
+            secretName: radicale
+            items:
+              - key: RADICALE_USERS
+                path: users
+configMapGenerator:
+  - name: radicale-restic-pvc  # TODO: https://github.com/kubernetes-sigs/kustomize/issues/4402
+    literals:
+      - RESTIC_HOSTNAME=svc.dd.soeren.cloud

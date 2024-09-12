@@ -1,0 +1,1 @@
+../../../apps/paperless-ngx/upsert-secret-paperless-ngx.sh

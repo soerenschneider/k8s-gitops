@@ -1,0 +1,79 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vmalert
+  namespace: monitoring
+  labels:
+    app: vmalert
+    app.kubernetes.io/name: vmalert
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vmalert
+      app.kubernetes.io/name: vmalert
+  template:
+    metadata:
+      labels:
+        app: vmalert
+        app.kubernetes.io/name: vmalert
+        app.kubernetes.io/instance: vmalert-prod
+        app.kubernetes.io/component: vmalert
+        app.kubernetes.io/part-of: monitoring
+      annotations:
+        prometheus.io/port: "8880"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: vmalert
+          image: victoriametrics/vmalert:v1.101.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8880
+              name: metrics
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "16Mi"
+              cpu: "10m"
+            limits:
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: metrics
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: metrics
+            initialDelaySeconds: 5
+          volumeMounts: []
+      volumes: []
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate

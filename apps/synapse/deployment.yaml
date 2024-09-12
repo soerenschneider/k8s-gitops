@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synapse
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: synapse
+  template:
+    metadata:
+      labels:
+        app: synapse
+        app.kubernetes.io/name: synapse
+        app.kubernetes.io/instance: synapse-prod
+        app.kubernetes.io/component: synapse
+        app.kubernetes.io/part-of: synapse
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 33991
+        runAsGroup: 33991
+        fsGroup: 33991
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: synapse
+          image: matrixdotorg/synapse:v1.105.0
+          ports:
+            - containerPort: 8008
+              name: http
+            - containerPort: 8443
+              name: https
+          env:
+            - name: SYNAPSE_SERVER_NAME
+              value: "soeren.cloud"
+            - name: SYNAPSE_REPORT_STATS
+              value: "yes"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "5m"
+            limits:
+              memory: "384Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 33991
+            runAsGroup: 33991
+            privileged: false
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: synapse-data
+              mountPath: /data
+            - name: synapse-config
+              mountPath: /synapse/config
+              readOnly: true
+      volumes:
+        - name: synapse-data
+          emptyDir:
+            sizeLimit: 1G
+        - name: synapse-config
+          configMap:
+            name: synapse-config

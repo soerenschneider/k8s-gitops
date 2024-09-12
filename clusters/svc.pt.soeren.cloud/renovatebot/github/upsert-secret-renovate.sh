@@ -1,0 +1,1 @@
+../../../../apps/renovatebot/upsert-secret-renovate.sh

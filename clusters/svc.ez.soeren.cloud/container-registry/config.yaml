@@ -1,0 +1,9 @@
+---
+http:
+  addr: localhost:5000
+  draintimeout: 60s
+  debug:
+    addr: localhost:5001
+    prometheus:
+      enabled: true
+      path: /metrics

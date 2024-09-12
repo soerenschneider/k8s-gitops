@@ -1,0 +1,1 @@
+../../../../apps/dyndns/client/components/keypair/upsert-secret-dyndns-keypair.sh

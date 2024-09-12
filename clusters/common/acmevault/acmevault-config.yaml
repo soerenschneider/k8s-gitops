@@ -1,0 +1,39 @@
+---
+acmeCustomDnsServers:
+  - 8.8.8.8
+  - 8.8.4.4
+acmeDnsProvider: route53
+domains:
+  - domain: nas.ez.soeren.cloud
+    sans: [nas.ha.soeren.cloud]
+  - domain: nas.dd.soeren.cloud
+    sans: [nas.ha.soeren.cloud]
+  - domain: nas.pt.soeren.cloud
+    sans: [nas.ha.soeren.cloud]
+  - domain: dbs.ez.soeren.cloud
+    sans: [dbs.ha.soeren.cloud]
+  - domain: dbs.dd.soeren.cloud
+    sans: [dbs.ha.soeren.cloud]
+  - domain: dbs.pt.soeren.cloud
+    sans: [dbs.ha.soeren.cloud]
+  - domain: sauron.ez.soeren.cloud
+  - domain: sauron.dd.soeren.cloud
+  - domain: sauron.pt.soeren.cloud
+  - domain: router.ez.soeren.cloud
+    sans: [nas-ha.ez.soeren.cloud]
+  - domain: router.dd.soeren.cloud
+    sans: [nas-ha.dd.soeren.cloud]
+  - domain: router.pt.soeren.cloud
+    sans: [nas-ha.pt.soeren.cloud]
+  - domain: vserver.ez.soeren.cloud
+  - domain: vserver.dd.soeren.cloud
+  - domain: vserver.pt.soeren.cloud
+email: acmevault@soerensoerensen.de
+metricsAddr: 0.0.0.0:9191
+intervalSeconds: 3660
+vault:
+  addr: https://vault.ha.soeren.cloud:443
+  authMethod: kubernetes
+  pathPrefix: prod
+  k8sRoleId: acmevault
+  k8sMountPath: svc.dd.soeren.cloud

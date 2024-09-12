@@ -1,0 +1,28 @@
+---
+- op: "add"
+  path: "/spec/template/spec/volumes/-"
+  value:
+    name: "certs"
+    secret:
+      secretName: "prometheus-cert"
+- op: "add"
+  path: "/spec/template/spec/containers/0/volumeMounts/-"
+  value:
+    name: "certs"
+    mountPath: "/tls"
+    readOnly: true
+- op: "add"
+  path: "/spec/template/spec/volumes/-"
+  value:
+    name: "cluster-tls-config"
+    configMap:
+      name: "alertmanager-cluster-tls-config"
+- op: "add"
+  path: "/spec/template/spec/containers/0/volumeMounts/-"
+  value:
+    name: "cluster-tls-config"
+    mountPath: "/etc/alertmanager/cluster-tls-config.yaml"
+    subPath: "cluster-tls-config.yaml"
+- op: "add"
+  path: "/spec/template/spec/containers/0/args/-"
+  value: "--cluster.tls-config=/etc/alertmanager/cluster-tls-config.yaml"

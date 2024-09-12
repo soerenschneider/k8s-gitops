@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - target:
+      kind: Deployment
+      name: karma
+    patch: |-
+      - op: replace
+        path: "/spec/template/spec/containers/0/readinessProbe/httpGet/path"
+        value: "/karma/health"
+      - op: replace
+        path: "/spec/template/spec/containers/0/livenessProbe/httpGet/path"
+        value: "/karma/health"
+      - op: add
+        path: "/spec/template/spec/containers/0/env/-"
+        value:
+          name: "LISTEN_PREFIX"
+          value: "/karma"

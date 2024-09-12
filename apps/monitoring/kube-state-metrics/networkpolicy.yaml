@@ -1,0 +1,26 @@
+---
+apiVersion: "networking.k8s.io/v1"
+kind: "NetworkPolicy"
+metadata:
+  name: "kube-state-metrics"
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: "kube-state-metrics"
+  policyTypes:
+    - "Ingress"
+    - "Egress"
+  ingress:
+    - ports:
+        - protocol: "TCP"
+          port: "metrics"
+        - protocol: "TCP"
+          port: "telemetry"
+      from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: "monitoring"
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: "prometheus"
+  egress: []

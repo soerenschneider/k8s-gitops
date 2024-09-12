@@ -1,0 +1,14 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: "mosquitto"
+spec:
+  secretName: "mosquitto-cert"
+  commonName: "mqtt.svc.dd.soeren.cloud"
+  dnsNames:
+    - "mqtt.svc.dd.soeren.cloud"
+  issuerRef:
+    name: "letsencrypt-dns-prod"
+    kind: "ClusterIssuer"
+    group: "cert-manager.io"

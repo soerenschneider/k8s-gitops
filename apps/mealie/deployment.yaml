@@ -1,0 +1,98 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "mealie"
+  labels:
+    app: "mealie"
+    app.kubernetes.io/instance: "mealie"
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  strategy:
+    type: "RollingUpdate"
+  selector:
+    matchLabels:
+      app: "mealie"
+      app.kubernetes.io/instance: "mealie-prod"
+  template:
+    metadata:
+      labels:
+        app: "mealie"
+        app.kubernetes.io/name: "mealie"
+        app.kubernetes.io/instance: "mealie-prod"
+        app.kubernetes.io/component: "mealie"
+        app.kubernetes.io/part-of: "mealie"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 45911
+        runAsGroup: 45911
+        fsGroup: 45911
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: mealie
+          image: "ghcr.io/mealie-recipes/mealie:v1.8.0"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "TZ"
+              value: "Europe/Berlin"
+            - name: "ALLOW_SIGNUP"
+              value: "false"
+          ports:
+            - name: "mealie"
+              containerPort: 9000
+              protocol: "TCP"
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 45911
+            runAsGroup: 45911
+            readOnlyRootFilesystem: true
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          envFrom:
+            - secretRef:
+                name: "mealie"
+                optional: true
+            - configMapRef:
+                name: "mealie"
+          resources:
+            requests:
+              memory: "196Mi"
+              cpu: "20m"
+            limits:
+              memory: "768Mi"
+          livenessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 0
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 0
+            failureThreshold: 3
+            timeoutSeconds: 1
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 9000
+            initialDelaySeconds: 0
+            failureThreshold: 30
+            timeoutSeconds: 1
+            periodSeconds: 5
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/app/data/"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "5Gi"

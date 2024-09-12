@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - target:
+      kind: Deployment
+      name: "sonarr"
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__URL_BASE
+          value: /sonarr
+  - target:
+      kind: NetworkPolicy
+      name: "sonarr"
+    patch: |-
+      - op: add
+        path: "/spec/ingress/0/from/-"
+        value:
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: "reverse-proxy"

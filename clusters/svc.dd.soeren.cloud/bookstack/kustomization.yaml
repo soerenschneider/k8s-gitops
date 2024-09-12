@@ -1,0 +1,28 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: bookstack
+resources:
+  - ../../../apps/bookstack
+  - namespace.yaml
+  - sops-secret-bookstack.yaml
+  - sops-secret-bookstack-oidc.yaml
+components:
+  - ../../../apps/bookstack/components/istio
+  - ../../../apps/bookstack/components/oidc
+patches:
+  - target:
+      kind: VirtualService
+      name: bookstack
+    patch: |
+      - op: replace
+        path: /spec/hosts
+        value:
+          - bookstack.svc.dd.soeren.cloud
+configMapGenerator:
+  - name: bookstack-config
+    behavior: merge
+    literals:
+      - APP_URL=https://bookstack.svc.dd.soeren.cloud
+      - DB_HOST=dbs.dd.soeren.cloud:3306
+      - OIDC_ISSUER=https://keycloak.svc.dd.soeren.cloud/realms/myrealm

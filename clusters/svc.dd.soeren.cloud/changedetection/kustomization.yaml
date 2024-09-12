@@ -1,0 +1,32 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: changedetection
+resources:
+  - ../../../apps/changedetection
+  - changedetection-pv.yaml
+  - namespace.yaml
+  - sops-secret-changedetection-oidc.yaml
+components:
+  - ../../../apps/changedetection/components/oidc
+  - ../../../apps/changedetection/components/istio
+  - ../../../apps/changedetection/components/playwright
+  - ../../../apps/changedetection/components/pvc
+patches:
+  - target:
+      kind: Deployment
+      name: changedetection
+    patch: |
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: BASE_URL
+          value: https://changedetection.svc.dd.soeren.cloud
+  - target:
+      kind: VirtualService
+      name: changedetection
+    patch: |
+      - op: replace
+        path: /spec/hosts
+        value:
+          - changedetection.svc.dd.soeren.cloud

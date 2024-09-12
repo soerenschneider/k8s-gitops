@@ -1,0 +1,39 @@
+---
+misconfigurations:
+  - id: "AVD-KSV-0011"
+  - id: "AVD-KSV-0012"
+    paths:
+      - "apps/vector/daemonset.yaml"
+  - id: "AVD-KSV-0014"
+    paths:
+      - "apps/keycloak/deployment.yaml"
+  - id: "AVD-KSV-0020"
+    paths:
+      - "apps/vector/daemonset.yaml"
+      - "apps/**/postgres-deployment.yaml"
+      - "apps/immich/components/pgvector/postgres-sts.yaml"
+      - "apps/paperless-ngx/paperless-ngx-deployment.yaml"
+      - "apps/keycloak/deployment.yaml" # errors if not running as 1000
+  - id: "AVD-KSV-0021"
+    paths:
+      - "apps/vector/daemonset.yaml"
+      - "apps/**/postgres-deployment.yaml"
+      - "apps/paperless-ngx/paperless-ngx-deployment.yaml"
+      - "apps/immich/components/pgvector/postgres-sts.yaml"
+      - "apps/keycloak/deployment.yaml" # errors if not running as 1000
+  - id: "AVD-KSV-0023"
+    paths:
+      - "apps/vector/daemonset.yaml"
+  - id: "AVD-KSV-0048"
+    paths:
+      - "apps/reloader/components/rbac/clusterrole.yaml"
+  - id: "AVD-KSV-0041"
+    paths:
+      - "apps/reloader/components/rbac/clusterrole.yaml"
+  - id: "AVD-KSV-0109"
+    paths:
+      - "clusters/common/taskd/configmap-ca.yaml"
+  - id: "AVD-KSV-01010"
+    paths:
+      - "**/taskwarrior-configmap.yaml" # false positive
+      - "apps/mariadb-galera/components/tls-wsrep/cm-sst-cnf.yaml" # false positive

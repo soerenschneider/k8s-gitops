@@ -1,0 +1,30 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+configMapGenerator:
+  - name: oauth2-proxy
+    behavior: merge  # TODO: https://github.com/kubernetes-sigs/kustomize/issues/4402
+    envs:
+      - oauth2-proxy.properties
+  - name: paperless-config
+    behavior: merge
+    envs:
+      - paperless.properties
+patches:
+  - target:
+      kind: Deployment
+      name: paperless-ngx
+    path: oauth2-proxy-deployment.yaml
+  - target:
+      kind: Service
+      name: paperless-ngx
+    patch: |
+      - op: replace
+        path: /spec/ports/0/targetPort
+        value: 4180
+  - target:
+      kind: NetworkPolicy
+    patch: |-
+      - op: replace
+        path: /spec/ingress/0/ports/0/port
+        value: oauth2-proxy

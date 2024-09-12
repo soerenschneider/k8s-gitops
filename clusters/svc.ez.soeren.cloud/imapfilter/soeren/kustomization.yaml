@@ -1,0 +1,32 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../apps/imapfilter
+patches:
+  - target:
+      kind: CronJob
+    patch: |-
+      - op: replace
+        path: "/metadata/name"
+        value: "imapfilter-soerensoerensen"
+      - op: replace
+        path: "/spec/schedule"
+        value: "0 2 * * *"
+      - op: replace
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/args"
+        value:
+          - "-c"
+          - "/config/config.lua"
+      - op: add
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "imapfilter-config"
+          mountPath: "/config"
+          readOnly: true
+      - op: add
+        path: "/spec/jobTemplate/spec/template/spec/volumes/-"
+        value:
+          name: "imapfilter-config"
+          secret:
+            secretName: "imapfilter-config"

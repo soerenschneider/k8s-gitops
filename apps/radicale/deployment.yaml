@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radicale
+  labels:
+    app.kubernetes.io/name: radicale
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: radicale
+  template:
+    metadata:
+      labels:
+        app: radicale
+        app.kubernetes.io/name: radicale
+        app.kubernetes.io/component: radicale
+        app.kubernetes.io/instance: radicale-prod
+        app.kubernetes.io/part-of: radicale
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: "tomsquest/docker-radicale:3.2.1.0"
+          name: "radicale"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          ports:
+            - containerPort: 5232
+              name: "radicale"
+          env:
+            - name: "TAKE_FILE_OWNERSHIP"
+              value: "false"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "5m"
+            limits:
+              memory: "128Mi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"

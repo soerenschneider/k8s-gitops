@@ -1,0 +1,55 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: "imapfilter"
+spec:
+  timeZone: "Europe/Berlin"
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: "Never"
+          securityContext:
+            runAsUser: 27701
+            runAsGroup: 27701
+            fsGroup: 27701
+            runAsNonRoot: true
+            seccompProfile:
+              type: "RuntimeDefault"
+          containers:
+            - name: "imapfilter"
+              image: "ghcr.io/soerenschneider/imapfilter:main-20240403180046"
+              imagePullPolicy: "IfNotPresent"
+              workingDir: "/tmp"
+              args: []
+              env:
+                - name: "HOME"
+                  value: "/tmp"
+              securityContext:
+                runAsUser: 27701
+                runAsGroup: 27701
+                runAsNonRoot: true
+                privileged: false
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
+              resources:
+                requests:
+                  memory: "64Mi"
+                  cpu: "5m"
+                limits:
+                  memory: "1Gi"
+              volumeMounts:
+                - name: "tmp"
+                  mountPath: "/tmp"
+          volumes:
+            - name: "tmp"
+              emptyDir: {}

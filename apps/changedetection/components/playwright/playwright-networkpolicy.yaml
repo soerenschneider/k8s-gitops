@@ -1,0 +1,19 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "playwright"
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: "playwright"
+  policyTypes:
+    - Ingress
+  ingress:
+    - ports:
+        - protocol: "TCP"
+          port: "playwright"
+      from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: "changedetection"

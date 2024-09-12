@@ -1,0 +1,16 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: minio
+spec:
+  secretName: minio-cert
+  duration: 2160h
+  renewBefore: 360h
+  commonName: minio.rs.soeren.cloud
+  dnsNames:
+    - minio.rs.soeren.cloud
+  issuerRef:
+    name: letsencrypt-dns-prod
+    kind: ClusterIssuer
+    group: cert-manager.io

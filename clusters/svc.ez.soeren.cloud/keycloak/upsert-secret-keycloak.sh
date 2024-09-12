@@ -1,0 +1,1 @@
+../../../apps/keycloak/upsert-secret-keycloak.sh

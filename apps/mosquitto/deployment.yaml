@@ -1,0 +1,74 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "mosquitto"
+  labels:
+    app.kubernetes.io/name: "mosquitto"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "mosquitto"
+  strategy:
+    type: "RollingUpdate"
+  template:
+    metadata:
+      labels:
+        app: "mosquitto"
+        app.kubernetes.io/name: "mosquitto"
+        app.kubernetes.io/component: "mosquitto"
+        app.kubernetes.io/instance: "mosquitto-prod"
+        app.kubernetes.io/part-of: "mosquitto"
+    spec:
+      securityContext:
+        runAsUser: 47272
+        runAsGroup: 47272
+        fsGroup: 47272
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "eclipse-mosquitto:2.0.18"
+          name: "mosquitto"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 47272
+            runAsGroup: 47272
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          imagePullPolicy: "IfNotPresent"
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 10m
+            limits:
+              memory: 384Mi
+          ports:
+            - containerPort: 1883
+              name: "mosquitto"
+            - containerPort: 8883
+              name: "mosquitto-tls"
+          livenessProbe:
+            tcpSocket:
+              port: 1883
+            initialDelaySeconds: 5
+          readinessProbe:
+            tcpSocket:
+              port: 1883
+            initialDelaySeconds: 1
+          volumeMounts:
+            - name: "mosquitto-config"
+              mountPath: "/mosquitto/config"
+      volumes:
+        - name: "mosquitto-config"
+          configMap:
+            name: "mosquitto-config"

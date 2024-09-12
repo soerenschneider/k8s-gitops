@@ -1,0 +1,18 @@
+---
+sinks:
+  prom_exporter:
+    type: "prometheus_exporter"
+    inputs: ["host_metrics", "internal_metrics"]
+    address: "0.0.0.0:9090"
+  loki:
+    type: "loki"
+    inputs: ["k8s"]
+    encoding:
+      codec: "json"
+    endpoint: "http://loki.loki:3100"
+    out_of_order_action: "accept"
+    tenant_id: "soeren"
+    labels:
+      datacenter: "ez"
+      cluster: "svc.ez.soeren.cloud"
+      app: "{{ .app }}"

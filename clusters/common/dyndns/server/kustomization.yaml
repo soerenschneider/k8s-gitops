@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../apps/dyndns/server
+configMapGenerator:
+  - name: dyndns-server-config
+    behavior: merge
+    literals:
+      - "DYNDNS_HOSTED_ZONE_ID=Z08408432FPT8110RNMJ1"
+      - "DYNDNS_SQS_QUEUE=https://sqs.us-east-1.amazonaws.com/457894857334/dyndns-prod"
+      - 'DYNDNS_KNOWN_HOSTS={"dd.dc.soeren.cloud":["hU0+O/QDU4tViikho4wLeD+FsrZawh5nDBcKDSQp0uc=","omNT1ZBsWCmN8U0b6Hhws79VDbWHYpitjtD8tV5H/h8="],"ez.dc.soeren.cloud":["TApMohc2KZN+kEhv5XWA88qW5DyHxf3jInv78wx4RLE=","tlJlqk3F6rGZG6j1EN8mraBGjRsMDNlIB8/6cH7WqGo="],"pt.dc.soeren.cloud":["KwpqFiE0KmWCJdHV0MIefX9RiZW4fk3VPL/DdwLtilM=","RHUYdhUZjE1eDoq8viiKlbCZc40lpiNljWE9QLBxlgw="]}'

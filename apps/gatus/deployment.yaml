@@ -1,0 +1,91 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gatus
+  labels:
+    app.kubernetes.io/name: gatus
+  annotations:
+    reloader.stakater.com/auto: "true"
+    ignore-check.kube-linter.io/unsafe-sysctls: "gatus needs sysctl parameters to perform ICMP as non-root user"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gatus
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: gatus
+        app.kubernetes.io/name: gatus
+        app.kubernetes.io/instance: gatus-prod
+        app.kubernetes.io/component: gatus
+        app.kubernetes.io/part-of: gatus
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 47234
+        runAsGroup: 47234
+        fsGroup: 47234
+        runAsNonRoot: true
+        sysctls:
+          - name: "net.ipv4.ping_group_range"
+            value: "0 2147483647"
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "twinproduction/gatus:v5.11.0"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            runAsUser: 47234
+            runAsGroup: 47234
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          imagePullPolicy: IfNotPresent
+          name: gatus
+          resources:
+            requests:
+              memory: 196Mi
+              cpu: 20m
+            limits:
+              memory: 384Mi
+          ports:
+            - containerPort: 8080
+              name: gatus
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: gatus
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: gatus
+            initialDelaySeconds: 5
+          startupProbe:
+            httpGet:
+              path: /health
+              port: gatus
+            failureThreshold: 60
+            periodSeconds: 10
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lib/gatus
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: storage
+          emptyDir: {}

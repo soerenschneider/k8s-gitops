@@ -1,0 +1,256 @@
+---
+title: "App dashboard"
+subtitle: "Homer"
+logo: "assets/logo.png"
+header: false  # Set to false to hide the header
+footer: ""
+columns: "3"  # "auto" or number (must be a factor of 12: 1, 2, 3, 4, 6, 12)
+connectivityCheck: true  # whether you want to display a message when the apps are not accessible anymore (VPN disconnected for example).
+# You should set it to true when using an authentication proxy, it also reloads the page when a redirection is detected when checking connectivity.
+
+# Optional: Proxy / hosting option
+proxy:
+  useCredentials: false  # send cookies & authorization headers when fetching service specific data. Set to `true` if you use an authentication proxy. Can be overrided on service level.
+
+# Set the default layout and color scheme
+defaults:
+  layout: columns  # Either 'columns', or 'list'
+  colorTheme: auto  # One of 'auto', 'light', or 'dark'
+
+# Optional theming
+theme: default  # 'default' or one of the themes available in 'src/assets/themes'.
+
+# Optional custom stylesheet
+# Will load custom CSS files. Especially useful for custom icon sets.
+# stylesheet:
+#   - "assets/custom.css"
+
+# Here is the exhaustive list of customization parameters
+# However all value are optional and will fallback to default if not set.
+# if you want to change only some of the colors, feel free to remove all unused key.
+colors:
+  light:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#f5f5f5"
+    card-background: "#ffffff"
+    text: "#363636"
+    text-header: "#424242"
+    text-title: "#303030"
+    text-subtitle: "#424242"
+    card-shadow: rgba(0, 0, 0, 0.1)
+    link: "#3273dc"
+    link-hover: "#363636"
+    background-image: "assets/your/light/bg.png"
+  dark:
+    highlight-primary: "#3367d6"
+    highlight-secondary: "#4285f4"
+    highlight-hover: "#5a95f5"
+    background: "#131313"
+    card-background: "#2b2b2b"
+    text: "#eaeaea"
+    text-header: "#ffffff"
+    text-title: "#fafafa"
+    text-subtitle: "#f5f5f5"
+    card-shadow: rgba(0, 0, 0, 0.4)
+    link: "#3273dc"
+    link-hover: "#ffdd57"
+    background-image: "assets/your/dark/bg.png"
+
+links: []
+
+# Services
+# First level array represents a group.
+# Leave only a "items" key if not using group (group name, icon & tagstyle are optional, section separation will not be displayed).
+services:
+  - name: "Application"
+    icon: "fa-solid fa-rocket"
+    items:
+      - name: "Whoogle"
+        logo: "assets/tools/sample.png"
+        # Alternatively a fa icon can be provided:
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted vault security"
+        url: "https://whoogle.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Pastebin"
+        logo: "assets/tools/sample.png"
+        # Alternatively a fa icon can be provided:
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted vault security"
+        url: "https://bin.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Changedetection"
+        logo: "assets/tools/sample.png"
+        # Alternatively a fa icon can be provided:
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted vault security"
+        url: "https://changedetection.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Mealie"
+        logo: "assets/tools/sample.png"
+        # Alternatively a fa icon can be provided:
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted recipe rezept cook"
+        url: "https://mealie.svc.dd.soeren.cloud"
+        target: "_blank"
+
+  - name: "Development"
+    icon: "fas fa-code-branch"
+    items:
+      - name: "Gitea"
+        logo: "assets/tools/sample.png"
+        # Alternatively a fa icon can be provided:
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted vault security"
+        url: "https://gitea.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Yaade"
+        logo: "assets/tools/sample.png"
+        # Alternatively a fa icon can be provided:
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted vault security"
+        url: "https://yaade.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "httpbin"
+        logo: "assets/tools/sample.png"
+        # Alternatively a fa icon can be provided:
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted vault security"
+        url: "https://httpbin.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "string-is"
+        logo: "assets/tools/sample.png"
+        # Alternatively a fa icon can be provided:
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted string strings conversion"
+        url: "https://string-is.rs.soeren.cloud"
+        target: "_blank"
+
+  - name: "Security"
+    icon: "fa-solid fa-shield"
+    items:
+      - name: "Vault"
+        logo: "assets/tools/sample.png"
+        icon: "fab fa-vault"
+        tag: "vault"
+        keywords: "self selfhosted hosted vault security"
+        url: "https://vault.ha.soeren.cloud"
+        target: "_blank"
+
+  - name: "PIM"
+    icon: "fa-regular fa-calendar"
+    items:
+      - name: "aether"
+        tag: "other"
+        url: "https://aether.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Linkding"
+        tag: "other"
+        url: "https://linkding.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Paperless-NGX"
+        tag: "other"
+        url: "https://paperless-ngx.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Wiki"
+        tag: "other"
+        url: "https://wiki.svc.dd.soeren.cloud"
+        target: "_blank"
+
+  - name: "NAS"
+    icon: "fa-solid fa-file"
+    items:
+      - name: "Syncthing"
+        tag: "other"
+        url: "https://nas.dd.soeren.cloud/syncthing"
+        target: "_blank"
+
+  - name: "Media"
+    icon: "fa-solid fa-film"
+    items:
+      - name: "Navidrome"
+        tag: "other"
+        url: "https://navidrome.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Immich"
+        tag: "other"
+        url: "https://immich.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Jellyfin"
+        tag: "other"
+        url: "https://jellyfin.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "VCR"
+        tag: "other"
+        url: "https://vcr.svc.dd.soeren.cloud"
+        target: "_blank"
+
+  - name: "Downloads"
+    icon: "fa-solid fa-download"
+    items:
+      - name: "Transmission"
+        tag: "other"
+        url: "https://swiss.soeren.cloud"
+        target: "_blank"
+      - name: "Radarr"
+        tag: "other"
+        url: "https://media.svc.dd.soeren.cloud/radarr"
+        target: "_blank"
+      - name: "Sonarr"
+        tag: "other"
+        url: "https://media.svc.dd.soeren.cloud/sonarr"
+        target: "_blank"
+      - name: "Prolwarr"
+        tag: "other"
+        url: "https://media.svc.dd.soeren.cloud/prowlarr"
+        target: "_blank"
+
+  - name: "Home Automation"
+    icon: "fa-solid fa-wand-magic"
+    items:
+      - name: "Home Assistant"
+        tag: "other"
+        url: "https://hass.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Vacuum Cleaner"
+        tag: "other"
+        url: "https://vacuum.dd.soeren.cloud"
+        target: "_blank"
+
+  - name: "Monitoring"
+    icon: "fas fa-heartbeat"
+    items:
+      - name: "Grafana"
+        tag: "other"
+        url: "https://rs.soeren.cloud/grafana"
+        target: "_blank"
+      - name: "Karma"
+        tag: "other"
+        url: "https://karma.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Prometheus"
+        tag: "other"
+        url: "https://prometheus.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Alertmanager"
+        tag: "other"
+        url: "https://alertmanager.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Blackbox Exporter"
+        tag: "other"
+        url: "https://blackbox-exporter.svc.dd.soeren.cloud"
+        target: "_blank"
+      - name: "Pushgateway"
+        tag: "other"
+        url: "https://pushgateway.svc.dd.soeren.cloud"
+        target: "_blank"

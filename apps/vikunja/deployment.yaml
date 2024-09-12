@@ -1,0 +1,80 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "vikunja"
+  labels:
+    app.kubernetes.io/name: "vikunja"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "vikunja"
+  template:
+    metadata:
+      labels:
+        app: "vikunja"
+        app.kubernetes.io/name: "vikunja"
+        app.kubernetes.io/component: "vikunja"
+        app.kubernetes.io/instance: "vikunja-prod"
+        app.kubernetes.io/part-of: "vikunja"
+    spec:
+      securityContext:
+        runAsUser: 17452
+        runAsGroup: 17452
+        fsGroup: 17452
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "vikunja/vikunja:unstable"
+          name: "vikunja"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 17452
+            runAsGroup: 17452
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          envFrom:
+            - configMapRef:
+                name: "vikunja"
+            - secretRef:
+                name: "vikunja"
+                optional: true
+          ports:
+            - containerPort: 3456
+              name: "vikunja"
+          startupProbe:
+            httpGet:
+              path: "/health"
+              port: "vikunja"
+            failureThreshold: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/health"
+              port: "vikunja"
+          livenessProbe:
+            httpGet:
+              path: "/health"
+              port: "vikunja"
+            failureThreshold: 2
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "5m"
+            limits:
+              memory: "128Mi"
+          volumeMounts:
+            - mountPath: "/data"
+              name: "storage"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"

@@ -1,0 +1,7 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - restic-mariadb-backup-cronjob.yaml
+  - restic-mariadb-networkpolicy.yaml
+  - restic-mariadb-prune-cronjob.yaml

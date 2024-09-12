@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yaade
+  labels:
+    app.kubernetes.io/name: yaade
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: yaade
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: yaade
+        app.kubernetes.io/name: yaade
+        app.kubernetes.io/component: yaade
+        app.kubernetes.io/part-of: yaade
+    spec:
+      securityContext:
+        runAsUser: 45346
+        runAsGroup: 45346
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: yaade
+          image: esperotech/yaade@sha256:63488cd72869c55eb64424670a12c6bcc5bfdc8788ee618b0f0f20dc2c36b2dc
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsUser: 45346
+            runAsGroup: 45346
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: YAADE_ADMIN_USERNAME
+              value: admin
+            - name: YAADE_PORT
+              value: "9339"
+          resources:
+            requests:
+              memory: 32Mi
+              cpu: 1m
+            limits:
+              memory: 256Mi
+          ports:
+            - containerPort: 9339
+              name: yaade
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: storage
+              mountPath: /app/data
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: storage
+          emptyDir:
+            sizeLimit: 50Mi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 10Mi

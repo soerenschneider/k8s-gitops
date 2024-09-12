@@ -1,0 +1,67 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: minio-mirror
+spec:
+  timeZone: Europe/Berlin
+  schedule: "0 */6 * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 45343
+            runAsGroup: 45343
+            fsGroup: 45343
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: minio-client
+              # renovate: datasource=github-releases depName=minio/minio versioning="regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})"
+              image: quay.io/minio/minio:RELEASE.2024-06-13T22-53-53Z
+              imagePullPolicy: IfNotPresent
+              command:
+                - /bin/bash
+                - -c
+              args:
+                - |
+                  set -eu
+                  sleep 5
+                  mc alias set source "${SOURCE_SERVER}" "${SOURCE_USER}" "${SOURCE_PASSWORD}"
+                  mc alias set dest "${DEST_SERVER}" "${DEST_USER}" "${DEST_PASSWORD}"
+                  mc mirror source/restic-backups-dd dest/restic-backups-dd
+              envFrom:
+                - configMapRef:
+                    name: minio-mirror
+                - secretRef:
+                    name: minio-mirror
+              securityContext:
+                runAsUser: 45343
+                runAsGroup: 45343
+                runAsNonRoot: true
+                privileged: false
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "64Mi"
+                  cpu: "5m"
+                limits:
+                  memory: "1Gi"
+              volumeMounts:
+                - mountPath: /tmp
+                  name: tmp
+          volumes:
+            - name: tmp
+              emptyDir:
+                sizeLimit: 64Mi

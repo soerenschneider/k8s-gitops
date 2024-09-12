@@ -1,0 +1,28 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: grafana
+resources:
+  - ../../../apps/grafana
+  - namespace.yaml
+  - sops-secret-grafana.yaml
+  - sops-secret-grafana-database-mariadb.yaml
+  - sops-secret-grafana-oidc.yaml
+components:
+  - ../../../apps/grafana/components/istio
+  - ../../../apps/grafana/components/oidc
+  - ../../../apps/grafana/components/database-mariadb
+patches:
+  - target:
+      kind: VirtualService
+      name: grafana
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - grafana.svc.dd.soeren.cloud
+configMapGenerator:
+  - name: grafana-config
+    behavior: merge
+    envs:
+      - grafana.properties

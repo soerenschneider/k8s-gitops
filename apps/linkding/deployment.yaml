@@ -1,0 +1,101 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkding
+  labels:
+    app.kubernetes.io/name: linkding
+    app: linkding
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: linkding
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: "linkding"
+        app.kubernetes.io/name: "linkding"
+        app.kubernetes.io/instance: "linkding-prod"
+        app.kubernetes.io/component: "linkding"
+        app.kubernetes.io/part-of: "linkding"
+    spec:
+      securityContext:
+        runAsUser: 32525
+        runAsGroup: 32525
+        fsGroup: 32525
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: "linkding"
+          image: "sissbruecker/linkding:1.31.0"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 32525
+            runAsGroup: 32525
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "196Mi"
+              cpu: 5m
+            limits:
+              memory: "384Mi"
+          ports:
+            - containerPort: 9090
+              name: "linkding"
+          startupProbe:
+            httpGet:
+              path: "/health"
+              port: "linkding"
+            failureThreshold: 60
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/health"
+              port: "linkding"
+            initialDelaySeconds: 5
+          livenessProbe:
+            httpGet:
+              path: "/health"
+              port: "linkding"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/etc/linkding/data"
+            - name: "tmp"
+              mountPath: "/tmp"
+            - mountPath: "/etc/linkding/secretkey.txt"
+              name: "django-secret-key"
+              subPath: "secretkey.txt"
+              readOnly: true
+          envFrom:
+            - configMapRef:
+                name: "linkding"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: storage
+          emptyDir:
+            sizeLimit: 200Mi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 5Mi
+        - name: django-secret-key
+          secret:
+            secretName: linkding
+            items:
+              - key: SECRET_KEY
+                path: secretkey.txt

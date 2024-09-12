@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microbin
+  labels:
+    app.kubernetes.io/name: microbin
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: microbin
+  template:
+    metadata:
+      labels:
+        app: microbin
+        app.kubernetes.io/name: microbin
+        app.kubernetes.io/instance: microbin-prod
+        app.kubernetes.io/component: microbin
+        app.kubernetes.io/part-of: microbin
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 34525
+        runAsGroup: 34525
+        fsGroup: 34525
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: microbin
+          image: danielszabo99/microbin:2.0.4
+          ports:
+            - containerPort: 8080
+              name: microbin
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 34525
+            runAsGroup: 34525
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "10m"
+            limits:
+              memory: "128Mi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/app/microbin_data"
+          envFrom:
+            - configMapRef:
+                name: "microbin-config"
+            - secretRef:
+                name: "microbin"
+                optional: true
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"

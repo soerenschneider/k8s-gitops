@@ -1,0 +1,77 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aplos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aplos
+  template:
+    metadata:
+      labels:
+        app: aplos
+        app.kubernetes.io/name: aplos
+        app.kubernetes.io/instance: aplos-prod
+        app.kubernetes.io/component: aplos
+        app.kubernetes.io/part-of: vcr
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: aplos
+          # TODO
+          image: ghcr.io/soerenschneider/aplos:main
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: "APLOS_ADDR"
+              value: "0.0.0.0:8080"
+            - name: "APLOS_DIRECTORY"
+              value: "/data"
+          ports:
+            - containerPort: 8080
+              name: "aplos"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "5m"
+            limits:
+              memory: "128Mi"
+          livenessProbe:
+            httpGet:
+              port: "aplos"
+              path: "/_health"
+            initialDelaySeconds: 2
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              port: "aplos"
+              path: "/_health"
+            initialDelaySeconds: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          volumeMounts:
+            - name: "storage"
+              readOnly: true
+              mountPath: "/data"
+      volumes:
+        - name: "storage"
+          persistentVolumeClaim:
+            readOnly: true
+            claimName: "vcr"

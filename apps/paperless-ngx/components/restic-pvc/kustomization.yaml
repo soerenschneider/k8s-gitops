@@ -1,0 +1,66 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ../../../../infra/restic-pvc
+configMapGenerator:
+  - name: "paperless-ngx-restic-pvc"
+    literals:
+      - "RETENTION_DAYS=7"
+      - "RETENTION_WEEKS=4"
+      - "RETENTION_MONTHS=6"
+      - "RESTIC_TARGETS=/mnt/data"
+      - "RESTIC_BACKUP_ID=paperless-ngx"
+patches:
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-backup"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 6 * * *"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "paperless-ngx"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsUser"
+        value: 1000
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsGroup"
+        value: 1000
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/fsGroup"
+        value: 1000
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
+        value: 1000
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
+        value: 1000
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "paperless-ngx-restic-pvc"
+          - secretRef:
+              name: "paperless-ngx-restic-pvc"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/0/persistentVolumeClaim/claimName"
+        value: "paperless-ngx-storage"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/0/mountPath"
+        value: "/mnt/data"
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-prune"
+    patch: |-
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "paperless-ngx"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "paperless-ngx-restic-pvc"
+          - secretRef:
+              name: "paperless-ngx-restic-pvc"

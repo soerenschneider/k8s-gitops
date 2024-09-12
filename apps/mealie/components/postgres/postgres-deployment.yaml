@@ -1,0 +1,114 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+        app.kubernetes.io/name: postgres
+        app.kubernetes.io/component: database
+        app.kubernetes.io/instance: mealie-prod
+        app.kubernetes.io/part-of: mealie
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "mealie"
+                topologyKey: "kubernetes.io/hostname"
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: postgres
+          image: postgres:16.3
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: [ALL]
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - "/usr/local/bin/pg_ctl stop -D /var/lib/postgresql/data -w -t 60 -m fast"
+          env:
+            - name: "POSTGRES_DB"
+              value: "mealie"
+            - name: "POSTGRES_USER"
+              valueFrom:
+                secretKeyRef:
+                  key: "POSTGRES_USER"
+                  name: "mealie-postgres"
+            - name: "POSTGRES_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  key: "POSTGRES_PASSWORD"
+                  name: "mealie-postgres"
+            - name: "PGDATA"
+              value: "/data/pgdata"
+          ports:
+            - containerPort: 5432
+              name: "postgres"
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "50m"
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U mealie
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U mealie
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: var-run
+              mountPath: /var/run
+            - name: storage
+              mountPath: /data
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 5Mi
+        - name: var-run
+          emptyDir:
+            sizeLimit: 5Mi
+        - name: storage
+          persistentVolumeClaim:
+            claimName: mealie-postgres

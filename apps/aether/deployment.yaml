@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aether
+  labels:
+    app.kubernetes.io/name: aether
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: aether
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: aether
+        app.kubernetes.io/name: aether
+        app.kubernetes.io/component: aether
+        app.kubernetes.io/part-of: aether
+      annotations:
+        prometheus.io/port: "9723"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: aether
+          image: ghcr.io/soerenschneider/aether:1.0.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - "/aether"
+            - "-config"
+            - "/config/aether-config.yaml"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 5m
+            limits:
+              memory: 256Mi
+          ports:
+            - containerPort: 8080
+              name: aether
+            - containerPort: 9723
+              name: metrics
+          envFrom:
+            - configMapRef:
+                name: aether-config
+          volumeMounts:
+            - name: config-volume
+              mountPath: "/config"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: aether-config
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: "cpu_speed"
+                    operator: "NotIn"
+                    values:
+                      - "fast"

@@ -1,0 +1,1 @@
+../../../apps/immich/components/restic-pvc/upsert-secret-immich-restic-pvc.sh

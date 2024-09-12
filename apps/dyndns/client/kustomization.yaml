@@ -1,0 +1,12 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+resources:
+  - "deployment.yaml"
+  - "networkpolicy.yaml"
+configMapGenerator:
+  - name: "dyndns-client-config"
+    literals:
+      - "DYNDNS_METRICS_LISTEN=:9191"
+      - "DYNDNS_KEYPAIR_PATH=/etc/dyndns/keypair.json"
+      - "DYNDNS_BROKERS=mqtt://mosquitto.mosquitto:1883"

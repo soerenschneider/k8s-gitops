@@ -1,0 +1,13 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - lidarr
+  - prowlarr
+  - radarr
+  - sonarr
+  - ../../../apps/media/components/postgres/postgres-deployment.yaml
+  - ../../svc.dd.soeren.cloud/media/postgres-pv.yaml
+  - ../../../apps/media/components/postgres/postgres-pvc.yaml
+  - ../../../apps/media/components/postgres/postgres-service.yaml
+  - ../../../apps/media/components/reverse-proxy-istio/media-virtualservice.yaml

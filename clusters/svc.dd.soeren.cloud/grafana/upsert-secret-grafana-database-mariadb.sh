@@ -1,0 +1,1 @@
+../../../apps/grafana/components/database-mariadb/upsert-secret-grafana-database-mariadb.sh

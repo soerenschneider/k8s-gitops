@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: radicale
+spec:
+  ports:
+    - port: 80
+      targetPort: radicale
+  selector:
+    app.kubernetes.io/name: radicale

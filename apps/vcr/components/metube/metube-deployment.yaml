@@ -1,0 +1,83 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: metube
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: metube
+  template:
+    metadata:
+      labels:
+        app: metube
+        app.kubernetes.io/name: metube
+        app.kubernetes.io/instance: metube-prod
+        app.kubernetes.io/component: metube
+        app.kubernetes.io/part-of: vcr
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: metube
+          image: ghcr.io/alexta69/metube:2024-01-26
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: UID
+              value: "65535"
+            - name: GID
+              value: "65535"
+            - name: DOWNLOAD_DIR
+              value: /data/metube
+            - name: STATE_DIR
+              value: /data/metube/.metube
+            - name: TEMP_DIR
+              value: /data/metube/.tmp
+          ports:
+            - containerPort: 8081
+              name: metube
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "10m"
+            limits:
+              memory: "512Mi"
+          livenessProbe:
+            tcpSocket:
+              port: metube
+            initialDelaySeconds: 2
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: metube
+            initialDelaySeconds: 1
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: storage
+              mountPath: /data
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: vcr
+        - name: tmp
+          emptyDir:
+            sizeLimit: 5Gi

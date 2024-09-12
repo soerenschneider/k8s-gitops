@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: homer
+  labels:
+    app.kubernetes.io/name: homer
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: homer
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: homer
+        app.kubernetes.io/name: homer
+        app.kubernetes.io/component: homer
+        app.kubernetes.io/part-of: homer
+    spec:
+      securityContext:
+        runAsUser: 34234
+        runAsGroup: 34234
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: homer
+          image: b4bz/homer:v23.10.1
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 34234
+            runAsGroup: 34234
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 5m
+            limits:
+              memory: 256Mi
+          ports:
+            - containerPort: 8080
+              name: homer
+          volumeMounts:
+            - name: config-volume
+              mountPath: "/www/assets"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: homer-config
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway

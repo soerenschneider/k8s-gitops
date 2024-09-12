@@ -1,0 +1,20 @@
+---
+apiVersion: "cert-manager.io/v1"
+kind: "Certificate"
+metadata:
+  name: "mariadb"
+  annotations:
+    cert-manager.io/issuer-ca-secret-name: letsencrypt-ca
+spec:
+  secretName: "mariadb-cert"
+  duration: "2160h"
+  renewBefore: "720h"
+  commonName: "this is not a valid name"
+  dnsNames: []
+  issuerRef:
+    name: "letsencrypt-dns-prod"
+    kind: "ClusterIssuer"
+    group: "cert-manager.io"
+  privateKey:
+    algorithm: "RSA"
+    size: 4096

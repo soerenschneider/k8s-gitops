@@ -1,0 +1,32 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../apps/vcr
+patches:
+  - target:
+      kind: CronJob
+    patch: |-
+      - op: replace
+        path: "/metadata/name"
+        value: "vcr-sportschau-sunday"
+      - op: replace
+        path: "/spec/timeZone"
+        value: "Europe/Berlin"
+      - op: replace
+        path: "/spec/schedule"
+        value: "45 21 * * SUN"
+      - op: replace
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/command"
+        value:
+          - timeout
+          - --preserve-status
+          - --kill-after=60s
+          - --signal=SIGINT
+          - 30m
+          - yt-dlp
+          - --merge-output-format=mp4
+          - --keep-video
+          - --output
+          - "/data/sportschau-%(epoch-3600>%Y%m%d-%H%M%S)s.%(ext)s"
+          - "https://www.ardmediathek.de/live/Y3JpZDovL3dkci5kZS9CZWl0cmFnLTNkYTY2NGRlLTE4YzItNDY1MC1hNGZmLTRmNjQxNDcyMDcyYg"

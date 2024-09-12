@@ -1,0 +1,42 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - istio-destinationrule.yaml
+  - istio-destinationrule-console.yaml
+  - istio-virtualservice.yaml
+  - istio-virtualservice-console.yaml
+  - minio-certificate.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: minio
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/livenessProbe/httpGet/scheme
+        value: HTTPS
+      - op: add
+        path: /spec/template/spec/containers/0/readinessProbe/httpGet/scheme
+        value: HTTPS
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: tls-volume
+          secret:
+            secretName: minio-cert
+            items:
+              - key: tls.crt
+                path: public.crt
+              - key: tls.key
+                path: private.key
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: tls-volume
+          mountPath: /tls
+          readOnly: true
+      - op: add
+        path: /spec/template/spec/containers/0/args
+        value:
+          - "--certs-dir"
+          - "/tls"

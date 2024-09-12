@@ -1,0 +1,8 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../apps/media/radarr
+components:
+  - ../../../../apps/media/radarr/components/postgres
+  - ../../../../apps/media/radarr/components/reverse-proxy

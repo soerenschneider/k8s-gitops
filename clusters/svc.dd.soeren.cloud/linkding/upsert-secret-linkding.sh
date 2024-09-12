@@ -1,0 +1,1 @@
+../../../apps/linkding/upsert-secret-linkding.sh

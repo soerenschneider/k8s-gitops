@@ -1,0 +1,37 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: keycloak
+resources:
+  - ../../../apps/keycloak
+  - namespace.yaml
+  - sops-secret-keycloak.yaml
+components:
+  - ../../../apps/keycloak/components/istio
+  - ../../../apps/keycloak/components/istio-proxy
+  - ../../../apps/keycloak/components/db-mariadb
+patches:
+  - target:
+      kind: Deployment
+      name: keycloak
+    patch: |-
+      - op: add
+        path: /spec/template/spec/priorityClassName
+        value: prod-high-prio
+      - op: replace
+        path: /spec/template/spec/containers/0/args
+        value:
+          - start
+  - target:
+      kind: VirtualService
+      name: keycloak
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - keycloak.svc.dd.soeren.cloud
+configMapGenerator:
+  - name: keycloak
+    behavior: merge
+    envs:
+      - keycloak.properties

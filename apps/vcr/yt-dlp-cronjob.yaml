@@ -1,0 +1,50 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: yt-dlp
+spec:
+  timeZone: Europe/Berlin
+  schedule: "0 18 * * SAT"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 65535
+            runAsGroup: 65535
+            fsGroup: 65535
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: yt-dlp
+              image: ghcr.io/soerenschneider/yt-dlp:2024.5.27
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                runAsUser: 65535
+                runAsGroup: 65535
+                runAsNonRoot: true
+                privileged: false
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "64Mi"
+                  cpu: "5m"
+                limits:
+                  memory: "1Gi"
+              volumeMounts:
+                - name: storage
+                  mountPath: /data
+          volumes:
+            - name: storage
+              emptyDir: {}

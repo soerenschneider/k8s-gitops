@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: playwright
+  name: playwright
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playwright
+  template:
+    metadata:
+      labels:
+        app: playwright
+        app.kubernetes.io/name: playwright
+        app.kubernetes.io/instance: playwright-prod
+        app.kubernetes.io/component: playwright
+        app.kubernetes.io/part-of: changedetection
+    spec:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: browserless/chrome:1.61.1-chrome-stable
+          imagePullPolicy: IfNotPresent
+          name: playwright
+          ports:
+            - containerPort: 3000
+              name: playwright
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "196Mi"
+              cpu: "10m"
+            limits:
+              memory: "768Mi"
+          env:
+            - name: PUID
+              value: "65532"
+            - name: GUID
+              value: "65532"
+            - name: DEFAULT_USER_DATA_DIR
+              value: /tmp/userdata
+            - name: DEFAULT_BLOCK_ADS
+              value: "true"
+            - name: MAX_CONCURRENT_SESSIONS
+              value: "15"
+            - name: XDG_CONFIG_HOME
+              value: /tmp/.chromium
+            - name: XDG_CACHE_HOME
+              value: /tmp/.chromium
+          volumeMounts:
+            - name: local
+              mountPath: /.local
+            - name: tmp
+              mountPath: /tmp
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: In
+                    values:
+                      - fast
+      volumes:
+        - name: local
+          emptyDir:
+            sizeLimit: 2Gi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 5Mi

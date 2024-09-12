@@ -1,0 +1,36 @@
+---
+name: Render Diagrams
+
+on:
+  push:
+    paths:
+      - '**.d2'
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up D2
+        run: |
+          curl -fsSL https://d2lang.com/install.sh | sh -s --
+
+      - name: Run make generate
+        run: make diagrams
+
+      - name: Check for differences
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Changes in diagrams detected"
+            git status
+            git diff
+            git config --global user.name 'diagrambot'
+            git config --global user.email 'diagrambot@domain.tld'
+            git commit -am "Automated diagram"
+            git push
+          else
+            echo "No changes detected"
+          fi

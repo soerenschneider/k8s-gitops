@@ -1,0 +1,67 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../apps/media/sonarr
+  - networkpolicy.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: sonarr
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__URL_BASE
+          value: /sonarr
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES_HOST
+          value: postgres
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES_MAIN_DB
+          value: sonarr
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_USER
+              name: postgres-sonarr
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: postgres-sonarr
+      - op: add
+        path: /spec/template/spec/initContainers
+        value:
+          - name: init
+            image: ghcr.io/onedr0p/postgres-init:16
+            env:
+              - name: INIT_POSTGRES_HOST
+                value: postgres
+              - name: INIT_POSTGRES_DBNAME
+                value: sonarr
+              - name: INIT_POSTGRES_SUPER_PASS
+                valueFrom:
+                  secretKeyRef:
+                    key: POSTGRES_PASSWORD
+                    name: postgres
+              - name: INIT_POSTGRES_USER
+                valueFrom:
+                  secretKeyRef:
+                    key: POSTGRES_USER
+                    name: postgres-sonarr
+              - name: INIT_POSTGRES_PASS
+                valueFrom:
+                  secretKeyRef:
+                    key: POSTGRES_PASSWORD
+                    name: postgres-sonarr

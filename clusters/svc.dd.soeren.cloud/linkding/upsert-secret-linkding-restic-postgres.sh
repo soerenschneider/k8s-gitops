@@ -1,0 +1,1 @@
+../../../apps/linkding/components/restic-postgres/upsert-secret-linkding-restic-postgres.sh

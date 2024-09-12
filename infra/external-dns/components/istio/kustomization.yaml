@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - target:
+      kind: ClusterRole
+      name: external-dns
+    patch: |-
+      - op: add
+        path: /rules/-
+        value:
+          apiGroups: ["networking.istio.io"]
+          resources: ["gateways", "virtualservices"]
+          verbs: ["get","watch","list"]
+  - target:
+      kind: Deployment
+      name: external-dns
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args
+        value:
+          - --source=istio-gateway
+          - --source=istio-virtualservice

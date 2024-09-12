@@ -1,0 +1,37 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: navidrome
+resources:
+  - ../../../apps/navidrome
+  - namespace.yaml
+  - navidrome-data-pv.yaml
+components:
+  - ../../../apps/navidrome/components/pvc
+  - ../../../apps/navidrome/components/istio
+patches:
+  - target:
+      kind: Deployment
+      name: navidrome
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: navidrome-music
+          hostPath:
+            path: /srv/files/music
+            type: Directory
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: navidrome-music
+          readOnly: true
+          mountPath: /music
+  - target:
+      kind: VirtualService
+      name: navidrome
+    patch: |-
+      - op: replace
+        path: "/spec/hosts"
+        value:
+          - "navidrome.rs.soeren.cloud"

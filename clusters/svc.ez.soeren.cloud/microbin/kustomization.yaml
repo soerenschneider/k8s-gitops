@@ -1,0 +1,26 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: microbin
+resources:
+  - namespace.yaml
+  - microbin-pv.yaml
+  - sops-secret-microbin.yaml
+  - ../../../apps/microbin
+components:
+  - ../../../apps/microbin/components/istio
+  - ../../../apps/microbin/components/pvc
+patches:
+  - target:
+      kind: VirtualService
+      name: microbin
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - bin.svc.ez.soeren.cloud
+configMapGenerator:
+  - name: microbin-config
+    behavior: merge
+    literals:
+      - MICROBIN_PUBLIC_PATH=https://bin.svc.ez.soeren.cloud

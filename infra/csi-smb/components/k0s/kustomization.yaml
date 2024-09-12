@@ -1,0 +1,50 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
+patches:
+  - target:
+      kind: "DaemonSet"
+      name: "csi-smb-node"
+    patch: |-
+      - op: "test"
+        path: "/spec/template/spec/containers/2/name"
+        value: "smb"
+      - op: "test"
+        path: "/spec/template/spec/containers/2/volumeMounts/1/name"
+        value: "mountpoint-dir"
+      - op: "replace"
+        path: "/spec/template/spec/containers/2/volumeMounts/1"
+        value:
+          mountPath: "/var/lib/k0s/kubelet/"
+          mountPropagation: "Bidirectional"
+          name: "mountpoint-dir"
+  - patch: |-
+      apiVersion: "apps/v1"
+      kind: "DaemonSet"
+      metadata:
+        name: "csi-smb-node"
+        namespace: "kube-system"
+      spec:
+        template:
+          spec:
+            containers:
+              - name: "node-driver-registrar"
+                env:
+                  - name: "DRIVER_REG_SOCK_PATH"
+                    value: "/var/lib/k0s/kubelet/plugins/smb.csi.k8s.io/csi.sock"
+            volumes:
+              - hostPath:
+                  path: "/var/lib/k0s/kubelet/plugins/smb.csi.k8s.io"
+                  type: "DirectoryOrCreate"
+                name: "socket-dir"
+              - hostPath:
+                  path: "/var/lib/k0s/kubelet/"
+                  type: "DirectoryOrCreate"
+                name: "mountpoint-dir"
+              - hostPath:
+                  path: "/var/lib/k0s/kubelet/plugins_registry/"
+                  type: "DirectoryOrCreate"
+                name: "registration-dir"
+    target:
+      kind: "DaemonSet"
+      name: "csi-smb-node"

@@ -1,0 +1,80 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gotenberg
+  namespace: paperless-ngx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gotenberg
+  template:
+    metadata:
+      labels:
+        app: gotenberg
+        app.kubernetes.io/name: gotenberg
+        app.kubernetes.io/component: gotenberg
+        app.kubernetes.io/instance: paperless-ngx-prod
+        app.kubernetes.io/part-of: paperless-ngx
+      annotations:
+        prometheus.io/port: "3000"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 36543
+        runAsGroup: 36543
+        fsGroup: 36543
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gotenberg
+          image: gotenberg/gotenberg:8.7.0
+          args:
+            - gotenberg
+            - "--log-level=warn"
+          ports:
+            - containerPort: 3000
+              name: gotenberg
+          securityContext:
+            privileged: false
+            runAsNonRoot: true
+            runAsUser: 36543
+            runAsGroup: 36543
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "25m"
+            limits:
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: gotenberg
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: gotenberg
+            initialDelaySeconds: 15
+            periodSeconds: 15
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/part-of
+                      operator: In
+                      values:
+                        - paperless-ngx
+                topologyKey: kubernetes.io/hostname

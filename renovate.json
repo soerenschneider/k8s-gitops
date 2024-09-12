@@ -1,0 +1,53 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":rebaseStalePrs"
+  ],
+  "kubernetes": {
+    "fileMatch": ["\\.yaml$"]
+  },
+  "ansible": {
+    "fileMatch": [
+      "(^|/)tasks/[^/]+\\.ya?ml$",
+      "(^|/)playbook.ya?ml$"
+    ]
+  },
+  "packageRules": [
+    {
+      "description": ["Custom versioning for minio"],
+      "versioning": "regex:^RELEASE\\.(?<major>\\d+)-(?<minor>\\d+)-(?<patch>\\d+)T.*Z$",
+      "matchPackagePatterns": ["minio/minio$"]
+    },
+    {
+      "matchDatasources": ["kubernetes"],
+      "updateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ]
+    },
+    {
+      "matchDatasources": ["docker"],
+      "updateTypes": [
+        "minor",
+        "patch"
+      ]
+    }
+  ],
+  "regexManagers": [
+     {
+         "fileMatch": ["playbook.ya?ml$"],
+         "matchStrings": [".+_image: \"(?<depName>.*?):(?<currentValue>.*?)\""],
+         "datasourceTemplate": "docker"
+    },
+
+    {
+        "fileMatch": [".*y[a]?ml$"],
+        "matchStrings": [
+            "# renovate: datasource=(?<datasource>docker)( versioning=(?<versioning>.*?))?\\s.+_image: \"(?<depName>.*?):(?<currentValue>.*)\"",
+            "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_version: \"(?<currentValue>.*)\""
+        ]
+    }
+  ]
+}

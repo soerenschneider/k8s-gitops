@@ -1,0 +1,29 @@
+---
+name: Pull Request Action
+on:
+  push:
+    branches:
+      - updates
+jobs:
+  create-pull-request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Pull Request
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            try {
+              const { repo, owner } = context.repo;
+              const result = await github.rest.pulls.create({
+                title: '[Auto-generated] Update Container Image',
+                owner,
+                repo,
+                head: '${{ github.ref_name }}',
+                base: 'main',
+                body: [
+                  '${{ github.event.head_commit.message }}'
+                ].join('\n')
+              });
+            } catch(err) {
+              console.log(err);
+            }

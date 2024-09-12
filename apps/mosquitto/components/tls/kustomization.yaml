@@ -1,0 +1,38 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - certificate.yaml
+  - configmap-ca.yaml
+configMapGenerator:
+  - name: mosquitto-config
+    behavior: replace
+    files:
+      - mosquitto.conf
+patches:
+  - target:
+      kind: "Deployment"
+      name: "mosquitto"
+    patch: |-
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "mosquitto-cert"
+          mountPath: "/tls"
+      - op: "add"
+        path: "/spec/template/spec/volumes/-"
+        value:
+          name: "mosquitto-cert"
+          secret:
+            secretName: "mosquitto-cert"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "ca"
+          mountPath: "/ca"
+      - op: "add"
+        path: "/spec/template/spec/volumes/-"
+        value:
+          name: "ca"
+          configMap:
+            name: "srn-ca"

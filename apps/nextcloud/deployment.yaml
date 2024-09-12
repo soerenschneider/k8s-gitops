@@ -1,0 +1,174 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nextcloud
+  labels:
+    app: nextcloud
+    app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/instance: nextcloud
+    app.kubernetes.io/component: app
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: nextcloud
+      app.kubernetes.io/name: nextcloud
+      app.kubernetes.io/instance: nextcloud
+      app.kubernetes.io/component: app
+  template:
+    metadata:
+      labels:
+        app: nextcloud
+        app.kubernetes.io/name: nextcloud
+        app.kubernetes.io/instance: nextcloud
+        app.kubernetes.io/component: app
+    spec:
+      securityContext:
+        runAsUser: 22473
+        runAsGroup: 22473
+        fsGroup: 22473
+        seccompProfile:
+          type: "RuntimeDefault"
+      initContainers:
+        - name: init
+          image: "nextcloud:29.0.1-fpm"
+          command: ["sh", "-c", "rsync -ar /usr/src/nextcloud/ /dest/html"]
+          volumeMounts:
+            - name: "shared-data"
+              mountPath: "/dest"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "15m"
+            limits:
+              memory: "128Mi"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 22473
+            runAsGroup: 22473
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+      containers:
+        - name: "nginx"
+          image: "nginx:1.27.0-alpine"
+          ports:
+            - containerPort: 8080
+              name: "nginx"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 22473
+            runAsGroup: 22473
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "15m"
+            limits:
+              memory: "128Mi"
+          volumeMounts:
+            - name: "nginx-config"
+              readOnly: true
+              mountPath: "/etc/nginx/nginx.conf"
+              subPath: "nginx.conf"
+            - name: "nginx-var-cache"
+              mountPath: "/var/cache/nginx"
+            - name: "nginx-var-run"
+              mountPath: "/var/run"
+            - name: "shared-data"
+              readOnly: true
+              mountPath: "/var/www"
+        - name: "nextcloud"
+          image: "nextcloud:29.0.1-fpm"
+          imagePullPolicy: "IfNotPresent"
+          envFrom:
+            - configMapRef:
+                name: "nextcloud-config"
+            - secretRef:
+                name: "nextcloud"
+                optional: true
+          ports:
+            - name: "nextcloud"
+              containerPort: 9000
+              protocol: "TCP"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 22473
+            runAsGroup: 22473
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          livenessProbe:
+            httpGet:
+              path: "/status.php"
+              port: "nextcloud"
+              httpHeaders:
+                - name: "Host"
+                  value: "nextcloud"
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: "/status.php"
+              port: "nextcloud"
+              httpHeaders:
+                - name: "Host"
+                  value: "nextcloud"
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "50m"
+            limits:
+              memory: "1024Mi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/var/www/html"
+            - name: "tmp"
+              mountPath: "/tmp"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "5Gi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: nginx-config
+          configMap:
+            name: nginx-config
+        - name: "nginx-var-cache"
+          emptyDir:
+            sizeLimit: "5Mi"
+        - name: "nginx-var-run"
+          emptyDir:
+            sizeLimit: "5Mi"
+        - name: "shared-data"
+          emptyDir:
+            sizeLimit: "5Gi"

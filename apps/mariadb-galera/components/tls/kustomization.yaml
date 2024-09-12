@@ -1,0 +1,36 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
+resources:
+  - "cert-certificate.yaml"
+configMapGenerator:
+  - name: "mariadb-galera"
+    behavior: "merge"
+    literals:
+      - "MARIADB_ENABLE_TLS=yes"
+      - "MARIADB_TLS_CERT_FILE=/tls/tls.crt"
+      - "MARIADB_TLS_KEY_FILE=/tls/tls.key"
+      - "MARIADB_TLS_CA_FILE=/tls/tls-ca.crt"
+patches:
+  - target:
+      kind: "StatefulSet"
+      name: "mariadb"
+    patch: |-
+      - op: "add"
+        path: "/spec/template/spec/volumes/-"
+        value:
+          name: "cert"
+          secret:
+            secretName: "mariadb-cert"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "cert"
+          mountPath: "/tls/tls.crt"
+          subPath: "tls.crt"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "cert"
+          mountPath: "/tls/tls.key"
+          subPath: "tls.key"

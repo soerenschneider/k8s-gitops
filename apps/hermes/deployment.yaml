@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hermes
+  labels:
+    app.kubernetes.io/name: hermes
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hermes
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: hermes
+        app.kubernetes.io/name: hermes
+        app.kubernetes.io/component: hermes
+        app.kubernetes.io/part-of: hermes
+      annotations:
+        prometheus.io/port: "9223"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 32325
+        runAsGroup: 32325
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: "hermes"
+          image: "ghcr.io/soerenschneider/hermes:1.0.1"
+          imagePullPolicy: "IfNotPresent"
+          command:
+            - "/hermes"
+            - "-config"
+            - "/config/hermes-config.yaml"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 32325
+            runAsGroup: 32325
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: "RuntimeDefault"
+            privileged: false
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "5m"
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 8080
+              name: "hermes"
+            - containerPort: 9723
+              name: "metrics"
+          envFrom:
+            - configMapRef:
+                name: "hermes-config"
+          volumeMounts:
+            - name: "config-volume"
+              mountPath: "/config"
+      volumes:
+        - name: "config-volume"
+          configMap:
+            name: "hermes-config"

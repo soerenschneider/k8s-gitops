@@ -1,0 +1,1 @@
+../../../apps/media/components/reverse-proxy-oidc/upsert-secret-media-reverse-proxy-oidc.sh

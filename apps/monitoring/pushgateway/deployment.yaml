@@ -1,0 +1,102 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pushgateway
+  labels:
+    app.kubernetes.io/name: pushgateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pushgateway
+  template:
+    metadata:
+      labels:
+        app: pushgateway
+        app.kubernetes.io/name: pushgateway
+        app.kubernetes.io/component: pushgateway
+        app.kubernetes.io/instance: pushgateway-prod
+        app.kubernetes.io/part-of: monitoring
+      annotations:
+        prometheus.io/port: "9091"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: pushgateway
+          image: quay.io/prometheus/pushgateway:v1.9.0
+          args: []
+          ports:
+            - containerPort: 9091
+              name: pushgateway
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 10m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /-/healthy
+              port: pushgateway
+              scheme: HTTP
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /-/ready
+              port: pushgateway
+              scheme: HTTP
+            initialDelaySeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 4
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "monitoring"
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              preference:
+                matchExpressions:
+                  - key: location
+                    operator: NotIn
+                    values:
+                      - ez
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: In
+                    values:
+                      - slow

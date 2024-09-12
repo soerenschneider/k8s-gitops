@@ -1,0 +1,68 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "redis"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "redis"
+  template:
+    metadata:
+      labels:
+        app: "redis"
+        app.kubernetes.io/name: "redis"
+        app.kubernetes.io/component: "cache"
+        app.kubernetes.io/instance: "vikunja-prod"
+        app.kubernetes.io/part-of: "vikunja"
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "redis"
+          image: "docker.io/library/redis:7.2.5-alpine"
+          ports:
+            - containerPort: 6379
+              name: "redis"
+          securityContext:
+            runAsUser: 65535
+            runAsGroup: 65535
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "48Mi"
+              cpu: "5m"
+            limits:
+              memory: "196Mi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "vikunja"
+                topologyKey: "kubernetes.io/hostname"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"

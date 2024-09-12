@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - target:
+      kind: Deployment
+      name: external-dns
+    patch: |-
+      - op: add
+        path: /spec/template/spec/priorityClassName
+        value: system
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: "--publish-internal-services"
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: "--source=service"
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: "--registry=txt"
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: "--policy=upsert-only"

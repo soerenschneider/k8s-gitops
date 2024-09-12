@@ -1,0 +1,68 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "hedgedoc"
+  labels:
+    app.kubernetes.io/name: "hedgedoc"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "hedgedoc"
+  strategy:
+    type: "RollingUpdate"
+  template:
+    metadata:
+      labels:
+        app: "hedgedoc"
+        app.kubernetes.io/name: "hedgedoc"
+        app.kubernetes.io/component: "hedgedoc"
+        app.kubernetes.io/part-of: "hedgedoc"
+    spec:
+      securityContext:
+        runAsUser: 17248
+        runAsGroup: 17248
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "hedgedoc"
+          image: "quay.io/hedgedoc/hedgedoc:1.9.9"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 17248
+            runAsGroup: 17248
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: "RuntimeDefault"
+            privileged: false
+            capabilities:
+              drop:
+                - "ALL"
+          env:
+            - name: "NODE_ENV"
+              value: "production"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "5m"
+            limits:
+              memory: "768Mi"
+          ports:
+            - containerPort: 3000
+              name: "hedgedoc"
+          envFrom:
+            - configMapRef:
+                name: "hedgedoc-config"
+          volumeMounts:
+            - name: "config-volume"
+              mountPath: "/config"
+      volumes:
+        - name: "config-volume"
+          configMap:
+            name: "hedgedoc-config"

@@ -1,0 +1,38 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+resources:
+  - ../../../../apps/monitoring/alertmanager
+  - sops-secret-alertmanager-config.yaml
+components:
+  - ../../../../apps/monitoring/alertmanager/components/config
+  - ../../../../apps/monitoring/alertmanager/components/reverse-proxy
+  - ../../../../apps/monitoring/alertmanager/components/cluster-istio
+  - ../../../../apps/monitoring/alertmanager/components/cluster-tls
+patches:
+  - target:
+      kind: Deployment
+      name: alertmanager
+    patch: |-
+      # alertmanager does not accept relative URLs here
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: "--web.external-url=https://monitoring.svc.dd.soeren.cloud/alertmanager"
+      - op: "add"
+        path: /spec/template/spec/containers/0/args/-
+        value: "--cluster.advertise-address=192.168.65.250:9094"
+      - op: "add"
+        path: /spec/template/spec/containers/0/args/-
+        value: "--cluster.peer=alertmanager.svc.ez.soeren.cloud:9094"
+      - op: "add"
+        path: /spec/template/spec/containers/0/args/-
+        value: "--cluster.peer=alertmanager.svc.pt.soeren.cloud:9094"
+  - target:
+      kind: "VirtualService"
+      name: "alertmanager-cluster"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "alertmanager.svc.dd.soeren.cloud"

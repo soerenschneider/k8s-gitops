@@ -1,0 +1,32 @@
+---
+- op: "replace"
+  path: "/spec/template/spec/initContainers"
+  value:
+    - name: "init"
+      image: "ghcr.io/onedr0p/postgres-init:16"
+      env:
+        - name: "INIT_POSTGRES_HOST"
+          value: "postgres"
+        - name: "INIT_POSTGRES_DBNAME"
+          value: "lidarr"
+        - name: "INIT_POSTGRES_SUPER_USER"
+          valueFrom:
+            secretKeyRef:
+              key: "POSTGRES_USER"
+              name: "media-components-postgres"
+              optional: true
+        - name: "INIT_POSTGRES_SUPER_PASS"
+          valueFrom:
+            secretKeyRef:
+              key: "POSTGRES_PASSWORD"
+              name: "media-components-postgres"
+        - name: "INIT_POSTGRES_USER"
+          valueFrom:
+            secretKeyRef:
+              key: "POSTGRES_USER"
+              name: "media-lidarr-postgres"
+        - name: "INIT_POSTGRES_PASS"
+          valueFrom:
+            secretKeyRef:
+              key: "POSTGRES_PASSWORD"
+              name: "media-lidarr-postgres"

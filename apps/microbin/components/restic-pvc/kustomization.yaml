@@ -1,0 +1,66 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ../../../../infra/restic-pvc
+configMapGenerator:
+  - name: "microbin-restic-pvc"
+    literals:
+      - "RETENTION_DAYS=7"
+      - "RETENTION_WEEKS=4"
+      - "RETENTION_MONTHS=6"
+      - "RESTIC_TARGETS=/app/microbin_data"
+      - "RESTIC_BACKUP_ID=microbin"
+patches:
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-backup"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 6 * * *"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "microbin"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsUser"
+        value: 911
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsGroup"
+        value: 911
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/fsGroup"
+        value: 911
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
+        value: 911
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
+        value: 911
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "microbin-restic-pvc"
+          - secretRef:
+              name: "microbin-restic-pvc"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/0/persistentVolumeClaim/claimName"
+        value: "microbin"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/0/mountPath"
+        value: "/app/microbin_data"
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-prune"
+    patch: |-
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "microbin"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "microbin-restic-pvc"
+          - secretRef:
+              name: "microbin-restic-pvc"

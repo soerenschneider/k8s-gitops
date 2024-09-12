@@ -1,0 +1,1 @@
+../../../../apps/media/radarr/components/postgres/upsert-secret-media-radarr-postgres.sh

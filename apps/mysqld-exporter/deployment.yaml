@@ -1,0 +1,60 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "mysqld-exporter"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "mysqld-exporter"
+  template:
+    metadata:
+      labels:
+        app: "mysqld-exporter"
+      annotations:
+        prometheus.io/port: "9104"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 40538
+        runAsGroup: 40538
+        fsGroup: 40538
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "mysqld-exporter"
+          image: "prom/mysqld-exporter:v0.15.1"
+          args:
+            - "--mysqld.address=mariadb:3306"
+          env:
+            - name: "MYSQLD_EXPORTER_PASSWORD"
+              valueFrom:
+                secretKeyRef:
+                  name: "mysqld-exporter"
+                  key: "MYSQLD_EXPORTER_PASSWORD"
+                  optional: true
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 40538
+            runAsGroup: 40538
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          ports:
+            - containerPort: 9104
+              name: "mysqld-exporter"
+          resources:
+            limits:
+              cpu: "100m"
+              memory: "256Mi"
+            requests:
+              cpu: "5m"
+              memory: "64Mi"

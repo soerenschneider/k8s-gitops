@@ -1,0 +1,63 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ../../../../infra/restic-pvc
+configMapGenerator:
+  - name: "navidrome-restic-pvc"
+    literals:
+      - "RETENTION_DAYS=7"
+      - "RETENTION_WEEKS=4"
+      - "RETENTION_MONTHS=6"
+      - "RESTIC_TARGETS=/data"
+      - "RESTIC_BACKUP_ID=navidrome"
+patches:
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-backup"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 6 * * *"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "navidrome"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsUser"
+        value: 65535
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsGroup"
+        value: 65535
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/fsGroup"
+        value: 65535
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
+        value: 65535
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
+        value: 65535
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "navidrome-restic-pvc"
+          - secretRef:
+              name: "navidrome-restic-pvc"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/0/persistentVolumeClaim/claimName"
+        value: "navidrome"
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-prune"
+    patch: |-
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "navidrome"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "navidrome-restic-pvc"
+          - secretRef:
+              name: "navidrome-restic-pvc"

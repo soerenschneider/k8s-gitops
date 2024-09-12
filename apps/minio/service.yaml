@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+spec:
+  ports:
+    - port: 9000
+      targetPort: minio-api
+      name: minio
+    - port: 9001
+      targetPort: minio-console
+      name: minio-console
+  selector:
+    app.kubernetes.io/name: minio

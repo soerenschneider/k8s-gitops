@@ -1,0 +1,42 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: acmevault
+spec:
+  podSelector:
+    matchLabels:
+      app: acmevault
+  policyTypes:
+    - Egress
+    - Ingress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: metrics
+      from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app: prometheus
+  egress:
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 8200
+          protocol: TCP
+    - ports:
+        - port: 53
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP

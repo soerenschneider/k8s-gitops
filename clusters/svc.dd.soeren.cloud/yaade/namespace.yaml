@@ -1,0 +1,8 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: yaade
+  labels:
+    name: yaade
+    istio-injection: enabled

@@ -1,0 +1,19 @@
+---
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "VirtualService"
+metadata:
+  name: "bookstack"
+spec:
+  hosts:
+    - "bookstack"
+  gateways:
+    - "istio-system/gateway"
+  http:
+    - match:
+        - uri:
+            prefix: "/"
+      route:
+        - destination:
+            host: "bookstack"
+            port:
+              number: 80

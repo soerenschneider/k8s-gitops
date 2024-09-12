@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+configMapGenerator:
+  - name: "mealie-oidc"  # TODO: https://github.com/kubernetes-sigs/kustomize/issues/4402
+    behavior: merge
+    literals:
+      - "OIDC_AUTH_ENABLED=true"
+      - "OIDC_CLIENT_ID=mealie"
+      - "OIDC_AUTO_REDIRECT=false"
+patches:
+  - target:
+      kind: "Deployment"
+      name: "mealie"
+    patch: |-
+      - op: "add"
+        path: "/spec/template/spec/containers/0/envFrom/-"
+        value:
+          configMapRef:
+            name: "mealie-oidc"

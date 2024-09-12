@@ -1,0 +1,42 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
+resources:
+  - cert-wsrep.yaml
+  - issuer.yaml
+  - cm-sst-cnf.yaml
+patches:
+  - target:
+      kind: "StatefulSet"
+      name: "mariadb"
+    patch: |-
+      - op: "add"
+        path: "/spec/template/spec/volumes/-"
+        value:
+          name: "sst-conf"
+          configMap:
+            name: "mariadb-sst-conf"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "sst-conf"
+          mountPath: "/opt/bitnami/mariadb/conf/bitnami/my_custom.cnf"
+          subPath: "sst.cnf"
+      - op: "add"
+        path: "/spec/template/spec/volumes/-"
+        value:
+          name: "wsrep-cert"
+          secret:
+            secretName: "mariadb-wsrep-cert"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "wsrep-cert"
+          mountPath: "/tls/wsrep-tls.crt"
+          subPath: "tls.crt"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "wsrep-cert"
+          mountPath: "/tls/wsrep-tls.key"
+          subPath: "tls.key"

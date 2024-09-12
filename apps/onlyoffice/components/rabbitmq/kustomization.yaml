@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - statefulset.yaml
+  - rabbitmq-amqp-service.yaml
+configMapGenerator:
+  - name: onlyoffice
+    behavior: merge
+    envs:
+      - onlyoffice.properties
+  - name: rabbitmq-conf
+    files:
+      - "00-rabbitmq.conf"

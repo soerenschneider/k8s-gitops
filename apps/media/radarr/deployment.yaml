@@ -1,0 +1,113 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: radarr
+  labels:
+    app: radarr
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: radarr
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: radarr
+        app.kubernetes.io/name: radarr
+        app.kubernetes.io/instance: media-prod
+        app.kubernetes.io/component: radarr
+        app.kubernetes.io/part-of: arr
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 20568
+        runAsGroup: 20568
+        fsGroup: 20568
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "ghcr.io/onedr0p/radarr:5.4.6.8723"
+          imagePullPolicy: "IfNotPresent"
+          name: "radarr"
+          ports:
+            - containerPort: 7878
+              name: "radarr"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 20568
+            runAsGroup: 20568
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: "RuntimeDefault"
+            privileged: false
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "10m"
+            limits:
+              memory: "768Mi"
+          readinessProbe:
+            httpGet:
+              path: "/ping"
+              port: "radarr"
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: "/ping"
+              port: "radarr"
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 1
+            failureThreshold: 3
+          env:
+            - name: "COMPlus_EnableDiagnostics"
+              value: "0"
+            - name: "PUSHOVER_DEBUG"
+              value: "false"
+            - name: "TZ"
+              value: "Europe/Berlin"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/config"
+            - name: "tmp"
+              mountPath: "/tmp"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 5
+              preference:
+                matchExpressions:
+                  - key: "cpu_speed"
+                    operator: "In"
+                    values:
+                      - "slow"
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "media"
+                topologyKey: "kubernetes.io/hostname"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "512Mi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "1Gi"

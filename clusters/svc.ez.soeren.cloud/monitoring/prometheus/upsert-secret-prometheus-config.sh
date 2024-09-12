@@ -1,0 +1,1 @@
+../../../../apps/monitoring/prometheus/components/config/upsert-secret-prometheus-config.sh

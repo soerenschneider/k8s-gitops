@@ -1,0 +1,80 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  labels:
+    app: "changedetection"
+  name: "changedetection"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "changedetection"
+  template:
+    metadata:
+      labels:
+        app: "changedetection"
+        app.kubernetes.io/name: "changedetection"
+        app.kubernetes.io/instance: "changedetection-prod"
+        app.kubernetes.io/component: "changedetection"
+        app.kubernetes.io/part-of: "changedetection"
+    spec:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "ghcr.io/dgtlmoon/changedetection.io:0.45.23"
+          imagePullPolicy: "IfNotPresent"
+          name: "changedetection"
+          ports:
+            - containerPort: 5000
+              name: "changedetection"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "196Mi"
+              cpu: "10m"
+            limits:
+              memory: "384Mi"
+          env:
+            - name: "PUID"
+              value: "65532"
+            - name: "GUID"
+              value: "65532"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/datastore"
+            - name: "tmp"
+              mountPath: "/tmp"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: "cpu_speed"
+                    operator: "NotIn"
+                    values:
+                      - "fast"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "200Mi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "5Mi"

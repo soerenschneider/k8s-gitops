@@ -1,0 +1,18 @@
+---
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "VirtualService"
+metadata:
+  name: "taskd"
+spec:
+  hosts:
+    - "taskd"
+  gateways:
+    - "istio-system/gateway"
+  tcp:
+    - match:
+        - port: 53589
+      route:
+        - destination:
+            host: "taskd"
+            port:
+              number: 53589

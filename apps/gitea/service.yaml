@@ -1,0 +1,22 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea
+spec:
+  ports:
+    - port: 80
+      targetPort: gitea-http
+  selector:
+    app.kubernetes.io/name: gitea
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gitea-ssh
+spec:
+  ports:
+    - port: 22
+      targetPort: gitea
+  selector:
+    app.kubernetes.io/name: gitea

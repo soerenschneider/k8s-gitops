@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskd
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taskd
+  template:
+    metadata:
+      labels:
+        app: taskd
+        app.kubernetes.io/name: taskd
+        app.kubernetes.io/instance: taskd-prod
+        app.kubernetes.io/component: taskd
+        app.kubernetes.io/part-of: taskd
+    spec:
+      securityContext:
+        runAsUser: 53589
+        runAsGroup: 53589
+        fsGroup: 53589
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "taskd"
+          image: "ghcr.io/soerenschneider/taskd:main-20240211125633"
+          imagePullPolicy: "IfNotPresent"
+          workingDir: "/var/taskd"
+          command:
+            - "taskd"
+            - "server"
+            - "--data"
+            - "/var/taskd"
+          ports:
+            - containerPort: 53589
+              name: "taskd"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "1m"
+            limits:
+              memory: "128Mi"
+          livenessProbe:
+            tcpSocket:
+              port: "taskd"
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: "taskd"
+            initialDelaySeconds: 2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            runAsNonRoot: true
+            runAsUser: 53589
+            runAsGroup: 53589
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/var/taskd"
+            - name: "config"
+              mountPath: "/var/taskd/config"
+              subPath: "taskd.properties"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "100Mi"
+        - name: "config"
+          configMap:
+            name: "taskd-config"

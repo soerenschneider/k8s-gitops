@@ -1,0 +1,58 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: git-repo-backup
+spec:
+  schedule: "@daily"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          securityContext:
+            runAsUser: 27274
+            runAsGroup: 27274
+            fsGroup: 27274
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - image: ghcr.io/soerenschneider/git-repo-backup:1.3.5
+              name: git-repo-backup
+              args:
+                - "-c"
+                - "/conf/config.json"
+                - "-d"
+                - "/repos"
+              securityContext:
+                runAsNonRoot: true
+                runAsUser: 27274
+                runAsGroup: 27274
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                privileged: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+              volumeMounts:
+                - name: config-volume
+                  mountPath: "/conf"
+                - name: storage
+                  mountPath: /repos/
+              resources:
+                requests:
+                  memory: 196Mi
+                  cpu: 10m
+                limits:
+                  memory: 512Mi
+          restartPolicy: Never
+          volumes:
+            - name: storage
+              emptyDir:
+                sizeLimit: 5Gi
+            - name: config-volume
+              configMap:
+                name: config

@@ -1,0 +1,72 @@
+---
+apiVersion: "batch/v1"
+kind: "CronJob"
+metadata:
+  name: "restic-postgres-backup"
+spec:
+  schedule: "0 6 * * *"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: "restic"
+            restic/name: "unknown"
+            restic/type: "postgres"
+            restic/operation: "backup"
+            sidecar.istio.io/inject: "false"
+        spec:
+          restartPolicy: "OnFailure"
+          securityContext:
+            runAsUser: 16523
+            runAsGroup: 16523
+            fsGroup: 16523
+            runAsNonRoot: true
+          containers:
+            - name: "restic-backup"
+              image: "ghcr.io/soerenschneider/restic-pg16:main-20240225135720"
+              imagePullPolicy: "IfNotPresent"
+              securityContext:
+                runAsUser: 16523
+                runAsGroup: 16523
+                runAsNonRoot: true
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
+              env:
+                - name: "POSTGRES_HOST"
+                  valueFrom:
+                    configMapKeyRef:
+                      name: "mealie-restic-postgres"
+                      key: "POSTGRES_SERVER"
+                - name: "PGPASSWORD"
+                  valueFrom:
+                    secretKeyRef:
+                      name: "mealie-restic-postgres"
+                      key: "POSTGRES_PASSWORD"
+                - name: "PUSHGATEWAY_URL"
+                  value: "http://pushgateway.monitoring"
+                - name: "TMPDIR"
+                  value: "/tmp"
+                - name: "RESTIC_CACHE_DIR"
+                  value: "/tmp/restic-cache"
+                - name: "_RESTIC_TYPE"
+                  value: "postgres"
+              envFrom: []
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "20m"
+                limits:
+                  memory: "1G"
+              volumeMounts:
+                - name: "tmp"
+                  mountPath: "/tmp"
+          volumes:
+            - name: "tmp"
+              emptyDir: {}

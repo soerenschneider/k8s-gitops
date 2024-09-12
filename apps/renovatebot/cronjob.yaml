@@ -1,0 +1,59 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: renovate-bot
+spec:
+  schedule: "@daily"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 3600
+      template:
+        metadata:
+          labels:
+            app: renovate
+            app.kubernetes.io/name: renovate
+            app.kubernetes.io/instance: renovate-prod
+            app.kubernetes.io/component: renovate
+            app.kubernetes.io/part-of: renovate
+        spec:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 42145
+            runAsGroup: 42145
+            seccompProfile:
+              type: "RuntimeDefault"
+          containers:
+            - image: "renovate/renovate:37.409.1"
+              name: "renovate"
+              env:
+                - name: "RENOVATE_BASE_DIR"
+                  value: "/storage"
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                privileged: false
+                runAsNonRoot: true
+                runAsUser: 42145
+                runAsGroup: 42145
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "75m"
+                limits:
+                  memory: "2Gi"
+              volumeMounts:
+                - name: "storage"
+                  mountPath: "/storage"
+          restartPolicy: Never
+          volumes:
+            - name: "storage"
+              emptyDir:
+                sizeLimit: 15Gi

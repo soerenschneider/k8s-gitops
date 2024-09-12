@@ -1,0 +1,25 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: mosquitto
+spec:
+  hosts:
+    - mqtt
+  gateways:
+    - istio-system/gateway
+  tcp:
+    - match:
+        - port: 1883
+      route:
+        - destination:
+            host: mosquitto
+            port:
+              number: 1883
+    - match:
+        - port: 8883
+      route:
+        - destination:
+            host: mosquitto
+            port:
+              number: 8883

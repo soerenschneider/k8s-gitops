@@ -1,0 +1,77 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "reloader"
+  namespace: "reloader"
+  labels:
+    app: "reloader"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: "reloader"
+  template:
+    metadata:
+      labels:
+        app: "reloader"
+        app.kubernetes.io/name: "reloader"
+        app.kubernetes.io/component: "reloader"
+        app.kubernetes.io/instance: "reloader-prod"
+        app.kubernetes.io/part-of: "reloader"
+      annotations:
+        prometheus.io/port: "9090"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: "RuntimeDefault"
+      serviceAccountName: "reloader"
+      containers:
+        - image: "ghcr.io/stakater/reloader:v1.0.97"
+          imagePullPolicy: "IfNotPresent"
+          name: "reloader"
+          ports:
+            - name: "metrics"
+              containerPort: 9090
+          livenessProbe:
+            httpGet:
+              path: "/live"
+              port: "metrics"
+            timeoutSeconds: 5
+            failureThreshold: 5
+            periodSeconds: 10
+            successThreshold: 1
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/live"
+              port: "metrics"
+            timeoutSeconds: 5
+            failureThreshold: 5
+            periodSeconds: 10
+            successThreshold: 1
+            initialDelaySeconds: 10
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "5m"
+            limits:
+              memory: "128Mi"
+              cpu: "20m"

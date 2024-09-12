@@ -1,0 +1,27 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+namespace: "hedgedoc"
+resources:
+  - "../../../apps/hedgedoc"
+  - "namespace.yaml"
+components:
+  - ../../../apps/hedgedoc/components/istio
+  - ../../../apps/hedgedoc/components/istio-proxy
+  - ../../../apps/hedgedoc/components/database-mariadb
+configMapGenerator:
+  - name: hedgedoc-config
+    behavior: merge
+    literals:
+      - CMD_DB_HOST=dbs.dd.soeren.cloud
+      - CMD_DB_DATABASE=hedgedoc_prod
+      - CMD_DOMAIN=hedgedoc.svc.dd.soeren.cloud
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "hedgedoc"
+    patch: |-
+      - op: "add"
+        path: "/spec/hosts"
+        value:
+          - "hedgedoc.svc.dd.soeren.cloud"

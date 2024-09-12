@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: microbin
+spec:
+  ports:
+    - port: 80
+      targetPort: microbin
+  selector:
+    app.kubernetes.io/name: microbin

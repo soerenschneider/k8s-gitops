@@ -1,0 +1,106 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: karma
+  labels:
+    app.kubernetes.io/name: karma
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: karma
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: karma
+        app.kubernetes.io/name: karma
+        app.kubernetes.io/instance: karma-prod
+        app.kubernetes.io/component: karma
+        app.kubernetes.io/part-of: monitoring
+      annotations:
+        prometheus.io/port: "8000"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: ghcr.io/prymitive/karma:v0.120
+          imagePullPolicy: IfNotPresent
+          name: karma
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            privileged: false
+            runAsUser: 65535
+            runAsGroup: 65535
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 10m
+            limits:
+              memory: 256Mi
+          ports:
+            - containerPort: 8000
+              name: karma
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: karma
+            initialDelaySeconds: 120
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: health
+              port: karma
+            initialDelaySeconds: 1
+          env:
+            - name: CONFIG_FILE
+              value: /conf/karma.yaml
+          volumeMounts:
+            - name: config
+              mountPath: /conf
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: config
+          configMap:
+            name: karma-config
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "monitoring"
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 20
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: NotIn
+                    values:
+                      - fast

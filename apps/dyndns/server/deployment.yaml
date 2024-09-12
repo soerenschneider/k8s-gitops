@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dyndns-server
+  labels:
+    app.kubernetes.io/name: dyndns
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dyndns-server
+  template:
+    metadata:
+      labels:
+        app: dyndns-server
+        app.kubernetes.io/name: dyndns
+        app.kubernetes.io/instance: dyndns
+        app.kubernetes.io/component: server
+        app.kubernetes.io/part-of: dyndns
+      annotations:
+        prometheus.io/port: "9191"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 51734
+        runAsGroup: 51734
+        fsGroup: 51734
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: ghcr.io/soerenschneider/dyndns-server:1.19.0
+          imagePullPolicy: IfNotPresent
+          name: dyndns-server
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 51734
+            runAsGroup: 51734
+            capabilities:
+              drop:
+                - ALL
+            seccompProfile:
+              type: RuntimeDefault
+          ports:
+            - containerPort: 9191
+              name: metrics
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "10m"
+            limits:
+              memory: "64Mi"
+          env:
+            - name: "DYNDNS_CLIENT_ID"
+              valueFrom:
+                fieldRef:
+                  fieldPath: "metadata.name"
+          envFrom:
+            - configMapRef:
+                name: "dyndns-server-config"
+            - secretRef:
+                name: "dyndns-server-aws"
+                optional: true

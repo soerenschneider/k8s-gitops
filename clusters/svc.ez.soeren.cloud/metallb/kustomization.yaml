@@ -1,0 +1,33 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: metallb-system
+resources:
+  - ../../../infra/metallb
+  - advertisment.yaml
+  - pool.yaml
+patches:
+  - target:
+      kind: DaemonSet
+      name: speaker
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            memory: 32M
+            cpu: 10m
+          limits:
+            memory: 128M
+  - target:
+      kind: Deployment
+      name: controller
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            memory: 32M
+            cpu: 50m
+          limits:
+            memory: 128M

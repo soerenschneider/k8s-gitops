@@ -1,0 +1,100 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blackbox-exporter
+  labels:
+    app: blackbox-exporter
+  annotations:
+    ignore-check.kube-linter.io/unsafe-sysctls: "Blackbox exporter needs sysctl parameters to perform ICMP as non-root user"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "blackbox-exporter"
+  template:
+    metadata:
+      labels:
+        app: "blackbox-exporter"
+        app.kubernetes.io/name: blackbox-exporter
+        app.kubernetes.io/instance: blackbox-exporter-prod
+        app.kubernetes.io/component: blackbox-exporter
+        app.kubernetes.io/part-of: monitoring
+      annotations:
+        prometheus.io/port: "9115"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 49172
+        runAsGroup: 49172
+        fsGroup: 49172
+        runAsNonRoot: true
+        sysctls:
+          - name: "net.ipv4.ping_group_range"
+            value: "0 2147483647"
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: "blackbox-exporter"
+          image: "docker.io/prom/blackbox-exporter:v0.25.0"
+          imagePullPolicy: "IfNotPresent"
+          args: []
+          ports:
+            - containerPort: 9115
+              name: "blackbox"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 49172
+            runAsGroup: 49172
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "64Mi"
+            limits:
+              memory: "128Mi"
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/-/healthy"
+              port: "blackbox"
+              scheme: "HTTP"
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            successThreshold: 1
+            timeoutSeconds: 10
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/-/ready"
+              port: "blackbox"
+              scheme: "HTTP"
+            initialDelaySeconds: 0
+            successThreshold: 1
+            timeoutSeconds: 4
+          volumeMounts: []
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              preference:
+                matchExpressions:
+                  - key: "location"
+                    operator: "NotIn"
+                    values:
+                      - "ez"
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: "cpu_speed"
+                    operator: "In"
+                    values:
+                      - "slow"
+      volumes: []

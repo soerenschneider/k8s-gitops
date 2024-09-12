@@ -1,0 +1,21 @@
+---
+apiVersion: "networking.k8s.io/v1"
+kind: "NetworkPolicy"
+metadata:
+  name: "dyndns-client"
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: "dyndns"
+      app.kubernetes.io/component: "client"
+  ingress:
+    - ports:
+        - protocol: "TCP"
+          port: "metrics"
+      from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: "monitoring"
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: "prometheus"

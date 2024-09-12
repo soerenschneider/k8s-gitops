@@ -1,0 +1,24 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+patches:
+  - target:
+      kind: Deployment
+      name: domain-exporter
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value:
+          "--config=/config.yaml"
+      - op: replace
+        path: /spec/template/spec/containers/0/volumeMounts
+        value:
+          - name: config
+            mountPath: /config.yaml
+            subPath: config.yaml
+      - op: replace
+        path: /spec/template/spec/volumes
+        value:
+          - name: config
+            configMap:
+              name: domain-exporter-config

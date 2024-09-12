@@ -1,0 +1,71 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "actualbudget"
+  labels:
+    app: "actualbudget"
+    app.kubernetes.io/name: "actualbudget"
+    app.kubernetes.io/instance: "actualbudget-prod"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "actualbudget"
+  template:
+    metadata:
+      labels:
+        app: "actualbudget"
+        app.kubernetes.io/name: "actualbudget"
+        app.kubernetes.io/instance: "actualbudget-prod"
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "actualbudget"
+          image: "docker.io/actualbudget/actual-server:24.5.0-alpine@sha256:2474bdbcd6a3888b5c0f68216ad9490cb7f5183caf173eddf967b9e77ad1ba8a"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            readOnlyRootFilesystem: true
+            privileged: false
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          env:
+            - name: "DEBUG"
+              value: "actual:config"
+          ports:
+            - containerPort: 5006
+              name: "actualbudget"
+          readinessProbe:
+            httpGet:
+              port: "actualbudget"
+              path: "/health"
+          livenessProbe:
+            httpGet:
+              port: "actualbudget"
+              path: "/health"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "5m"
+            limits:
+              memory: "1Gi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"

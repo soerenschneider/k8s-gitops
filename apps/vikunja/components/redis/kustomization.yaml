@@ -1,0 +1,29 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
+resources:
+  - "redis-deployment.yaml"
+  - "redis-service.yaml"
+  - "networkpolicy.yaml"
+configMapGenerator:
+  - name: "vikunja"
+    behavior: "merge"
+    literals:
+      - "VIKUNJA_REDIS_ENABLED=true"
+      - "VIKUNJA_REDIS_HOST=redis:6379"
+      - "VIKUNJA_CACHE_ENABLED=true"
+      - "VIKUNJA_CACHE_TYPE=redis"
+patches:
+  - target:
+      kind: "NetworkPolicy"
+    patch: |-
+      - op: add
+        path: "/spec/egress/-"
+        value:
+          to:
+            - podSelector:
+                matchLabels:
+                  k8s-app: "redis"
+          ports:
+            - port: "redis"
+              protocol: "TCP"

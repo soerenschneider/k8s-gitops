@@ -1,0 +1,1 @@
+../../../infra/external-dns/components/aws/upsert-secret-external-dns.sh

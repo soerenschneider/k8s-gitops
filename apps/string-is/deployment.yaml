@@ -1,0 +1,57 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "string-is"
+  labels:
+    app.kubernetes.io/name: "string-is"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "string-is"
+  template:
+    metadata:
+      labels:
+        app: "string-is"
+        app.kubernetes.io/name: "string-is"
+        app.kubernetes.io/component: "string-is"
+        app.kubernetes.io/instance: "string-is-prod"
+        app.kubernetes.io/part-of: "string-is"
+    spec:
+      securityContext:
+        runAsUser: 27452
+        runAsGroup: 27452
+        fsGroup: 27452
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "daveperrett/string-is:v1.37.4"
+          name: "string-is"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 27452
+            runAsGroup: 27452
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          ports:
+            - containerPort: 3000
+              name: "string-is"
+          readinessProbe:
+            tcpSocket:
+              port: "string-is"
+          livenessProbe:
+            tcpSocket:
+              port: "string-is"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "5m"
+            limits:
+              memory: "128Mi"

@@ -1,0 +1,105 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "paperless-ngx"
+  labels:
+    app: "paperless-ngx"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "paperless-ngx"
+  template:
+    metadata:
+      labels:
+        app: "paperless-ngx"
+        app.kubernetes.io/name: "paperless-ngx"
+        app.kubernetes.io/component: "paperless-ngx"
+        app.kubernetes.io/instance: "paperless-ngx-prod"
+        app.kubernetes.io/part-of: "paperless-ngx"
+    spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "paperless-ngx"
+          image: "ghcr.io/paperless-ngx/paperless-ngx:2.10.2"
+          imagePullPolicy: "IfNotPresent"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "50m"
+            limits:
+              memory: "1024Mi"
+          ports:
+            - containerPort: 8000
+              name: "paperless-ngx"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          env:
+            - name: "USERMAP_UID"
+              value: "1000"
+            - name: "USERMAP_GID"
+              value: "1000"
+          envFrom:
+            - configMapRef:
+                name: "paperless-config"
+            - secretRef:
+                name: "paperless"
+                optional: true
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: "paperless-ngx"
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: "paperless-ngx"
+            initialDelaySeconds: 5
+          startupProbe:
+            httpGet:
+              path: "/"
+              port: "paperless-ngx"
+            failureThreshold: 60
+            periodSeconds: 10
+          volumeMounts:
+            - name: "entrypoint"
+              mountPath: "/usr/local/bin/paperless_cmd.sh"
+              subPath: "paperless_cmd.sh"
+            - name: "storage"
+              mountPath: "/mnt/data"
+            - name: "consumption"
+              mountPath: "/mnt/consume"
+            - name: "tmp"
+              mountPath: "/tmp"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "5Gi"
+        - name: "consumption"
+          emptyDir:
+            sizeLimit: "512Mi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "5Mi"
+        - name: "entrypoint"
+          configMap:
+            name: "entrypoint-script"
+            defaultMode: 365

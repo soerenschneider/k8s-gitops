@@ -1,0 +1,1 @@
+../../../../apps/media/lidarr/components/postgres/upsert-secret-media-lidarr-postgres.sh

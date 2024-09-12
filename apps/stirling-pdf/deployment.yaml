@@ -1,0 +1,110 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "stirling-pdf"
+  labels:
+    app.kubernetes.io/name: "stirling-pdf"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "stirling-pdf"
+  template:
+    metadata:
+      labels:
+        app: "stirling-pdf"
+        app.kubernetes.io/name: "stirling-pdf"
+        app.kubernetes.io/component: "stirling-pdf"
+        app.kubernetes.io/instance: "stirling-pdf-prod"
+        app.kubernetes.io/part-of: "stirling-pdf"
+    spec:
+      securityContext:
+        runAsUser: 27452
+        runAsGroup: 27452
+        fsGroup: 27452
+        seccompProfile:
+          type: "RuntimeDefault"
+      initContainers:
+        - name: "tesseract"
+          image: "frooodle/s-pdf:0.26.1"
+          command:
+            - "sh"
+            - "-c"
+            - "mkdir -p /usr/share/tessdata; cp -rn /usr/share/tessdata-original/* /usr/share/tessdata; if [ -d /usr/share/tesseract-ocr/4.00/tessdata ]; then cp -r /usr/share/tesseract-ocr/4.00/tessdata/* /usr/share/tessdata || true; fi; if [ -d /usr/share/tesseract-ocr/5/tessdata ]; then cp -r /usr/share/tesseract-ocr/5/tessdata/* /usr/share/tessdata || true; fi"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 27452
+            runAsGroup: 27452
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "5m"
+            limits:
+              memory: "512Mi"
+          volumeMounts:
+            - mountPath: "/usr/share/tessdata"
+              name: "tessdata"
+      containers:
+        - image: "frooodle/s-pdf:0.26.1"
+          name: "stirling-pdf"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 27452
+            runAsGroup: 27452
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          command:
+            - "java"
+            - "-Dfile.encoding=UTF-8"
+            - "-jar"
+            - "/app.jar"
+          ports:
+            - containerPort: 8080
+              name: "stirling-pdf"
+          readinessProbe:
+            httpGet:
+              port: "stirling-pdf"
+              path: "/actuator/health"
+          livenessProbe:
+            httpGet:
+              port: "stirling-pdf"
+              path: "/actuator/health"
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "5m"
+            limits:
+              memory: "512Mi"
+          volumeMounts:
+            - mountPath: "/usr/share/tessdata"
+              name: "tessdata"
+            - mountPath: "/logs"
+              name: "logs"
+            - mountPath: "/configs"
+              name: "configs"
+            - mountPath: "/tmp"
+              name: "tmp"
+      volumes:
+        - name: "tessdata"
+          emptyDir: {}
+        - name: "logs"
+          emptyDir: {}
+        - name: "configs"
+          emptyDir: {}
+        - name: "tmp"
+          emptyDir: {}

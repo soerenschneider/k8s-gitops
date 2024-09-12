@@ -1,0 +1,12 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: minio-mirror
+resources:
+  - ../../../apps/minio-mirror
+  - namespace.yaml
+configMapGenerator:
+  - name: minio-mirror
+    literals:
+      - SOURCE_SERVER=https://minio.rs.soeren.cloud
+      - DEST_SERVER=https://s3.amazonaws.com

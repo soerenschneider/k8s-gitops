@@ -1,0 +1,88 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  labels:
+    app.kubernetes.io/name: gitea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+        app.kubernetes.io/name: gitea
+        app.kubernetes.io/instance: gitea-prod
+        app.kubernetes.io/component: gitea
+        app.kubernetes.io/part-of: gitea
+    spec:
+      securityContext:
+        runAsUser: 32322
+        runAsGroup: 32322
+        fsGroup: 32322
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gitea
+          image: gitea/gitea:1.21.11-rootless
+          ports:
+            - containerPort: 3000
+              name: gitea-http
+            - containerPort: 2222
+              name: gitea-ssh
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 32322
+            runAsGroup: 32322
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          env:
+            - name: USER_UID
+              value: "32322"
+            - name: USER_GID
+              value: "32322"
+          resources:
+            limits:
+              memory: "2Gi"
+            requests:
+              cpu: "50m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /api/healthz
+              port: gitea-http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/healthz
+              port: gitea-http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: storage
+              mountPath: /var/lib/gitea
+            - name: etc
+              mountPath: /etc/gitea
+            - name: tmp
+              mountPath: /tmp/gitea
+      volumes:
+        - name: storage
+          emptyDir:
+            sizeLimit: 5Gi
+        - name: etc
+          emptyDir:
+            sizeLimit: 500Mi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 500Mi

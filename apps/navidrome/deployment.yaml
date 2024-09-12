@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: navidrome
+  namespace: navidrome
+  labels:
+    app.kubernetes.io/name: navidrome
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: navidrome
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: navidrome
+        app.kubernetes.io/name: navidrome
+        app.kubernetes.io/component: navidrome
+        app.kubernetes.io/instance: navidrome-prod
+        app.kubernetes.io/part-of: navidrome
+      annotations:
+        prometheus.io/port: "4533"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 65535
+        runAsGroup: 65535
+        fsGroup: 65535
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: navidrome
+          image: deluan/navidrome:0.52.5
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 65535
+            runAsGroup: 65535
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 5m
+            limits:
+              memory: 512Mi
+          envFrom:
+            - configMapRef:
+                name: navidrome
+          ports:
+            - containerPort: 4533
+              name: "navidrome"
+          livenessProbe:
+            httpGet:
+              path: "/health"
+              port: "navidrome"
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: "/health"
+              port: "navidrome"
+            initialDelaySeconds: 5
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: storage
+          emptyDir:
+            sizeLimit: 5Gi

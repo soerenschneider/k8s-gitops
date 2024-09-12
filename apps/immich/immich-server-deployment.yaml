@@ -1,0 +1,100 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: immich-server
+  labels:
+    app: immich-server
+spec:
+  selector:
+    matchLabels:
+      app: immich-server
+  template:
+    metadata:
+      labels:
+        app: immich-server
+        app.kubernetes.io/name: immich-server
+        app.kubernetes.io/component: server
+        app.kubernetes.io/instance: immich-prod
+        app.kubernetes.io/part-of: immich
+    spec:
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "immich"
+                topologyKey: "kubernetes.io/hostname"
+      securityContext:
+        fsGroup: 25001
+        runAsUser: 25001
+        runAsGroup: 25001
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "immich-server"
+          image: "ghcr.io/immich-app/immich-server:v1.106.4"
+          env:
+            - name: "NODE_ENV"
+              value: "production"
+          envFrom:
+            - configMapRef:
+                name: "immich"
+            - secretRef:
+                name: "immich"
+                optional: true
+          securityContext:
+            runAsUser: 25001
+            runAsGroup: 25001
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          ports:
+            - containerPort: 3001
+              name: "immich-server"
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/server-info/ping"
+              port: "immich-server"
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/server-info/ping"
+              port: "immich-server"
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "50m"
+            limits:
+              memory: "2Gi"
+              cpu: "4"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
+            - name: "geocoding-dump"
+              mountPath: "/usr/src/app/.reverse-geocoding-dump"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: "geocoding-dump"
+          emptyDir:
+            sizeLimit: "1Gi"

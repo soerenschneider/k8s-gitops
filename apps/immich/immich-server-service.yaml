@@ -1,0 +1,15 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: "immich-server"
+  labels:
+    app: "immich-server"
+spec:
+  type: "ClusterIP"
+  selector:
+    app: "immich-server"
+  ports:
+    - port: 80
+      targetPort: "immich-server"
+      protocol: TCP

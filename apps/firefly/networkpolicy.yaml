@@ -1,0 +1,57 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-namespace-traffic
+spec:
+  podSelector: {}  # Selects all pods in the same namespace
+  policyTypes:
+    - Egress
+    - Ingress
+  egress:
+    - to:
+        - podSelector: {}  # Allows traffic to all pods in the same namespace
+    - to:
+        - ipBlock:
+            cidr: 192.168.0.0/16
+      ports:
+        - port: 3306
+          protocol: TCP
+        - port: 3307
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              networking/namespace: kube-system
+          podSelector: {}
+      ports:
+        - port: 53
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - port: 53
+          protocol: UDP
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: redis
+      from:
+        - podSelector:
+            matchLabels:
+              app: firefly
+    - ports:
+        - protocol: TCP
+          port: firefly
+      from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+          podSelector:
+            matchLabels:
+              istio: ingressgateway

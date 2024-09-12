@@ -1,0 +1,14 @@
+---
+version: 0.1
+http:
+  addr: 0.0.0.0:5000
+  draintimeout: 60s
+  debug:
+    addr: 0.0.0.0:5001
+    prometheus:
+      enabled: true
+      path: /metrics
+storage:
+  filesystem:
+    rootdirectory: /var/lib/registry
+    maxthreads: 100

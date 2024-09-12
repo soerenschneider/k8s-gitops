@@ -1,0 +1,110 @@
+---
+kind: "Deployment"
+apiVersion: "apps/v1"
+metadata:
+  name: "immich-machine-learning"
+  labels:
+    app: "immich-machine-learning"
+spec:
+  selector:
+    matchLabels:
+      app: "immich-machine-learning"
+  template:
+    metadata:
+      labels:
+        app: "immich-machine-learning"
+        app.kubernetes.io/name: "immich-machine-learning"
+        app.kubernetes.io/component: "machine-learning"
+        app.kubernetes.io/instance: "immich-prod"
+        app.kubernetes.io/part-of: "immich"
+    spec:
+      securityContext:
+        runAsUser: 25001
+        runAsGroup: 25001
+        fsGroup: 25001
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "immich-machine-learning"
+          image: "ghcr.io/immich-app/immich-machine-learning:v1.106.4"
+          securityContext:
+            runAsUser: 25001
+            runAsGroup: 25001
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            privileged: false
+            capabilities:
+              drop:
+                - "ALL"
+          ports:
+            - containerPort: 3003
+              name: "immich-ml"
+          env:
+            - name: "NODE_ENV"
+              value: "production"
+            - name: "MPLCONFIGDIR"
+              value: "/tmp/matplotlib"
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/ping"
+              port: "immich-ml"
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: "/ping"
+              port: "immich-ml"
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            timeoutSeconds: 1
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "100m"
+            limits:
+              memory: "6Gi"
+              cpu: "4"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
+            - name: "cache"
+              mountPath: "/cache"
+            - name: "tmp"
+              mountPath: "/tmp"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: "cache"
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "5Gi"
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "immich"
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: "cpu_speed"
+                    operator: "In"
+                    values:
+                      - "fast"

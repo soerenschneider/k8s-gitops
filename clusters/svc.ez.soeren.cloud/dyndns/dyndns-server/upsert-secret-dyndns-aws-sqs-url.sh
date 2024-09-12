@@ -1,0 +1,1 @@
+../../../../apps/dyndns/server/components/aws-sqs/upsert-secret-dyndns-aws-sqs-url.sh

@@ -1,0 +1,36 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: aether
+resources:
+  - ../../common/aether
+  - namespace.yaml
+  - sops-secret-aether.yaml
+  - sops-secret-taskd-credentials.yaml
+patches:
+  - target:
+      kind: VirtualService
+      name: aether
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - aether.svc.ez.soeren.cloud
+  - target:
+      kind: Issuer
+      name: vault-issuer
+    patch: |-
+      - op: replace
+        path: /spec/vault/auth/kubernetes/mountPath
+        value: /v1/auth/svc.ez.soeren.cloud
+  - target:
+      kind: Certificate
+      name: minio
+    patch: |-
+      - op: replace
+        path: /spec/commonName
+        value: aether.svc.ez.soeren.cloud
+      - op: replace
+        path: /spec/dnsNames
+        value:
+          - aether.svc.ez.soeren.cloud

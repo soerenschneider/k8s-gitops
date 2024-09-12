@@ -1,0 +1,1 @@
+../../../apps/mealie/upsert-secret-mealie.sh

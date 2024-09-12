@@ -1,0 +1,19 @@
+---
+apiVersion: "cert-manager.io/v1"
+kind: "Certificate"
+metadata:
+  name: "rabbitmq-cluster-tls"
+spec:
+  secretName: "rabbitmq-cluster-tls-cert"
+  duration: "2160h"
+  renewBefore: "360h"
+  commonName: "rabbitmq.svc.dd.soeren.cloud"
+  dnsNames:
+    - "rabbitmq.svc.dd.soeren.cloud"
+  issuerRef:
+    name: "vault-issuer"
+    kind: "Issuer"
+    group: "cert-manager.io"
+  privateKey:
+    algorithm: "RSA"
+    size: 3072

@@ -1,0 +1,39 @@
+---
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "VirtualService"
+metadata:
+  name: "mariadb"
+spec:
+  hosts:
+    - "mariadb"
+  gateways:
+    - "istio-system/gateway"
+  tcp:
+    - match:
+        - port: 3306
+      route:
+        - destination:
+            host: "mariadb"
+            port:
+              number: 3306
+    - match:
+        - port: 4567
+      route:
+        - destination:
+            host: "mariadb"
+            port:
+              number: 4567
+    - match:
+        - port: 4568
+      route:
+        - destination:
+            host: "mariadb"
+            port:
+              number: 4568
+    - match:
+        - port: 4444
+      route:
+        - destination:
+            host: "mariadb"
+            port:
+              number: 4444

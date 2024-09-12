@@ -1,0 +1,7 @@
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*secret*.y*ml
+!sops-*.y*ml
+*.swp
+/.idea

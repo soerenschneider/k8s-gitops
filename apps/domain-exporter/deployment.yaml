@@ -1,0 +1,69 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: domain-exporter
+  labels:
+    app.kubernetes.io/name: domain-exporter
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: domain-exporter
+  template:
+    metadata:
+      labels:
+        app: domain-exporter
+        app.kubernetes.io/name: domain-exporter
+        app.kubernetes.io/instance: domain-exporter-prod
+        app.kubernetes.io/component: domain-exporter
+      annotations:
+        prometheus.io/port: "9222"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 17238
+        runAsGroup: 17238
+        fsGroup: 17238
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: domain-exporter
+          image: caarlos0/domain_exporter:v1.23.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--logFormat=json"
+            - "--cache=6h"
+          ports:
+            - containerPort: 9222
+              name: domain-exporter
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 17238
+            runAsGroup: 17238
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: "domain-exporter"
+            initialDelaySeconds: 5
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: "domain-exporter"
+            initialDelaySeconds: 1
+          resources:
+            limits:
+              memory: "256Mi"
+            requests:
+              cpu: "5m"
+              memory: "32Mi"

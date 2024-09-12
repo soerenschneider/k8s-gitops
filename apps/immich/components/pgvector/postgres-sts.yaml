@@ -1,0 +1,95 @@
+---
+apiVersion: apps/v1
+kind: "StatefulSet"
+metadata:
+  name: "postgres"
+spec:
+  serviceName: "postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "postgres"
+  template:
+    metadata:
+      labels:
+        app: "postgres"
+    spec:
+      securityContext:
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "postgres"
+          image: "tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0"
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            seccompProfile:
+              type: "RuntimeDefault"
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - "/usr/local/bin/pg_ctl stop -D /var/lib/postgresql/data -w -t 60 -m fast"
+          env:
+            - name: "POSTGRES_DB"
+              value: "immich"
+            - name: "POSTGRES_USER"
+              value: "immich"
+            - name: "POSTGRES_PASSWORD"
+              value: "immich"
+            - name: "PGDATA"
+              value: "/data/pgdata"
+            - name: "POSTGRES_INITDB_ARGS"
+              value: '--data-checksums'
+          ports:
+            - containerPort: 5432
+              name: "postgres"
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "50m"
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U immich
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - exec pg_isready -U immich
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: var-run
+              mountPath: /var/run
+            - name: storage
+              mountPath: /data
+      volumes:
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "512Mi"
+        - name: "var-run"
+          emptyDir:
+            sizeLimit: "50Mi"
+        - name: "storage"
+          persistentVolumeClaim:
+            claimName: "immich-postgres"

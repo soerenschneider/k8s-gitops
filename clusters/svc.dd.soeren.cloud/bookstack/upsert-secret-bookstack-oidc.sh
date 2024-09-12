@@ -1,0 +1,1 @@
+../../../apps/bookstack/components/oidc/upsert-secret-bookstack-oidc.sh

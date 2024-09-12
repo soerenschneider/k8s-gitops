@@ -1,0 +1,124 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookstack
+  labels:
+    app.kubernetes.io/name: bookstack
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bookstack
+  template:
+    metadata:
+      labels:
+        app: bookstack
+        app.kubernetes.io/name: bookstack
+        app.kubernetes.io/instance: bookstack-prod
+        app.kubernetes.io/component: bookstack
+    spec:
+      securityContext:
+        runAsUser: 65534
+        runAsGroup: 65534
+        fsGroup: 65534
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      initContainers:
+        # https://stackoverflow.com/questions/38483837/please-provide-a-valid-cache-path-error-in-laravel
+        - name: init
+          image: solidnerd/bookstack:24.5.2
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          resources:
+            limits:
+              memory: "256Mi"
+            requests:
+              cpu: "5m"
+              memory: "16Mi"
+          volumeMounts:
+            - mountPath: "/var/www/bookstack/storage/"
+              name: "storage"
+          command:
+            - "sh"
+            - "-c"
+            - "mkdir -v -p /var/www/bookstack/storage/framework/sessions /var/www/bookstack/storage/framework/views /var/www/bookstack/storage/framework/cache/data /var/www/bookstack/storage/uploads/images /var/www/bookstack/storage/uploads/files /var/www/bookstack/storage/logs"
+      containers:
+        - name: "bookstack"
+          image: "solidnerd/bookstack:24.5.2"
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8080
+              name: "bookstack"
+          envFrom:
+            - configMapRef:
+                name: "bookstack-config"
+            - secretRef:
+                name: "bookstack"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 65534
+            runAsGroup: 65534
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          livenessProbe:
+            httpGet:
+              path: "/status"
+              port: "bookstack"
+            initialDelaySeconds: 15
+          readinessProbe:
+            httpGet:
+              path: "/status"
+              port: "bookstack"
+            initialDelaySeconds: 5
+          startupProbe:
+            httpGet:
+              path: "/status"
+              port: bookstack
+            failureThreshold: 60
+            periodSeconds: 10
+          resources:
+            limits:
+              memory: "256Mi"
+            requests:
+              cpu: "5m"
+              memory: "32Mi"
+          volumeMounts:
+            - name: storage
+              mountPath: /var/www/bookstack/storage/
+            - name: data
+              mountPath: /data
+            - name: run
+              mountPath: /var/run
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: data
+          emptyDir:
+            sizeLimit: 1Gi
+        - name: storage
+          emptyDir:
+            sizeLimit: 1Gi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 50M
+        - name: run
+          emptyDir:
+            sizeLimit: 5M

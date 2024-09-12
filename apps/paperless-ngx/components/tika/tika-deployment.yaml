@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tika
+  namespace: paperless-ngx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tika
+  template:
+    metadata:
+      labels:
+        app: tika
+        app.kubernetes.io/name: tika
+        app.kubernetes.io/component: tika
+        app.kubernetes.io/instance: paperless-ngx-prod
+        app.kubernetes.io/part-of: paperless-ngx
+    spec:
+      securityContext:
+        runAsUser: 35002
+        runAsGroup: 35002
+        fsGroup: 35002
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: tika
+          image: apache/tika:2.9.2.1
+          ports:
+            - containerPort: 9998
+              name: tika
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 35002
+            runAsGroup: 35002
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "25m"
+            limits:
+              memory: "1024Mi"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: tika
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: tika
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/part-of
+                      operator: In
+                      values:
+                        - paperless-ngx
+                topologyKey: kubernetes.io/hostname
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: tmp
+          emptyDir:
+            sizeLimit: 50Mi

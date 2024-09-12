@@ -1,0 +1,81 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hass
+  labels:
+    app.kubernetes.io/name: hass
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: hass
+  template:
+    metadata:
+      labels:
+        app: hass
+        app.kubernetes.io/name: hass
+        app.kubernetes.io/component: hass
+        app.kubernetes.io/part-of: hass
+    spec:
+      securityContext:
+        runAsUser: 48123
+        runAsGroup: 48123
+        fsGroup: 48123
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: "homeassistant/home-assistant:2024.5.4"
+          imagePullPolicy: "IfNotPresent"
+          command:
+            - "/usr/local/bin/hass"
+            - "--config=/config"
+            - "--log-file=/dev/null"
+          workingDir: "/config"
+          name: "hass"
+          ports:
+            - containerPort: 8123
+              name: "hass"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 48123
+            runAsGroup: 48123
+            privileged: false
+            runAsNonRoot: true
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "50m"
+            limits:
+              memory: "1024Mi"
+          readinessProbe:
+            httpGet:
+              path: "/manifest.json"
+              port: "hass"
+          livenessProbe:
+            httpGet:
+              path: "/manifest.json"
+              port: "hass"
+            initialDelaySeconds: 10
+            periodSeconds: 3
+          volumeMounts:
+            - name: "config"
+              mountPath: "/config"
+            - name: "tmp"
+              mountPath: "/tmp"
+      volumes:
+        - name: "config"
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "5Mi"

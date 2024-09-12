@@ -1,0 +1,101 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+spec:
+  serviceName: mariadb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: "mariadb"
+        app.kubernetes.io/name: "mariadb"
+        app.kubernetes.io/component: "database"
+        app.kubernetes.io/instance: "onlyoffice-prod"
+        app.kubernetes.io/part-of: "onlyoffice"
+    spec:
+      securityContext:
+        runAsUser: 45538
+        runAsGroup: 45538
+        fsGroup: 45538
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: mariadb
+          image: mariadb:11.4.2
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "onlyoffice"
+            - name: MYSQL_DATABASE
+              value: "onlyoffice"
+            - name: MYSQL_USER
+              value: "onlyoffice"
+            - name: MYSQL_PASSWORD
+              value: "onlyoffice"
+          ports:
+            - containerPort: 3306
+              name: mariadb
+          readinessProbe:
+            exec:
+              command:
+                - "healthcheck.sh"
+                - "--connect"
+                - "--innodb_initialized"
+          livenessProbe:
+            exec:
+              command:
+                - "healthcheck.sh"
+                - "--connect"
+                - "--innodb_initialized"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 45538
+            runAsGroup: 45538
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+            requests:
+              cpu: "50m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/var/lib/mysql"
+            - name: "tmp"
+              mountPath: "/tmp"
+            - name: "run"
+              mountPath: "/run/mysqld"
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "onlyoffice"
+                topologyKey: "kubernetes.io/hostname"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "50Mi"
+        - name: "run"
+          emptyDir:
+            sizeLimit: "50Mi"

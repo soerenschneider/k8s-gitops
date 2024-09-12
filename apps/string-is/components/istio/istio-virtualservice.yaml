@@ -1,0 +1,19 @@
+---
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "VirtualService"
+metadata:
+  name: "string-is"
+spec:
+  hosts:
+    - "string-is"
+  gateways:
+    - "istio-system/gateway"
+  http:
+    - match:
+        - uri:
+            prefix: "/"
+      route:
+        - destination:
+            host: "string-is"
+            port:
+              number: 80

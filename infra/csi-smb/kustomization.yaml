@@ -1,0 +1,10 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+commonLabels:
+  app: "csi-smb-node"
+resources:
+  - "csi-smb-controller.yaml"
+  - "csi-smb-driver.yaml"
+  - "csi-smb-node.yaml"
+  - "rbac-csi-smb.yaml"
