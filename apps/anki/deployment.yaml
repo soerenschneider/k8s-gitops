@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: anki
-          image: ghcr.io/luckyturtledev/anki:24.06.2
+          image: ghcr.io/luckyturtledev/anki:24.06.3
           ports:
             - containerPort: 8080
               name: anki
