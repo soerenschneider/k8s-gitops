@@ -12,21 +12,21 @@ patches:
         path: /metadata/name
         value: "renovate-github"
       - op: add
-        path: /spec/jobTemplate/spec/template/spec/containers/0/env
+        path: /spec/jobTemplate/spec/template/spec/containers/0/env/-
         value:
-          - name: "RENOVATE_HOST_RULES"
-            valueFrom:
-              secretKeyRef:
-                name: tokens
-                key: "RENOVATE_HOST_RULES"
+          name: "RENOVATE_HOST_RULES"
+          valueFrom:
+            secretKeyRef:
+              name: tokens
+              key: "RENOVATE_HOST_RULES"
       - op: add
-        path: /spec/jobTemplate/spec/template/spec/containers/0/env
+        path: /spec/jobTemplate/spec/template/spec/containers/0/env/-
         value:
-          - name: "RENOVATE_TOKEN"
-            valueFrom:
-              secretKeyRef:
-                name: tokens
-                key: github-token
+          name: "RENOVATE_TOKEN"
+          valueFrom:
+            secretKeyRef:
+              name: tokens
+              key: github-token
       - op: add
         path: /spec/jobTemplate/spec/template/spec/containers/0/envFrom
         value:
