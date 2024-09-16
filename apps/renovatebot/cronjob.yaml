@@ -26,7 +26,7 @@ spec:
             seccompProfile:
               type: "RuntimeDefault"
           containers:
-            - image: "renovate/renovate:37.440.7"
+            - image: "renovate/renovate:38.80.0"
               name: "renovate"
               env:
                 - name: "RENOVATE_BASE_DIR"
