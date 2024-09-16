@@ -36,6 +36,3 @@ spec:
               - port: 9094
                 targetPort: 9094
                 name: "am-cluster"
-              - port: 9999
-                targetPort: 9999
-                name: "fuck"
