@@ -28,7 +28,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "homeassistant/home-assistant:2024.9.1"
+        - image: "homeassistant/home-assistant:2024.9.2"
           imagePullPolicy: "IfNotPresent"
           command:
             - "/usr/local/bin/hass"
