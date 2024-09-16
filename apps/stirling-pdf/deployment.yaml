@@ -27,7 +27,7 @@ spec:
           type: "RuntimeDefault"
       initContainers:
         - name: "tesseract"
-          image: "frooodle/s-pdf:0.28.3"
+          image: "frooodle/s-pdf:0.29.0"
           command:
             - "sh"
             - "-c"
@@ -54,7 +54,7 @@ spec:
             - mountPath: "/usr/share/tessdata"
               name: "tessdata"
       containers:
-        - image: "frooodle/s-pdf:0.28.3"
+        - image: "frooodle/s-pdf:0.29.0"
           name: "stirling-pdf"
           securityContext:
             allowPrivilegeEscalation: false
