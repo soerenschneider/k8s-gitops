@@ -17,15 +17,15 @@ patches:
       name: "alertmanager"
     patch: |-
       # alertmanager does not accept relative URLs here
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: "--web.external-url=https://monitoring.dqs.dd.soeren.cloud/alertmanager"
       - op: "add"
         path: /spec/template/spec/containers/0/args/-
-        value: "--web.external-url=https://monitoring.svc.ez.soeren.cloud/alertmanager"
+        value: "--cluster.advertise-address=192.168.65.32:9094"
       - op: "add"
         path: /spec/template/spec/containers/0/args/-
-        value: "--cluster.advertise-address=192.168.2.253:9094"
-      - op: "add"
-        path: /spec/template/spec/containers/0/args/-
-        value: "--cluster.peer=alertmanager.dqs.dd.soeren.cloud:9094"
+        value: "--cluster.peer=alertmanager.svc.ez.soeren.cloud:9094"
       - op: "add"
         path: /spec/template/spec/containers/0/args/-
         value: "--cluster.peer=alertmanager.svc.pt.soeren.cloud:9094"
@@ -36,4 +36,4 @@ patches:
       - op: "replace"
         path: "/spec/hosts"
         value:
-          - "alertmanager.svc.ez.soeren.cloud"
+          - "alertmanager.dqs.dd.soeren.cloud"

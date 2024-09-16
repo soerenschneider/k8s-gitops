@@ -13,22 +13,22 @@ components:
   - ../../../../apps/monitoring/alertmanager/components/vol-hostpath
 patches:
   - target:
-      kind: "StatefulSet"
-      name: "alertmanager"
+      kind: StatefulSet
+      name: alertmanager
     patch: |-
       # alertmanager does not accept relative URLs here
+      - op: add
+        path: /spec/template/spec/containers/0/args/-
+        value: "--web.external-url=https://monitoring.svc.pt.soeren.cloud/alertmanager"
       - op: "add"
         path: /spec/template/spec/containers/0/args/-
-        value: "--web.external-url=https://monitoring.svc.ez.soeren.cloud/alertmanager"
+        value: "--cluster.advertise-address=192.168.73.250:9094"
       - op: "add"
         path: /spec/template/spec/containers/0/args/-
-        value: "--cluster.advertise-address=192.168.2.253:9094"
+        value: "--cluster.peer=alertmanager.svc.ez.soeren.cloud:9094"
       - op: "add"
         path: /spec/template/spec/containers/0/args/-
         value: "--cluster.peer=alertmanager.dqs.dd.soeren.cloud:9094"
-      - op: "add"
-        path: /spec/template/spec/containers/0/args/-
-        value: "--cluster.peer=alertmanager.svc.pt.soeren.cloud:9094"
   - target:
       kind: "VirtualService"
       name: "alertmanager-cluster"
@@ -36,4 +36,4 @@ patches:
       - op: "replace"
         path: "/spec/hosts"
         value:
-          - "alertmanager.svc.ez.soeren.cloud"
+          - "alertmanager.svc.pt.soeren.cloud"
