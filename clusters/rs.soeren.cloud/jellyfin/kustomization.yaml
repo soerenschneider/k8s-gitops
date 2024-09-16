@@ -12,20 +12,20 @@ components:
   - ../../../apps/jellyfin/components/storage-healthcheck
 patches:
   - target:
-      kind: VirtualService
-      name: jellyfin
+      kind: "VirtualService"
+      name: "jellyfin"
     patch: |-
-      - op: replace
-        path: /spec/hosts
+      - op: "replace"
+        path: "/spec/hosts"
         value:
-          - jellyfin.rs.soeren.cloud
+          - "jellyfin.rs.soeren.cloud"
   - target:
-      kind: StatefulSet
-      name: jellyfin
+      kind: "StatefulSet"
+      name: "jellyfin"
     patch: |-
-      - op: replace
-        path: /spec/template/spec/volumes/2
+      - op: "replace"
+        path: "/spec/template/spec/volumes/2"
         value:
-          name: media
+          name: "media"
           hostPath:
-            path: /mnt/media
+            path: "/mnt/media"
