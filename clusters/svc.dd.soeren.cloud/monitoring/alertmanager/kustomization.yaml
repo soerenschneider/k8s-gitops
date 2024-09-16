@@ -12,8 +12,8 @@ components:
   - ../../../../apps/monitoring/alertmanager/components/cluster-tls
 patches:
   - target:
-      kind: Deployment
-      name: alertmanager
+      kind: "StatefulSet"
+      name: "alertmanager"
     patch: |-
       # alertmanager does not accept relative URLs here
       - op: add

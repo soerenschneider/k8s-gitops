@@ -1,6 +1,6 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: alertmanager
   labels:
@@ -8,6 +8,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
+  serviceName: alertmanager
   replicas: 1
   revisionHistoryLimit: 10
   selector:
@@ -37,7 +38,7 @@ spec:
           image: quay.io/prometheus/alertmanager:v0.27.0
           imagePullPolicy: IfNotPresent
           args:
-            - --storage.path=/data
+            - --storage.path=/data/
             - --log.level=info
           securityContext:
             runAsNonRoot: true
