@@ -11,16 +11,13 @@ patches:
     patch: |-
       - op: "replace"
         path: "/metadata/name"
-        value: "nmap-prober-rs"
-      - op: "replace"
-        path: "/spec/schedule"
-        value: "15 * * * *"
+        value: "nmap-prober-ch"
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/value"
         value: "22,53,80,443,2379,2380,6443,8080,8405,9443,9999,10251,10252,15823"
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/containers/0/env/1/value"
-        value: "45.136.28.72"
+        value: "176.10.127.142"
       - op: "add"
         path: "/spec/jobTemplate/spec/template/spec/containers/0/env/-"
         value:
