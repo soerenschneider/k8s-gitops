@@ -1,0 +1,48 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nmap-prober
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 11364
+            runAsGroup: 11364
+            fsGroup: 11364
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: nmap-prober
+              image: ghcr.io/soerenschneider/nmap-prober:1.0.0
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                runAsUser: 11364
+                runAsGroup: 11364
+                runAsNonRoot: true
+                privileged: false
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+              env:
+                - name: PORTS
+                  value: "22,53,80,443,6443,8080,8405,8443,9443,9999,15823"
+                - name: TARGET
+                  value: ""
+              resources:
+                requests:
+                  memory: "32Mi"
+                  cpu: "5m"
+                limits:
+                  memory: "128Mi"
