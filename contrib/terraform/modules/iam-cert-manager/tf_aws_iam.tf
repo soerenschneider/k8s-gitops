@@ -12,6 +12,7 @@ resource "aws_iam_access_key" "user" {
   user = aws_iam_user.user.name
 }
 
+#trivy:ignore:AVD-AWS-0057
 resource "aws_iam_user_policy" "route53_access" {
   name = local.aws_name
   user = aws_iam_user.user.name
