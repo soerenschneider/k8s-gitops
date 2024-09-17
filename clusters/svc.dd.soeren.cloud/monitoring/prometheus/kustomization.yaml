@@ -4,9 +4,12 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ../../../../apps/monitoring/prometheus
-  - sops-secret-monitoring-prometheus-config.yaml
 components:
   - ../../../../apps/monitoring/prometheus/components/config
   - ../../../../apps/monitoring/prometheus/components/rbac
   - ../../../../apps/monitoring/prometheus/components/reverse-proxy
   - ../../../../apps/monitoring/prometheus/components/tls-client-cert
+configMapGenerator:
+  - name: monitoring-prometheus-config
+    files:
+      - prometheus-config.yaml
