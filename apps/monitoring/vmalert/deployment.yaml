@@ -40,7 +40,7 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8880
-              name: metrics
+              name: vmalert
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -61,14 +61,14 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: metrics
+              port: vmalert
             initialDelaySeconds: 15
             timeoutSeconds: 5
             failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /health
-              port: metrics
+              port: vmalert
             initialDelaySeconds: 5
           volumeMounts: []
       volumes: []

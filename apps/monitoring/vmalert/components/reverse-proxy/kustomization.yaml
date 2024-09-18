@@ -1,0 +1,27 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
+patches:
+  - target:
+      kind: "Deployment"
+      name: "vmalert"
+    patch: |-
+      - op: "add"
+        path: "/spec/template/spec/containers/0/args/-"
+        value: "--web.external-url=/vmalert"
+      - op: "add"
+        path: "/spec/template/spec/containers/0/args/-"
+        value: "--web.route-prefix=/"
+  - target:
+      kind: "NetworkPolicy"
+      name: "vmalert"
+    patch: |-
+      - op: add
+        path: "/spec/ingress/0/from/-"
+        value:
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: "monitoring"
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: "reverse-proxy"
