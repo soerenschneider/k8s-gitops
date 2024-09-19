@@ -26,6 +26,12 @@ spec:
       hosts:
         - "*"
     - port:
+        number: 1883
+        name: "mqtt"
+        protocol: TCP
+      hosts:
+        - "*.dqs.dd.soeren.cloud"
+    - port:
         number: 5671
         name: "amqp-tls"
         protocol: TCP
