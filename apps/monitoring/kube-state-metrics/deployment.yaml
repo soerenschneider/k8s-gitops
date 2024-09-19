@@ -38,16 +38,22 @@ spec:
               name: "metrics"
             - containerPort: 8081
               name: "telemetry"
-          livenessProbe:
+          startupProbe:
             httpGet:
               path: "/healthz"
-              port: 8080
+              port: metrics
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: "/livez"
+              port: metrics
             initialDelaySeconds: 5
             timeoutSeconds: 5
           readinessProbe:
             httpGet:
-              path: "/"
-              port: 8081
+              path: "/readyz"
+              port: telemetry
             initialDelaySeconds: 5
             timeoutSeconds: 5
           resources:
