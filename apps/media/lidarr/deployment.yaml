@@ -29,7 +29,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "ghcr.io/onedr0p/lidarr:2.2.5"
+        - image: "ghcr.io/onedr0p/lidarr:2.4.3"
           imagePullPolicy: "IfNotPresent"
           name: "lidarr"
           ports:

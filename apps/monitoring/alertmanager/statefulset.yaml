@@ -1,0 +1,107 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: alertmanager
+  labels:
+    app.kubernetes.io/name: alertmanager
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  serviceName: alertmanager
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: alertmanager
+  template:
+    metadata:
+      labels:
+        app: alertmanager
+        app.kubernetes.io/name: alertmanager
+        app.kubernetes.io/component: alertmanager
+        app.kubernetes.io/instance: alertmanager-prod
+        app.kubernetes.io/part-of: monitoring
+      annotations:
+        prometheus.io/port: "9093"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 44443
+        runAsGroup: 44443
+        fsGroup: 44443
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: alertmanager
+          image: quay.io/prometheus/alertmanager:v0.27.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - --storage.path=/data/
+            - --log.level=info
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 44443
+            runAsGroup: 44443
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - containerPort: 9093
+              name: "alertmanager"
+            - containerPort: 9094
+              name: "am-cluster"
+          livenessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: "/-/healthy"
+              port: "alertmanager"
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            failureThreshold: 10
+            httpGet:
+              path: "/-/ready"
+              port: "alertmanager"
+            initialDelaySeconds: 3
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
+          resources:
+            requests:
+              cpu: "10m"
+              memory: "50Mi"
+            limits:
+              memory: "96Mi"
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                      - alertmanager
+              topologyKey: location
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 5
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: In
+                    values:
+                      - slow
+      volumes:
+        - name: storage
+          emptyDir:
+            sizeLimit: 100Mi

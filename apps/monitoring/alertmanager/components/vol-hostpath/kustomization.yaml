@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: "Component"
+patches:
+  - target:
+      kind: "StatefulSet"
+      name: "alertmanager"
+    patch: |-
+      - op: "replace"
+        path: "/spec/template/spec/volumes/0"
+        value:
+          name: "storage"
+          hostPath:
+            path: "/mnt/k8s/alertmanager"

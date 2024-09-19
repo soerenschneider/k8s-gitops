@@ -10,10 +10,11 @@ components:
   - ../../../../apps/monitoring/alertmanager/components/reverse-proxy
   - ../../../../apps/monitoring/alertmanager/components/cluster-istio
   - ../../../../apps/monitoring/alertmanager/components/cluster-tls
+  - ../../../../apps/monitoring/alertmanager/components/vol-hostpath
 patches:
   - target:
-      kind: Deployment
-      name: alertmanager
+      kind: "StatefulSet"
+      name: "alertmanager"
     patch: |-
       # alertmanager does not accept relative URLs here
       - op: add

@@ -36,11 +36,11 @@ spec:
           type: RuntimeDefault
       containers:
         - name: vmalert
-          image: victoriametrics/vmalert:v1.101.0
+          image: victoriametrics/vmalert:v1.103.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8880
-              name: metrics
+              name: vmalert
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -61,14 +61,14 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: metrics
+              port: vmalert
             initialDelaySeconds: 15
             timeoutSeconds: 5
             failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /health
-              port: metrics
+              port: vmalert
             initialDelaySeconds: 5
           volumeMounts: []
       volumes: []

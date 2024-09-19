@@ -10,9 +10,10 @@ components:
   - ../../../../apps/monitoring/alertmanager/components/reverse-proxy
   - ../../../../apps/monitoring/alertmanager/components/cluster-istio
   - ../../../../apps/monitoring/alertmanager/components/cluster-tls
+  - ../../../../apps/monitoring/alertmanager/components/vol-hostpath
 patches:
   - target:
-      kind: "Deployment"
+      kind: "StatefulSet"
       name: "alertmanager"
     patch: |-
       # alertmanager does not accept relative URLs here
@@ -24,7 +25,10 @@ patches:
         value: "--cluster.advertise-address=192.168.2.253:9094"
       - op: "add"
         path: /spec/template/spec/containers/0/args/-
-        value: "--cluster.peer=alertmanager.svc.dd.soeren.cloud:9094"
+        value: "--cluster.peer=alertmanager.dqs.dd.soeren.cloud:9094"
+      - op: "add"
+        path: /spec/template/spec/containers/0/args/-
+        value: "--cluster.peer=alertmanager.svc.pt.soeren.cloud:9094"
   - target:
       kind: "VirtualService"
       name: "alertmanager-cluster"

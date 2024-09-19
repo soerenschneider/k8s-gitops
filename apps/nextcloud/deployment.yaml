@@ -34,7 +34,7 @@ spec:
           type: "RuntimeDefault"
       initContainers:
         - name: init
-          image: "nextcloud:29.0.1-fpm"
+          image: "nextcloud:29.0.6-fpm"
           command: ["sh", "-c", "rsync -ar /usr/src/nextcloud/ /dest/html"]
           volumeMounts:
             - name: "shared-data"
@@ -59,7 +59,7 @@ spec:
                 - "ALL"
       containers:
         - name: "nginx"
-          image: "nginx:1.27.0-alpine"
+          image: "nginx:1.27.1-alpine"
           ports:
             - containerPort: 8080
               name: "nginx"
@@ -94,7 +94,7 @@ spec:
               readOnly: true
               mountPath: "/var/www"
         - name: "nextcloud"
-          image: "nextcloud:29.0.1-fpm"
+          image: "nextcloud:29.0.6-fpm"
           imagePullPolicy: "IfNotPresent"
           envFrom:
             - configMapRef:

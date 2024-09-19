@@ -1,0 +1,40 @@
+---
+modules:
+  dns_soerenschneider:
+    dns:
+      query_name: router.ez.soeren.cloud
+      query_type: A
+      validate_answer_rrs:
+        fail_if_not_matches_regexp:
+          - "router.ez.soeren.cloud.\t.*\tIN\tA\t.*192\\.168\\.2\\.3"
+    prober: dns
+  http:
+    http:
+      tls_config:
+        cert_file: /certs/tls.crt
+        key_file: /certs/tls.key
+      valid_status_codes:
+        - 200
+        - 204
+        - 301
+        - 302
+        - 403
+        - 404
+    prober: http
+    timeout: 5s
+  http_2xx:
+    prober: http
+    timeout: 5s
+  icmp:
+    icmp:
+      preferred_ip_protocol: ip4
+    prober: icmp
+    timeout: 2s
+  tcp_cert:
+    prober: tcp
+    tcp:
+      tls: true
+    timeout: 2s
+  tcp_connect:
+    prober: tcp
+    timeout: 2s

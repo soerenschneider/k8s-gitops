@@ -8,7 +8,7 @@ patches:
     patch: |-
       - op: add
         path: "/spec/template/spec/containers/0/args/-"
-        value: "--config.file=/etc/config/prometheus.yaml"
+        value: "--config.file=/etc/config/prometheus-config.yaml"
       - op: add
         path: "/spec/template/spec/containers/0/volumeMounts/-"
         value:
@@ -19,6 +19,6 @@ patches:
         path: "/spec/template/spec/volumes/-"
         value:
           name: "prometheus-config"
-          secret:
+          configMap:
             defaultMode: 420
-            secretName: "monitoring-prometheus-config"
+            name: "monitoring-prometheus-config"

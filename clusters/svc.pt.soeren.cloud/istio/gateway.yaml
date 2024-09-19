@@ -9,11 +9,17 @@ spec:
     istio: ingressgateway
   servers:
     - port:
+        number: 22
+        name: ssh
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
         number: 80
         name: http
         protocol: HTTP
       hosts:
-        - "*.svc.pt.soeren.cloud"
+        - "*"
       tls:
         httpsRedirect: true
     - port:
@@ -24,4 +30,67 @@ spec:
         mode: SIMPLE
         credentialName: ingress-cert
       hosts:
-        - "*.svc.pt.soeren.cloud"
+        - "*"
+    - port:
+        number: 443
+        name: https-passthrough
+        protocol: HTTPS
+      tls:
+        mode: PASSTHROUGH
+      hosts:
+        - minio.svc.pt.soeren.cloud
+        - minio-console.svc.pt.soeren.cloud
+    - port:
+        number: 1883
+        name: mqtt
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
+        number: 8883
+        name: mqtt-tls
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
+        number: 53589
+        name: taskd
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
+        number: 3306
+        name: "mariadb"
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
+        number: 4567
+        name: "replicate-tcp"
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
+        number: 4568
+        name: "iss"
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
+        number: 4444
+        name: "sst"
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
+        number: 5671
+        name: "amqp-tls"
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
+        number: 9094
+        name: "am-cluster"
+        protocol: TCP
+      hosts:
+        - "*"

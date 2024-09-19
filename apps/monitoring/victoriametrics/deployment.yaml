@@ -41,7 +41,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: victoriametrics
-          image: victoriametrics/victoria-metrics:v1.101.0
+          image: victoriametrics/victoria-metrics:v1.103.0
           imagePullPolicy: IfNotPresent
           args:
             - "--storageDataPath=/storage"

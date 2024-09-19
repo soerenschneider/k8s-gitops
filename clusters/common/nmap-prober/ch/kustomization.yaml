@@ -1,0 +1,17 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+namespace: "nmap-prober"
+resources:
+  - "../../../../apps/nmap-prober"
+patches:
+  - target:
+      kind: "CronJob"
+      name: "nmap-prober"
+    patch: |-
+      - op: "replace"
+        path: "/metadata/name"
+        value: "nmap-prober-ch"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/1/value"
+        value: "176.10.127.142"
