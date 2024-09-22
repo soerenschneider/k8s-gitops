@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../flux2
+patches:
+  - target:
+      kind: Kustomization
+      name: gitops-cluster
+    patch: |-
+      - op: replace
+        path: /spec/path
+        value: ./clusters/dqs.dd.soeren.cloud
+      - op: remove
+        path: /spec/decryption
