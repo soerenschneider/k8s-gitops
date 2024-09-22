@@ -6,6 +6,7 @@ resources:
   - ../../../../apps/monitoring/prometheus
 components:
   - ../../../../apps/monitoring/prometheus/components/config
+  - ../../../../apps/monitoring/prometheus/components/initcontainer-seed-rules
   - ../../../../apps/monitoring/prometheus/components/rbac
   - ../../../../apps/monitoring/prometheus/components/reverse-proxy
   - ../../../../apps/monitoring/prometheus/components/tls-client-cert
