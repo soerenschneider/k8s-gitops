@@ -1,0 +1,11 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "gotify"
+spec:
+  ports:
+    - port: 80
+      targetPort: "gotify"
+  selector:
+    app.kubernetes.io/name: "gotify"
