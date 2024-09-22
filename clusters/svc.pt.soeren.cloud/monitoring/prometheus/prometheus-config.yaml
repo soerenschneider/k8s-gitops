@@ -6,7 +6,7 @@ global:
     cluster: svc.pt.soeren.cloud
     location: pt
     datacenter: pt
-rule_files: [/etc/prometheus/rules/*.rules]
+rule_files: [/rules/basics/*.rules]
 alerting:
   alertmanagers:
     - scheme: http
@@ -65,6 +65,12 @@ scrape_configs:
     tls_config: *default_pki_config
     dns_sd_configs:
       - names: [routers-tls.prom-target.pt.soeren.cloud]
+  - job_name: rootserver
+    dns_sd_configs:
+      - names: [rs.prom-target.soeren.cloud]
+  - job_name: seedbox
+    dns_sd_configs:
+      - names: [ch.prom-target.soeren.cloud]
   - job_name: sensors
     dns_sd_configs:
       - names: [sensors.prom-target.pt.soeren.cloud]
@@ -178,7 +184,9 @@ scrape_configs:
       module: [http]
     tls_config: *default_pki_config
     dns_sd_configs:
-      - names: [blackbox-https.prom-target.pt.soeren.cloud]
+      - names:
+          - blackbox-https.prom-target.pt.soeren.cloud
+          - blackbox-https.prom-target.soeren.cloud
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
