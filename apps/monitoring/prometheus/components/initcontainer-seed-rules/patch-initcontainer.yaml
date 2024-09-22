@@ -3,7 +3,7 @@
   path: "/spec/template/spec/initContainers"
   value:
     - name: "seed"
-      image: "ghcr.io/soerenschneider/alerting-rules:main-20240403210327"
+      image: "ghcr.io/soerenschneider/alerting-rules:main-20240922191228"
       imagePullPolicy: "IfNotPresent"
       command: ["rsync", "-vr", "/rules/", "/rules-dest/"]
       securityContext:
