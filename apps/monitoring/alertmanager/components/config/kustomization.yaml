@@ -1,6 +1,6 @@
 ---
-apiVersion: kustomize.config.k8s.io/v1alpha1
-kind: Component
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
 patches:
   - target:
       kind: "StatefulSet"
@@ -21,4 +21,4 @@ patches:
           name: "alertmanager-config"
           secret:
             defaultMode: 420
-            secretName: alertmanager-config
+            secretName: "monitoring-alertmanager-config"
