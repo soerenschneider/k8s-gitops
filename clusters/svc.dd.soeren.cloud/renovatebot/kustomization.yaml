@@ -15,7 +15,7 @@ patches:
         value: "Europe/Berlin"
       - op: replace
         path: /spec/schedule
-        value: "0 12 * * 1-5"
+        value: "0 6 * * 1-5"
   - target:
       kind: CronJob
       name: renovate-gitlab
@@ -25,4 +25,4 @@ patches:
         value: "Europe/Berlin"
       - op: replace
         path: /spec/schedule
-        value: "0 12 * * 1-5"
+        value: "0 6 * * 1-5"
