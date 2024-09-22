@@ -30,6 +30,7 @@ misconfigurations:
   - id: "AVD-KSV-0041"
     paths:
       - "apps/reloader/components/rbac/clusterrole.yaml"
+      - "apps/monitoring/kube-state-metrics/components/rbac/cluster-role.yaml"
   - id: "AVD-KSV-0109"
     paths:
       - "clusters/common/taskd/configmap-ca.yaml"
