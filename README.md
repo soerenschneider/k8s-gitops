@@ -1,5 +1,9 @@
 # k8s-gitops
 
+![security](https://github.com/soerenschneider/k8s-gitops/actions/workflows/security-scanners.yaml/badge.svg)
+![lint](https://github.com/soerenschneider/k8s-gitops/actions/workflows/lint.yaml/badge.svg)
+
+
 ## Key Technologies
 
 - **Kubernetes**: Orchestrates the deployment, scaling, and operations of containerized applications.
@@ -8,6 +12,7 @@
 - **Cert-Manager**: Manages the issuance and renewal of TLS certificates.
 - **External Secrets**: Integrates external secret stores (AWS Secrets Manager, HashiCorp Vault, etc.) with Kubernetes.
 - **External DNS**: Dynamically updates DNS records based on Kubernetes resources.
+- **Renovatebot**: Keeps track of updated versions for the manifests.
 
 ## Repository Structure
 
