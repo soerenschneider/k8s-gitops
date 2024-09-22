@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: renovate
 resources:
   - ../../common/renovatebot
-  - sops-secret-renovate.yaml
+  - renovate-external-secret.yaml
 patches:
   - target:
       kind: CronJob
@@ -15,7 +15,7 @@ patches:
         value: "Europe/Berlin"
       - op: replace
         path: /spec/schedule
-        value: "0 1 * * *"
+        value: "0 12 * * 1-5"
   - target:
       kind: CronJob
       name: renovate-gitlab
@@ -25,4 +25,4 @@ patches:
         value: "Europe/Berlin"
       - op: replace
         path: /spec/schedule
-        value: "0 10 * * *"
+        value: "0 12 * * 1-5"

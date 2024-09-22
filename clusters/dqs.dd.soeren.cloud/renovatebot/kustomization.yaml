@@ -7,22 +7,22 @@ resources:
   - renovate-external-secret.yaml
 patches:
   - target:
-      kind: CronJob
-      name: renovate-github
+      kind: "CronJob"
+      name: "renovate-github"
     patch: |-
       - op: add
         path: /spec/timeZone
         value: "Europe/Berlin"
       - op: replace
         path: /spec/schedule
-        value: "0 20 * * 1-5"
+        value: "0 10 * * 1-5"
   - target:
-      kind: CronJob
-      name: renovate-gitlab
+      kind: "CronJob"
+      name: "renovate-gitlab"
     patch: |-
       - op: add
         path: /spec/timeZone
         value: "Europe/Berlin"
       - op: replace
         path: /spec/schedule
-        value: "0 20 * * 1-5"
+        value: "0 10 * * 1-5"

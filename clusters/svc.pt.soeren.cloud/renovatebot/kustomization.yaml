@@ -3,7 +3,26 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: renovate
 resources:
-  - github
-  - gitlab
-  - namespace.yaml
-  - sops-secret-tokens.yaml
+  - ../../common/renovatebot
+  - renovate-external-secret.yaml
+patches:
+  - target:
+      kind: CronJob
+      name: renovate-github
+    patch: |-
+      - op: add
+        path: /spec/timeZone
+        value: "Europe/Berlin"
+      - op: replace
+        path: /spec/schedule
+        value: "0 22 * * 1-5"
+  - target:
+      kind: CronJob
+      name: renovate-gitlab
+    patch: |-
+      - op: add
+        path: /spec/timeZone
+        value: "Europe/Berlin"
+      - op: replace
+        path: /spec/schedule
+        value: "0 22 * * 1-5"
