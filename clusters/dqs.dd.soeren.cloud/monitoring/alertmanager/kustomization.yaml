@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ../../../../apps/monitoring/alertmanager
-  - external-secret.yaml
+  - alertmanager-external-secret.yaml
 components:
   - ../../../../apps/monitoring/alertmanager/components/config
   - ../../../../apps/monitoring/alertmanager/components/reverse-proxy
