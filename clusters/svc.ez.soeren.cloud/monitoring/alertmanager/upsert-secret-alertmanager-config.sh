@@ -1,1 +1,0 @@
-../../../../apps/monitoring/alertmanager/components/config/upsert-secret-alertmanager-config.sh
