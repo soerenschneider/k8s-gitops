@@ -1,8 +1,45 @@
 # k8s-gitops
 
-TODO
+## Key Technologies
 
-## Bootstrapping a new cluster
+- **Kubernetes**: Orchestrates the deployment, scaling, and operations of containerized applications.
+- **Flux CD**: GitOps continuous delivery solution for Kubernetes.
+- **Istio**: A service mesh that provides advanced networking capabilities such as traffic management, security, and observability.
+- **Cert-Manager**: Manages the issuance and renewal of TLS certificates.
+- **External Secrets**: Integrates external secret stores (AWS Secrets Manager, HashiCorp Vault, etc.) with Kubernetes.
+- **External DNS**: Dynamically updates DNS records based on Kubernetes resources.
+
+## Repository Structure
+
+This repository is structured to follow GitOps principles, with Kubernetes manifests for different environments (e.g., development, staging, production) stored here and managed via Flux CD.
+
+```bash
+├── apps/
+│   ├── app1/
+│   ├── app2/
+│   └── app3/
+├── clusters/
+│   ├── cluster-1/
+│   ├── cluster-2/
+│   ├── cluster-.../
+│   ├── cluster-n/
+├── contrib/
+│   ├── flux/
+│   ├── istio/
+│   ├── terraform/
+├── infra/
+│   ├── app1/
+│   ├── app2/
+```
+
+### Folder Overview:
+
+- **apps/**: Application manifests for various services.
+- **clusters/**: Environment-specific configurations for different Kubernetes clusters.
+- **contrib/**: Tools to help boostrapping clusters.
+- **infra/**: Low-level platform apps and configurations.
+
+## Bootstrapping a New Cluster
 
 ### Flux
 Navigate to `contrib/flux/$CLUSTER_NAME` and run
