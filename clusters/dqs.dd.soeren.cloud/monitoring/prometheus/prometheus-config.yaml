@@ -6,7 +6,7 @@ global:
     cluster: dqs.dd.soeren.cloud
     location: dd
     datacenter: dd
-rule_files: [/etc/prometheus/rules/*.rules]
+rule_files: [/rules/basics/*.rules]
 alerting:
   alertmanagers:
     - scheme: http
