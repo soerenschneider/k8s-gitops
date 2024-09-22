@@ -21,6 +21,9 @@ spec:
         app.kubernetes.io/instance: prometheus-prod
         app.kubernetes.io/component: prometheus
         app.kubernetes.io/part-of: monitoring
+      annotations:
+        prometheus.io/port: "9090"
+        prometheus.io/scrape: "true"
     spec:
       serviceAccountName: prometheus
       securityContext:
