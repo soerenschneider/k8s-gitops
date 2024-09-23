@@ -34,7 +34,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "jryberg/mosquitto-exporter:v0.7.0"
+        - image: "jryberg/mosquitto-exporter:v0.7.3"
           name: "mosquitto-exporter"
           args:
             - --endpoint=tcp://mosquitto:1883
