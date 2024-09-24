@@ -1,0 +1,31 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../apps/vcr
+patches:
+  - target:
+      kind: CronJob
+    patch: |-
+      - op: replace
+        path: "/metadata/name"
+        value: "vcr-gametwo"
+      - op: replace
+        path: "/spec/timeZone"
+        value: "Europe/Berlin"
+      - op: replace
+        path: "/spec/schedule"
+        value: "0 0 * * *"
+      - op: replace
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/command"
+        value:
+          - yt-dlp
+          - "--break-on-reject"
+          - "--cache-dir=/data/.yt-dlp"
+          - "--dateafter=now-2day"
+          - '--format-sort=height:1080'
+          - "--prefer-free-formats"
+          - "--output=/data/gametwo/%(upload_date)s_%(title)s.%(ext)s"
+          - "https://www.youtube.com/@GameTwo"
+          - '--merge-output-format=mp4'
+          - '--postprocessor-args=-c:v libx265 -preset slow -crf 28 -pix_fmt yuv420p10le -c:a copy'

@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   - sportschau-saturday
   - sportschau-sunday
+  - gametwo
+  - rocketbeans-gaming
 components:
   - ../../../apps/vcr/components/fileserver
   - ../../../apps/vcr/components/fileserver-istio
