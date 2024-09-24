@@ -6,6 +6,7 @@ resources:
   - ../../../../apps/monitoring/vmalert
 components:
   - ../../../../apps/monitoring/vmalert/components/tls-client-cert
+  - ../../../../apps/monitoring/vmalert/components/reverse-proxy
   - ../../../../apps/monitoring/vmalert/components/initcontainer-seed-rules
 patches:
   - target:
@@ -16,5 +17,8 @@ patches:
         path: "/spec/template/spec/containers/0/args"
         value:
           - "-notifier.url=http://alertmanager"
-          - "-datasource.url=http://prometheus"
+          - "-notifier.url=https://monitoring.svc.ez.soeren.cloud/alertmanager/"
+          - "-notifier.url=https://monitoring.dqs.dd.soeren.cloud/alertmanager/"
+          - "-datasource.url=https://victoriametrics.rs.soeren.cloud"
+          - "-external.url=https://monitoring.svc.pt.soeren.cloud/vmalert/"
           - "-rule=/rules/*.rules"

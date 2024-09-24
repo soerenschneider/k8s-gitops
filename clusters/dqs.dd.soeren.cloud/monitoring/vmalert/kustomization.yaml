@@ -17,5 +17,8 @@ patches:
         path: "/spec/template/spec/containers/0/args"
         value:
           - "-notifier.url=http://alertmanager"
-          - "-datasource.url=http://prometheus"
+          - "-notifier.url=https://monitoring.svc.pt.soeren.cloud/alertmanager/"
+          - "-notifier.url=https://monitoring.dqs.dd.soeren.cloud/alertmanager/"
+          - "-datasource.url=https://victoriametrics.rs.soeren.cloud"
+          - "-external.url=https://monitoring.dqs.dd.soeren.cloud/vmalert/"
           - "-rule=/rules/*.rules"
