@@ -36,7 +36,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: docker.io/ghostfolio/ghostfolio:2.109.0
+        - image: docker.io/ghostfolio/ghostfolio:2.110.0
           imagePullPolicy: IfNotPresent
           name: ghostfolio
           securityContext:
