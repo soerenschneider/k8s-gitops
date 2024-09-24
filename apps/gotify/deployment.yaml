@@ -42,8 +42,6 @@ spec:
               drop:
                 - "ALL"
           env:
-            - name: GOTIFY_DEFAULTUSER_PASS
-              value: custom
             - name: GOTIFY_SERVER_PORT
               value: "8080"
           resources:
