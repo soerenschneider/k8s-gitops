@@ -26,10 +26,10 @@ misconfigurations:
       - "apps/vector/daemonset.yaml"
   - id: "AVD-KSV-0048"
     paths:
-      - "apps/reloader/components/rbac/clusterrole.yaml"
+      - "infra/reloader/components/rbac/clusterrole.yaml"
   - id: "AVD-KSV-0041"
     paths:
-      - "apps/reloader/components/rbac/clusterrole.yaml"
+      - "infra/reloader/components/rbac/clusterrole.yaml"
       - "apps/monitoring/kube-state-metrics/components/rbac/cluster-role.yaml"
   - id: "AVD-KSV-0109"
     paths:
