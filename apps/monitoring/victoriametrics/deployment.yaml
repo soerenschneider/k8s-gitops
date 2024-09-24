@@ -63,10 +63,10 @@ spec:
                 - "ALL"
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "10m"
-            limits:
               memory: "512Mi"
+              cpu: "50m"
+            limits:
+              memory: "2Gi"
           livenessProbe:
             httpGet:
               path: "/-/healthy"
