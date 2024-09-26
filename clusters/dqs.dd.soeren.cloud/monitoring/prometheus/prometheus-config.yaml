@@ -11,7 +11,7 @@ alerting:
   alertmanagers:
     - scheme: http
       static_configs:
-        - targets: [alertmanager]
+        - targets: [router.dd.soeren.cloud:9093, router.ez.soeren.cloud:9093, router.pt.soeren.cloud:9093]
 remote_write:
   - url: https://victoriametrics.rs.soeren.cloud/api/v1/write
 scrape_configs:
