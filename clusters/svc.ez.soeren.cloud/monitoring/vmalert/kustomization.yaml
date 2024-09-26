@@ -16,9 +16,9 @@ patches:
       - op: add
         path: "/spec/template/spec/containers/0/args"
         value:
-          - "-notifier.url=http://alertmanager"
-          - "-notifier.url=https://monitoring.svc.pt.soeren.cloud/alertmanager/"
-          - "-notifier.url=https://monitoring.dqs.dd.soeren.cloud/alertmanager/"
+          - "-notifier.url=http://router.dd.soeren.cloud:9093"
+          - "-notifier.url=http://router.ez.soeren.cloud:9093"
+          - "-notifier.url=http://router.pt.soeren.cloud:9093"
           - "-datasource.url=https://victoriametrics.rs.soeren.cloud"
           - "-external.url=https://monitoring.svc.ez.soeren.cloud/vmalert/"
           - "-rule=/rules/*.rules"
