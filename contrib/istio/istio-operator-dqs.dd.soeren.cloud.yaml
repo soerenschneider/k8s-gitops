@@ -17,8 +17,6 @@ spec:
       - name: istio-ingressgateway
         enabled: true
         k8s:
-#          serviceAnnotations:
-#            metallb.universe.tf/address-pool: ez
           service:
             ports:
               - port: 80
@@ -27,11 +25,32 @@ spec:
               - port: 443
                 targetPort: 8443
                 name: "https"
+              - port: 1883
+                targetPort: 1883
+                name: "mqtt"
+              - port: 3306
+                targetPort: 3306
+                name: "mariadb"
+              - port: 4567
+                targetPort: 4567
+                name: "replicate-tcp"
+              - port: 4568
+                targetPort: 4568
+                name: "iss"
+              - port: 4444
+                targetPort: 4444
+                name: "sst"
               - port: 5671
                 targetPort: 5671
                 name: "amqp-tls"
               - port: 8883
                 targetPort: 8883
-                name: mqtt-tls
+                name: "mqtt-tls"
+              - port: 9094
+                targetPort: 9094
+                name: "alertmanager-cluster"
+              - port: 53589
+                targetPort: 53589
+                name: "taskd"
             externalIPs:
-              - 192.168.2.227
+              - 192.168.65.32
