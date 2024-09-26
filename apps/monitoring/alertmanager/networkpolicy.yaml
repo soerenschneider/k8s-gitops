@@ -26,3 +26,5 @@ spec:
     - ports:
         - protocol: TCP
           port: 9094
+        - protocol: UDP
+          port: 9094

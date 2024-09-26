@@ -15,3 +15,16 @@ spec:
       name: "am-cluster"
   selector:
     app.kubernetes.io/name: "alertmanager"
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "alertmanager-cluster-udp"
+spec:
+  ports:
+    - port: 9094
+      protocol: "UDP"
+      targetPort: "am-cluster"
+      name: "am-cluster"
+  selector:
+    app.kubernetes.io/name: "alertmanager"
