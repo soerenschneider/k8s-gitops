@@ -1,9 +1,0 @@
----
-apiVersion: metallb.io/v1beta1
-kind: L2Advertisement
-metadata:
-  name: ez
-  namespace: metallb-system
-spec:
-  ipAddressPools:
-    - ez
