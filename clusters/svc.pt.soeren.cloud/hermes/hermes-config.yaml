@@ -1,0 +1,11 @@
+---
+http:
+  address: "0.0.0.0:8080"
+metrics_addr: "0.0.0.0:9223"
+events_impl: [http]
+
+dead_letter_queue: "gotify"
+gotify:
+  - uri: "gotify"
+    token_file: "/etc/hermes/gotify_token"
+    addr: "https://gotify.dqs.dd.soeren.cloud"
