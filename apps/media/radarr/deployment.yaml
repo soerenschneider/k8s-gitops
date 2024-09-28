@@ -31,7 +31,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "ghcr.io/onedr0p/radarr:5.10.4.9218"
+        - image: "ghcr.io/onedr0p/radarr:5.11.0.9244"
           imagePullPolicy: "IfNotPresent"
           name: "radarr"
           ports:
