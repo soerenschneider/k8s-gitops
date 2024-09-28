@@ -8,16 +8,12 @@ patches:
       kind: NetworkPolicy
       name: hermes
     patch: |-
-      - op: "replace"
-        path: "/spec/ingress/-"
+      - op: add
+        path: "/spec/ingress/0/from/-"
         value:
-          ports:
-            - protocol: TCP
-              port: hermes
-          from:
-            - namespaceSelector:
-                matchLabels:
-                  kubernetes.io/metadata.name: istio-system
-              podSelector:
-                matchLabels:
-                  istio: ingressgateway
+          namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: "istio-system"
+          podSelector:
+            matchLabels:
+              istio: "ingressgateway"

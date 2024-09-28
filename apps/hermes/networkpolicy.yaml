@@ -10,8 +10,12 @@ spec:
     - Egress
   ingress:
     - ports:
-        - protocol: TCP
-          port: metrics
+        - protocol: "TCP"
+          port: "hermes"
+      from: []
+    - ports:
+        - protocol: "TCP"
+          port: "metrics"
       from:
         - namespaceSelector:
             matchLabels:
