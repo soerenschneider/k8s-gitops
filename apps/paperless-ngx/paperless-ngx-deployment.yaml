@@ -36,7 +36,7 @@ spec:
               memory: "512Mi"
               cpu: "50m"
             limits:
-              memory: "1024Mi"
+              memory: "2048Mi"
           ports:
             - containerPort: 8000
               name: "paperless-ngx"
@@ -92,13 +92,13 @@ spec:
       volumes:
         - name: "storage"
           emptyDir:
-            sizeLimit: "5Gi"
+            sizeLimit: "1Gi"
         - name: "consumption"
           emptyDir:
-            sizeLimit: "512Mi"
+            sizeLimit: "1Gi"
         - name: "tmp"
           emptyDir:
-            sizeLimit: "5Mi"
+            sizeLimit: "1Gi"
         - name: "entrypoint"
           configMap:
             name: "entrypoint-script"

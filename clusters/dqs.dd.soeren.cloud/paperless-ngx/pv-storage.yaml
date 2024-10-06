@@ -1,0 +1,24 @@
+---
+apiVersion: "v1"
+kind: "PersistentVolume"
+metadata:
+  name: "paperless-ngx-storage"
+spec:
+  capacity:
+    storage: "15Gi"
+  accessModes:
+    - "ReadWriteOnce"
+  storageClassName: "local-storage"
+  local:
+    path: "/mnt/k8s/paperless-ngx/data"
+  claimRef:
+    namespace: "paperless-ngx"
+    name: "paperless-ngx-storage"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: "kubernetes.io/hostname"
+              operator: "In"
+              values:
+                - "k8s-dqs.dd.soeren.cloud"
