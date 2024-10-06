@@ -1,0 +1,30 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: prometheus-vault-token-syncer
+  namespace: monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: secret-writer
+  namespace: monitoring
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["create", "update"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-vault-token-syncer-binding
+  namespace: monitoring
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-vault-token-syncer
+    namespace: monitoring
+roleRef:
+  kind: Role
+  name: secret-writer
+  apiGroup: rbac.authorization.k8s.io

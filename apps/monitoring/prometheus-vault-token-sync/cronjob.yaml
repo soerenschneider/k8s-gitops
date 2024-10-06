@@ -1,0 +1,61 @@
+---
+apiVersion: batch/v1
+kind: "CronJob"
+metadata:
+  name: "prometheus-vault-token-syncer"
+spec:
+  schedule: "*/6 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 23764
+            runAsGroup: 23764
+            fsGroup: 23764
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          serviceAccountName: prometheus-vault-token-syncer
+          containers:
+            - name: "prometheus-vault-token-syncer"
+              image: "ghcr.io/soerenschneider/prometheus-vault-token-syncer:latest"
+              imagePullPolicy: "IfNotPresent"
+              env:
+                - name: "VAULT_MOUNT_PATH"
+                  value: "kubernetes"
+                - name: "VAULT_ADDR"
+                  value: "https://vault.ha.soeren.cloud"
+                - name: "VAULT_ROLE"
+                  value: "monitoring"
+                - name: "SECRET_NAMESPACE"
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.namespace
+              securityContext:
+                runAsUser: 23764
+                runAsGroup: 23764
+                runAsNonRoot: true
+                privileged: false
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                requests:
+                  memory: "64Mi"
+                  cpu: "5m"
+                limits:
+                  memory: "1Gi"
+              volumeMounts:
+                - name: storage
+                  mountPath: /data
+          volumes:
+            - name: storage
+              emptyDir: {}
