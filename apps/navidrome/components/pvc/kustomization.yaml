@@ -13,4 +13,4 @@ patches:
         value:
           name: "storage"
           persistentVolumeClaim:
-            claimName: "navidrome"
+            claimName: "navidrome-data"
