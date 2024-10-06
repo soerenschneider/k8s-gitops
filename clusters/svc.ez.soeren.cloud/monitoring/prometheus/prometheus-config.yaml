@@ -88,7 +88,7 @@ scrape_configs:
       format: [prometheus]
     scheme: https
     authorization:
-      credentials_file: /tokens/vault
+      credentials_file: /etc/tokens/vault-token
     static_configs:
       - targets: [vault.ez.soeren.cloud:8200]
   - job_name: vault-prod-tls
