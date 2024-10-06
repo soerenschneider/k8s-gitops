@@ -28,9 +28,9 @@ spec:
         prometheus.io/scrape: "true"
     spec:
       securityContext:
-        runAsUser: 65535
-        runAsGroup: 65535
-        fsGroup: 65535
+        runAsUser: 61523
+        runAsGroup: 61523
+        fsGroup: 61523
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -39,8 +39,8 @@ spec:
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
-            runAsUser: 65535
-            runAsGroup: 65535
+            runAsUser: 61523
+            runAsGroup: 61523
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             privileged: false
