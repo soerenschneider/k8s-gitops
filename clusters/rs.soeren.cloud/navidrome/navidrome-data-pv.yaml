@@ -11,6 +11,9 @@ spec:
   storageClassName: local-storage
   local:
     path: /srv/k8s/navidrome/data
+  claimRef:
+    namespace: "navidrome"
+    name: "navidrome-data"
   nodeAffinity:
     required:
       nodeSelectorTerms:
