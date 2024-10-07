@@ -5,8 +5,7 @@ namespace: bookstack
 resources:
   - ../../../apps/bookstack
   - namespace.yaml
-  - sops-secret-bookstack.yaml
-  - sops-secret-bookstack-oidc.yaml
+  - external-secret-bookstack.yaml
 components:
   - ../../../apps/bookstack/components/istio
   - ../../../apps/bookstack/components/oidc

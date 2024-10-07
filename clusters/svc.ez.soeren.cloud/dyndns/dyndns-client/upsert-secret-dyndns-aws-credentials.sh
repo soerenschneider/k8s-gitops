@@ -1,1 +1,0 @@
-../../../../apps/dyndns/client/components/aws-credentials/upsert-secret-dyndns-aws-credentials.sh

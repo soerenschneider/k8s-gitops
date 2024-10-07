@@ -1,1 +1,0 @@
-../../../apps/bookstack/upsert-secret-bookstack.sh

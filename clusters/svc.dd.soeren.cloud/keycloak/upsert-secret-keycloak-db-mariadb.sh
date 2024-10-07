@@ -1,1 +1,0 @@
-../../../apps/keycloak/components/db-mariadb/upsert-secret-keycloak-db-mariadb.sh

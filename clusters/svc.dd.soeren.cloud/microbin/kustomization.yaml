@@ -3,10 +3,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: microbin
 resources:
+  - ../../../apps/microbin
   - namespace.yaml
   - microbin-pv.yaml
-  - sops-secret-microbin.yaml
-  - ../../../apps/microbin
+  - external-secret-microbin.yaml
 components:
   - ../../../apps/microbin/components/istio
   - ../../../apps/microbin/components/istio-proxy

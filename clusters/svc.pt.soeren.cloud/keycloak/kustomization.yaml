@@ -5,9 +5,11 @@ namespace: keycloak
 resources:
   - ../../../apps/keycloak
   - namespace.yaml
-  - sops-secret-keycloak.yaml
+  - external-secret-keycloak.yaml
+  - external-secret-keycloak-db.yaml
 components:
   - ../../../apps/keycloak/components/istio
+  - ../../../apps/keycloak/components/db-mariadb
 patches:
   - target:
       kind: Deployment

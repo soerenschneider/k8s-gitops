@@ -5,9 +5,7 @@ namespace: grafana
 resources:
   - ../../../apps/grafana
   - namespace.yaml
-  - sops-secret-grafana.yaml
-  - sops-secret-grafana-database-mariadb.yaml
-  - sops-secret-grafana-oidc.yaml
+  - external-secret-grafana.yaml
 components:
   - ../../../apps/grafana/components/istio
   - ../../../apps/grafana/components/oidc
