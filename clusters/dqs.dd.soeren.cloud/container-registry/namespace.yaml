@@ -1,0 +1,7 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: container-registry
+  labels:
+    name: container-registry
