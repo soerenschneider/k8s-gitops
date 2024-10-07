@@ -22,7 +22,7 @@ spec:
           serviceAccountName: prometheus-vault-token-syncer
           containers:
             - name: "prometheus-vault-token-syncer"
-              image: "ghcr.io/soerenschneider/prometheus-vault-token-syncer:latest"
+              image: "ghcr.io/soerenschneider/prometheus-vault-token-syncer:1.0.0"
               imagePullPolicy: "IfNotPresent"
               env:
                 - name: "VAULT_MOUNT_PATH"
