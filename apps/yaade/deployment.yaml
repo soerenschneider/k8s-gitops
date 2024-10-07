@@ -28,7 +28,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: yaade
-          image: esperotech/yaade@sha256:54803910c4b029ec9545fe926db523a3a6bc3e291caaf2527636bcf1dcb34fed
+          image: esperotech/yaade@sha256:08c177e92428b9a9656d1f922e28fe69a3ac98bce29b104968f6798ba9e14c1b
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsUser: 45346
