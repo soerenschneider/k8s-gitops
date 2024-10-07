@@ -12,3 +12,5 @@ configMapGenerator:
       - "VIKUNJA_SERVICE_TIMEZONE=Europe/Berlin"
       - "VIKUNJA_SENTRY_ENABLED=false"
       - "VIKUNJA_FILES_BASEPATH=/data"
+      - "VIKUNJA_LOG_LEVEL=NOTICE"
+      - "VIKUNJA_LOG_HTTP=off"
