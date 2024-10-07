@@ -34,6 +34,9 @@ misconfigurations:
   - id: "AVD-KSV-0109"
     paths:
       - "clusters/common/taskd/configmap-ca.yaml"
+  - id: "AVD-KSV-0113"
+    paths:
+      - "apps/monitoring/prometheus-vault-token-syncer/rbac.yaml"
   - id: "AVD-KSV-01010"
     paths:
       - "**/taskwarrior-configmap.yaml" # false positive
