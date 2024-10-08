@@ -6,8 +6,8 @@ resources:
   - ../../../apps/linkding
   - namespace.yaml
   - postgres-pv.yaml
-  - sops-secret-linkding.yaml
-  - sops-secret-oauth2-proxy.yaml
+  - external-secret-linkding.yaml
+  - external-secret-oauth2-proxy.yaml
 components:
   - ../../../apps/linkding/components/istio
   - ../../../apps/linkding/components/oidc

@@ -1,1 +1,0 @@
-../../../apps/radicale/upsert-secret-radicale.sh

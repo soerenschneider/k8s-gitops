@@ -6,7 +6,7 @@ resources:
   - ../../../apps/microbin
   - namespace.yaml
   - virtualservice.yaml
-  - sops-secret-credentials.yaml
+  - external-secret-microbin.yaml
   - local-volume.yaml
   - pvc.yaml
 patches:

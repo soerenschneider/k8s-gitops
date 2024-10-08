@@ -1,1 +1,0 @@
-../../../apps/vikunja/upsert-secret-vikunja.sh

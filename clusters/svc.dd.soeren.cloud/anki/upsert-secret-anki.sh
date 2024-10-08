@@ -1,1 +1,0 @@
-../../../apps/anki/upsert-secret-anki.sh

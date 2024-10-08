@@ -4,7 +4,7 @@ kind: Kustomization
 resources:
   - ../../../../infra/cert-manager
   - clusterissuer.yaml
-  - sops-secret-route53-credentials.yaml
+  - external-secret-cert-manager.yaml
 namespace: cert-manager
 patches:
   - target:

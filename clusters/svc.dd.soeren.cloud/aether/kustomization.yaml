@@ -5,8 +5,7 @@ namespace: aether
 resources:
   - ../../common/aether
   - namespace.yaml
-  - sops-secret-aether.yaml
-  - sops-secret-aether-taskwarrior.yaml
+  - external-secret-aether.yaml
 patches:
   - target:
       kind: VirtualService

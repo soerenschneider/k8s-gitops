@@ -1,1 +1,0 @@
-../../../apps/linkding/components/postgres/upsert-secret-linkding-postgres.sh

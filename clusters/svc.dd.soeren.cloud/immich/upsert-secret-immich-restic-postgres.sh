@@ -1,1 +1,0 @@
-../../../apps/immich/components/restic-postgres/upsert-secret-immich-restic-postgres.sh

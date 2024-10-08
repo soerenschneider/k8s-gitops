@@ -1,1 +1,0 @@
-../../../apps/taskd/components/restic-pvc/upsert-secret-taskd-restic-pvc.sh

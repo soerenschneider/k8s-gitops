@@ -1,1 +1,0 @@
-../../../../apps/dyndns/client/components/aws-endpoints/upsert-secret-dyndns-aws-endpoints.sh

@@ -7,9 +7,8 @@ resources:
   - namespace.yaml
   - pv-consumption.yaml
   - pv-storage.yaml
-  - sops-secret-paperless.yaml
-  - sops-secret-oauth2-proxy.yaml
-  - sops-secret-restic.yaml
+  - external-secret-paperless-ngx.yaml
+  - external-secret-oauth2-proxy.yaml
 components:
   - ../../../apps/paperless-ngx/components/istio
   - ../../../apps/paperless-ngx/components/istio-proxy

@@ -7,13 +7,11 @@ resources:
   - namespace.yaml
   - pv.yaml
   - config-cm.yaml
-  - sops-secret-radicale.yaml
-  - sops-secret-radicale-restic-pvc.yaml
+  - external-secret-radicale.yaml
 components:
   - ../../../apps/radicale/components/istio
   - ../../../apps/radicale/components/istio-proxy
   - ../../../apps/radicale/components/pvc
-  - ../../../apps/radicale/components/restic-pvc
 patches:
   - target:
       kind: VirtualService

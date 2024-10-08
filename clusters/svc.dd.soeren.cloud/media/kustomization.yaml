@@ -11,12 +11,11 @@ resources:
   - nas-media-pv.yaml
   - nas-media-pvc.yaml
   - postgres-pv.yaml
-  - sops-secret-media-components-postgres.yaml
-  - sops-secret-media-components-reverse-proxy-oidc.yaml
-  - sops-secret-media-lidarr-postgres.yaml
-  - sops-secret-media-prowlarr-postgres.yaml
-  - sops-secret-media-radarr-postgres.yaml
-  - sops-secret-media-sonarr-postgres.yaml
+  - external-secret-sonarr.yaml
+  - external-secret-radarr.yaml
+  - external-secret-prowlarr.yaml
+  - external-secret-lidarr.yaml
+  - external-secret-oauth2-proxy.yaml
 components:
   - ../../../apps/media/components/postgres
   - ../../../apps/media/components/postgres-pvc

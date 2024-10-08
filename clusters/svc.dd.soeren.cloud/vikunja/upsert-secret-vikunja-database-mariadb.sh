@@ -1,1 +1,0 @@
-../../../apps/vikunja/components/database-mariadb/upsert-secret-vikunja-database-mariadb.sh

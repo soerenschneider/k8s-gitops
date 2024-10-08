@@ -1,1 +1,0 @@
-../../../apps/radicale/components/restic-pvc/upsert-secret-radicale-restic-pvc.sh

@@ -1,1 +1,0 @@
-../../../apps/paperless-ngx/components/oidc/upsert-secret-paperless-ngx-oidc.sh

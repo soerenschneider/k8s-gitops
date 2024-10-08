@@ -1,1 +1,0 @@
-../../../apps/mealie/components/postgres/upsert-secret-mealie-postgres.sh

@@ -4,9 +4,10 @@ kind: Kustomization
 namespace: nextcloud
 resources:
   - ../../../apps/nextcloud
-  - sops-secret-nextcloud.yaml
   - namespace.yaml
   - pv.yaml
+  - external-secret-nextcloud.yaml
+  - external-secret-nextcloud-db.yaml
 components:
   - ../../../apps/nextcloud/components/mariadb
   - ../../../apps/nextcloud/components/istio
