@@ -16,9 +16,11 @@ domains:
     sans: [dbs.ha.soeren.cloud]
   - domain: dbs.pt.soeren.cloud
     sans: [dbs.ha.soeren.cloud]
-  - domain: sauron.ez.soeren.cloud
-  - domain: sauron.dd.soeren.cloud
-  - domain: sauron.pt.soeren.cloud
+  - domain: testserver.dd.soeren.cloud
+  - domain: k8s.ez.soeren.cloud
+  - domain: k8s.dd.soeren.cloud
+  - domain: k8s.pt.soeren.cloud
+  - domain: k8s-dqs.dd.soeren.cloud
   - domain: router.ez.soeren.cloud
     sans: [nas-ha.ez.soeren.cloud]
   - domain: router.dd.soeren.cloud
