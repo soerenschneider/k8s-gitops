@@ -34,7 +34,7 @@ spec:
                   sleep 5
                   mc alias set source "${SOURCE_SERVER}" "${SOURCE_USER}" "${SOURCE_PASSWORD}"
                   mc alias set dest "${DEST_SERVER}" "${DEST_USER}" "${DEST_PASSWORD}"
-                  mc mirror source/restic-backups-dd dest/restic-backups-dd
+                  MC_JSON=true mc mirror "source/${SOURCE_PATH}" "dest/${DEST_PATH}"
               envFrom:
                 - configMapRef:
                     name: minio-mirror
