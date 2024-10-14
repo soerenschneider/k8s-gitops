@@ -3,6 +3,7 @@ apiVersion: batch/v1
 kind: "CronJob"
 metadata:
   name: "prometheus-vault-token-syncer"
+  namespace: monitoring
 spec:
   schedule: "*/6 * * * *"
   concurrencyPolicy: Forbid
