@@ -43,6 +43,13 @@ schema_config:
       object_store: filesystem
       schema: v12
       store: tsdb
+    - from: "2024-04-01"
+      object_store: filesystem
+      store: tsdb
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
 server:
   grpc_listen_port: 9095
   http_listen_port: 3100
