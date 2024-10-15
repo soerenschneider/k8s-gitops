@@ -6,7 +6,7 @@ resources:
 patches:
   - target:
       kind: "NetworkPolicy"
-      name: "whoogle"
+      name: "gotify"
     patch: |-
       - op: "add"
         path: "/spec/ingress/0/from/-"
