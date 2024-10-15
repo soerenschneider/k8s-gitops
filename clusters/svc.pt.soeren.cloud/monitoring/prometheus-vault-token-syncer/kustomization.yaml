@@ -9,6 +9,7 @@ patches:
       apiVersion: "batch/v1"
       kind: "CronJob"
       metadata:
+        namespace: "monitoring"
         name: "prometheus-vault-token-syncer"
       spec:
         jobTemplate:

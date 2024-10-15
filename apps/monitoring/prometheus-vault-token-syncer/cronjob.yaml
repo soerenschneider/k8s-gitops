@@ -5,8 +5,9 @@ metadata:
   name: "prometheus-vault-token-syncer"
   namespace: monitoring
 spec:
-  schedule: "*/6 * * * *"
+  schedule: "* */5 * * *"
   concurrencyPolicy: Forbid
+  failedJobsHistoryLimit: 0
   jobTemplate:
     spec:
       backoffLimit: 0

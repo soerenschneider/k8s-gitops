@@ -10,6 +10,7 @@ patches:
       kind: "CronJob"
       metadata:
         name: "prometheus-vault-token-syncer"
+        namespace: "monitoring"
       spec:
         jobTemplate:
           spec:
