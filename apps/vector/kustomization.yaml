@@ -7,5 +7,6 @@ resources:
   - sa.yaml
 configMapGenerator:
   - name: vector-config
+    behavior: create
     files:
       - agent.yaml

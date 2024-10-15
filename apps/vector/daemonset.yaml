@@ -90,10 +90,8 @@ spec:
       terminationGracePeriodSeconds: 60
       volumes:
         - name: "vector-config"
-          projected:
-            sources:
-              - configMap:
-                  name: "vector"
+          configMap:
+            name: "vector"
         - name: data
           hostPath:
             path: "/var/lib/vector"
