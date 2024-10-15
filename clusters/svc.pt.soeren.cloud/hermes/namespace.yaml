@@ -2,6 +2,6 @@
 kind: Namespace
 apiVersion: v1
 metadata:
-  name: acmevault
+  name: hermes
   labels:
-    name: acmevault
+    name: hermes
