@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: taskchampion
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: taskchampion
+  template:
+    metadata:
+      labels:
+        app: taskchampion
+        app.kubernetes.io/name: taskchampion
+        app.kubernetes.io/instance: taskchampion-prod
+        app.kubernetes.io/component: taskchampion
+        app.kubernetes.io/part-of: taskchampion
+    spec:
+      securityContext:
+        runAsUser: 53589
+        runAsGroup: 53589
+        fsGroup: 53589
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "taskchampion"
+          image: "ghcr.io/gothenburgbitfactory/taskchampion-sync-server:main@sha256:4798edada4b264cdcc82f1c8ea2389cdd5cde02926f74b2361005438056f5729"
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 8080
+              name: "taskchampion"
+          resources:
+            requests:
+              memory: "16Mi"
+              cpu: "1m"
+            limits:
+              memory: "32Mi"
+          livenessProbe:
+            tcpSocket:
+              port: "taskchampion"
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: "taskchampion"
+            initialDelaySeconds: 2
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            runAsNonRoot: true
+            runAsUser: 53589
+            runAsGroup: 53589
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/var/lib/taskchampion-sync-server"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "100Mi"

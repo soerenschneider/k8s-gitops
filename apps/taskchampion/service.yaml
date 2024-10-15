@@ -1,0 +1,12 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "taskchampion"
+spec:
+  selector:
+    app: "taskchampion"
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: "taskchampion"
