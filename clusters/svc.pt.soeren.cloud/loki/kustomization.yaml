@@ -4,19 +4,18 @@ kind: Kustomization
 namespace: loki
 resources:
   - ../../../apps/loki
-  - configmap.yaml
-  - pv.yaml
-  - pvc.yaml
+  - loki-pv.yaml
   - namespace.yaml
-  - virtualservice.yaml
+components:
+  - ../../../apps/loki/components/istio
+  - ../../../apps/loki/components/monolith
+  - ../../../apps/loki/components/pvc
 patches:
   - target:
-      kind: Deployment
-      name: loki
+      kind: "VirtualService"
+      name: "loki"
     patch: |-
-      - op: replace
-        path: /spec/template/spec/volumes/0
+      - op: "replace"
+        path: "/spec/hosts"
         value:
-          name: storage
-          persistentVolumeClaim:
-            claimName: loki
+          - "loki.svc.pt.soeren.cloud"
