@@ -319,6 +319,13 @@ scrape_configs:
       - source_labels: [__meta_kubernetes_pod_name]
         action: replace
         target_label: kubernetes_pod_name
+    metric_relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_chart]
+        action: drop
+      - source_labels: [__meta_kubernetes_pod_label_heritage]
+        action: drop
+      - source_labels: [__meta_kubernetes_pod_label_install_operator_istio_io_owning_resource]
+        action: drop
   - job_name: kubernetes-cadvisor
     scheme: https
     tls_config:
