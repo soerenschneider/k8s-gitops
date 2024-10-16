@@ -1,0 +1,89 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memos
+  labels:
+    app.kubernetes.io/name: memos
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: memos
+  template:
+    metadata:
+      labels:
+        app: memos
+        app.kubernetes.io/name: memos
+        app.kubernetes.io/instance: memos-prod
+        app.kubernetes.io/component: memos
+    spec:
+      securityContext:
+        runAsUser: 34171
+        runAsGroup: 34171
+        fsGroup: 34171
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: "memos"
+          image: "ghcr.io/usememos/memos:0.22.5"
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: "MEMOS_PORT"
+              value: "5230"
+            - name: "MEMOS_ADDR"
+              value: "0.0.0.0"
+          envFrom:
+            - secretRef:
+                name: "memos"
+                optional: true
+          ports:
+            - containerPort: 5230
+              name: "memos"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 34171
+            runAsGroup: 34171
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: "memos"
+            initialDelaySeconds: 15
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: "memos"
+            initialDelaySeconds: 5
+          startupProbe:
+            httpGet:
+              path: "/"
+              port: memos
+            failureThreshold: 60
+            periodSeconds: 10
+          resources:
+            limits:
+              memory: "256Mi"
+            requests:
+              cpu: "5m"
+              memory: "32Mi"
+          volumeMounts:
+            - name: storage
+              mountPath: /var/opt/memos
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: storage
+          emptyDir:
+            sizeLimit: 1Gi
+        - name: tmp
+          emptyDir:
+            sizeLimit: 50M

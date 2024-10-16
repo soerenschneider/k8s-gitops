@@ -1,0 +1,19 @@
+---
+apiVersion: "networking.istio.io/v1alpha3"
+kind: "VirtualService"
+metadata:
+  name: "memos"
+spec:
+  hosts:
+    - "memos"
+  gateways:
+    - "istio-system/gateway"
+  http:
+    - match:
+        - uri:
+            prefix: "/"
+      route:
+        - destination:
+            host: "memos"
+            port:
+              number: 80
