@@ -3,7 +3,7 @@ alertmanager:
   interval: 60s
   servers:
     - name: local
-      uri: http://alertmanager
+      uri: http://router.dd.soeren.cloud:9093
       timeout: 10s
       proxy: true
       readonly: false
