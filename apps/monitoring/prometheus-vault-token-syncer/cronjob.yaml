@@ -5,7 +5,7 @@ metadata:
   name: "prometheus-vault-token-syncer"
   namespace: monitoring
 spec:
-  schedule: "* */5 * * *"
+  schedule: "0 */5 * * *"
   concurrencyPolicy: Forbid
   failedJobsHistoryLimit: 0
   jobTemplate:
@@ -52,12 +52,7 @@ spec:
               resources:
                 requests:
                   memory: "64Mi"
-                  cpu: "5m"
+                  cpu: "1m"
                 limits:
-                  memory: "1Gi"
-              volumeMounts:
-                - name: storage
-                  mountPath: /data
-          volumes:
-            - name: storage
-              emptyDir: {}
+                  memory: "128Mi"
+                  cpu: "100m"
