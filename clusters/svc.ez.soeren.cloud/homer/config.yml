@@ -95,9 +95,18 @@ miniflux: &miniflux
 pastebin: &pastebin
   name: "Pastebin"
   icon: "fa-solid fa-paste"
+  logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/privatebin.svg"
   tag: "vault"
   keywords: "self selfhosted hosted vault security"
-  url: "https://bin.svc.dd.soeren.cloud"
+  url: "https://privatebin.svc.dd.soeren.cloud"
+  target: "_blank"
+
+cyberchef: &cyberchef
+  name: "Cyberchef"
+  logo: "https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/svg/cyberchef.svg"
+  tag: "vault"
+  keywords: "self selfhosted hosted vault security"
+  url: "https://cyberchef.svc.pt.soeren.cloud"
   target: "_blank"
 
 changedetection:
@@ -348,13 +357,14 @@ services:
       - <<: *stirling_pdf
         url: "https://stirling-pdf.svc.ez.soeren.cloud"
       - <<: *pastebin
-        url: "https://bin.svc.ez.soeren.cloud"
+        url: "https://privatebin.svc.ez.soeren.cloud"
       - <<: *whoogle
         url: "https://whoogle.svc.ez.soeren.cloud"
 
   - name: "Development"
     icon: "fas fa-code-branch"
     items:
+      - <<: *cyberchef
       - <<: *dev_httpbin
         url: "https://httpbin.svc.ez.soeren.cloud"
       - <<: *dev_stringis
