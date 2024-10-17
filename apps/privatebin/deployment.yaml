@@ -1,0 +1,77 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "privatebin"
+  labels:
+    app: "privatebin"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "privatebin"
+  template:
+    metadata:
+      labels:
+        app: "privatebin"
+        app.kubernetes.io/name: "privatebin"
+        app.kubernetes.io/component: "privatebin"
+        app.kubernetes.io/instance: "privatebin-prod"
+        app.kubernetes.io/part-of: "privatebin"
+    spec:
+      securityContext:
+        runAsUser: 23763
+        runAsGroup: 23763
+        fsGroup: 23763
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "privatebin"
+          image: "docker.io/privatebin/nginx-fpm-alpine:1.7.4@sha256:4cc5f26f5b558b734cb084ada4fdacd75bd9f5e4574f3f3df54165b3623d6b86"
+          imagePullPolicy: "IfNotPresent"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "5m"
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 8080
+              name: "privatebin"
+          readinessProbe:
+            tcpSocket:
+              port: "privatebin"
+          livenessProbe:
+            tcpSocket:
+              port: "privatebin"
+          securityContext:
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 23763
+            runAsGroup: 23763
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/srv/data"
+            - name: "config"
+              mountPath: "/srv/cfg"
+            - name: "tmp"
+              mountPath: "/tmp"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"
+        - name: "config"
+          configMap:
+            name: "privatebin-config"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "1Gi"
