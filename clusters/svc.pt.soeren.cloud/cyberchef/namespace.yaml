@@ -1,0 +1,7 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: cyberchef
+  labels:
+    name: cyberchef
