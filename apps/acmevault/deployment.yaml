@@ -33,7 +33,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: acmevault
-          image: "ghcr.io/soerenschneider/acmevault:1.14.0"
+          image: "ghcr.io/soerenschneider/acmevault:1.15.0"
           imagePullPolicy: "IfNotPresent"
           securityContext:
             readOnlyRootFilesystem: true
