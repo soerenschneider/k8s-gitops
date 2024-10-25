@@ -5,3 +5,6 @@ namespace: monitoring
 resources:
   - ../../../../apps/monitoring/victoriametrics
   - virtualservice.yaml
+components:
+  - ../../../../apps/monitoring/victoriametrics/components/istio
+  - ../../../../apps/monitoring/victoriametrics/components/pvc
