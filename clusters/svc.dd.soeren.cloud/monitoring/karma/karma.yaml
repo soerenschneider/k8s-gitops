@@ -21,7 +21,8 @@ custom:
 debug: false
 filters:
   default:
-    - "@receiver=by-cluster-service"
+    - "@receiver!=deadman"
+    - "@state=active"
 karma:
   name: karma-prod
 labels:
