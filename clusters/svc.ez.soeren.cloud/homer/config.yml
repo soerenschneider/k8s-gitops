@@ -395,14 +395,6 @@ services:
       - <<: *pim_wiki
         url: "https://bookstack.svc.ez.soeren.cloud"
 
-#  - name: "NAS"
-#    icon: "fa-solid fa-file"
-#    items:
-#      - name: "Syncthing"
-#        tag: "other"
-#        url: "https://nas.dd.soeren.cloud/syncthing"
-#        target: "_blank"
-
   - name: "Media"
     icon: "fa-solid fa-film"
     items:
