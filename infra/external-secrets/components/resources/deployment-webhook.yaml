@@ -41,6 +41,7 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 12364
+            runAsGroup: 12364
             seccompProfile:
               type: RuntimeDefault
           image: ghcr.io/external-secrets/external-secrets:v0.10.5
@@ -70,6 +71,12 @@ spec:
             - name: certs
               mountPath: /tmp/certs
               readOnly: true
+          resources:
+            requests:
+              memory: 64Mi
+              cpu: 50Mi
+            limits:
+              memory: 256Mi
       volumes:
         - name: certs
           secret:

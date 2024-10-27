@@ -27,8 +27,12 @@ misconfigurations:
   - id: "AVD-KSV-0048"
     paths:
       - "infra/reloader/components/rbac/clusterrole.yaml"
+  - id: "AVD-KSV-0049"
+    paths:
+      - "infra/external-secrets/components/resources/rbac-clusterroles.yaml"
   - id: "AVD-KSV-0041"
     paths:
+      - "infra/external-secrets/components/resources/rbac-bindings.yaml"
       - "infra/reloader/components/rbac/clusterrole.yaml"
       - "apps/monitoring/kube-state-metrics/components/rbac/cluster-role.yaml"
   - id: "AVD-KSV-0109"
@@ -37,6 +41,9 @@ misconfigurations:
   - id: "AVD-KSV-0113"
     paths:
       - "apps/monitoring/prometheus-vault-token-syncer/rbac.yaml"
+  - id: "AVD-KSV-0114"
+    paths:
+      - "infra/external-secrets/components/resources/rbac-bindings.yaml"
   - id: "AVD-KSV-01010"
     paths:
       - "**/taskwarrior-configmap.yaml" # false positive

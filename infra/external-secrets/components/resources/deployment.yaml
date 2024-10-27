@@ -44,6 +44,7 @@ spec:
             readOnlyRootFilesystem: true
             runAsNonRoot: true
             runAsUser: 12364
+            runAsGroup: 12364
             seccompProfile:
               type: RuntimeDefault
           image: ghcr.io/external-secrets/external-secrets:v0.10.5
@@ -55,4 +56,10 @@ spec:
             - containerPort: 8080
               protocol: TCP
               name: metrics
+          resources:
+            requests:
+              memory: 128Mi
+              cpu: 50Mi
+            limits:
+              memory: 1Gi
       dnsPolicy: ClusterFirst
