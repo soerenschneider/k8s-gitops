@@ -9,11 +9,11 @@ metadata:
 webhooks:
   - name: "validate.secretstore.external-secrets.io"
     rules:
-      - apiGroups:   ["external-secrets.io"]
+      - apiGroups: ["external-secrets.io"]
         apiVersions: ["v1beta1"]
-        operations:  ["CREATE", "UPDATE", "DELETE"]
-        resources:   ["secretstores"]
-        scope:       "Namespaced"
+        operations: ["CREATE", "UPDATE", "DELETE"]
+        resources: ["secretstores"]
+        scope: "Namespaced"
     clientConfig:
       service:
         namespace: external-secrets
@@ -22,14 +22,13 @@ webhooks:
     admissionReviewVersions: ["v1", "v1beta1"]
     sideEffects: None
     timeoutSeconds: 5
-
   - name: "validate.clustersecretstore.external-secrets.io"
     rules:
-      - apiGroups:   ["external-secrets.io"]
+      - apiGroups: ["external-secrets.io"]
         apiVersions: ["v1beta1"]
-        operations:  ["CREATE", "UPDATE", "DELETE"]
-        resources:   ["clustersecretstores"]
-        scope:       "Cluster"
+        operations: ["CREATE", "UPDATE", "DELETE"]
+        resources: ["clustersecretstores"]
+        scope: "Cluster"
     clientConfig:
       service:
         namespace: external-secrets
@@ -49,11 +48,11 @@ metadata:
 webhooks:
   - name: "validate.externalsecret.external-secrets.io"
     rules:
-      - apiGroups:   ["external-secrets.io"]
+      - apiGroups: ["external-secrets.io"]
         apiVersions: ["v1beta1"]
-        operations:  ["CREATE", "UPDATE", "DELETE"]
-        resources:   ["externalsecrets"]
-        scope:       "Namespaced"
+        operations: ["CREATE", "UPDATE", "DELETE"]
+        resources: ["externalsecrets"]
+        scope: "Namespaced"
     clientConfig:
       service:
         namespace: external-secrets
