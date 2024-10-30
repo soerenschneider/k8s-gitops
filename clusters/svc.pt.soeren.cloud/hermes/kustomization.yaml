@@ -9,6 +9,7 @@ components:
 resources:
   - "namespace.yaml"
   - "../../../apps/hermes"
+  - "external-secret-hermes.yaml"
 configMapGenerator:
   - name: "hermes-config"
     files:

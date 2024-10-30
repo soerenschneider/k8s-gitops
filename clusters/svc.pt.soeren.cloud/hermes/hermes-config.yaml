@@ -13,5 +13,5 @@ awtrix:
 dead_letter_queue: "gotify"
 gotify:
   - uri: "gotify"
-    token_file: "/etc/hermes/gotify_token"
+    token_file: "/etc/hermes/gotify"
     addr: "http://gotify.gotify"
