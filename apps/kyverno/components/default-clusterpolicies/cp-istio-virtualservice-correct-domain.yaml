@@ -2,7 +2,7 @@
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
-  name: restrict-virtual-service-wildcard
+  name: restrict-virtual-service-domain
   annotations:
     policies.kyverno.io/title: Restrict Virtual Service Host with Wildcards
     policies.kyverno.io/category: Istio
@@ -22,24 +22,19 @@ spec:
   validationFailureAction: "enforce"
   background: true
   rules:
-    - name: block-virtual-service-wildcard
+    - name: "block-virtual-service-wildcard"
       match:
         any:
           - resources:
               kinds:
-                - VirtualService
-      preconditions:
-        all:
-          - key: "{{ request.operation || 'BACKGROUND' }}"
-            operator: AnyIn
-            value: ["CREATE", "UPDATE"]
+                - "VirtualService"
       validate:
-        message: "Wildcards are not permitted as hosts."
+        message: "Only VirtualService objects for the correct domain are allowed."
         foreach:
           - list: "request.object.spec.hosts"
             deny:
               conditions:
                 any:
-                  - key: "{{ contains(element, '*') }}"
-                    operator: Equals
-                    value: true
+                  - key: "{{element}}"
+                    operator: NotEquals
+                    value: "*.ez.soeren.cloud"

@@ -1,0 +1,17 @@
+apiVersion: "helm.toolkit.fluxcd.io/v2"
+kind: "HelmRelease"
+metadata:
+  name: "kyverno"
+spec:
+  releaseName: "kyverno"
+  chart:
+    spec:
+      chart: "kyverno"
+      version: "2.6.0"
+      sourceRef:
+        kind: "HelmRepository"
+        name: "kyverno"
+  interval: "1h"
+  install:
+    remediation:
+      retries: 3
