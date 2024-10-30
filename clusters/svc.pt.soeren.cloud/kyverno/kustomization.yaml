@@ -15,3 +15,9 @@ patches:
       - op: replace
         path: /spec/rules/0/validate/foreach/0/deny/conditions/any/0/value
         value: "*.pt.soeren.cloud"
+  - target:
+      kind: ClusterPolicy
+    patch: |
+      - op: replace
+        path: /spec/validationFailureAction
+        value: "audit"
