@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: "cyberchef"
-          image: "ghcr.io/soerenschneider/cyberchef:10.19.2"
+          image: "ghcr.io/soerenschneider/cyberchef:10.19.4"
           imagePullPolicy: "IfNotPresent"
           env:
             - name: "APLOS_ADDR"
