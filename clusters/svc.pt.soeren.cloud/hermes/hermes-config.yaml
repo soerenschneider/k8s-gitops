@@ -14,4 +14,4 @@ dead_letter_queue: "gotify"
 gotify:
   - uri: "gotify"
     token_file: "/etc/hermes/gotify_token"
-    addr: "https://gotify.dqs.dd.soeren.cloud"
+    addr: "http://gotify.gotify"
