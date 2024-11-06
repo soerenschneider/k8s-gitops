@@ -14,8 +14,8 @@ spec:
           port: "hermes"
       from: []
     - ports:
-        - protocol: "TCP"
-          port: "metrics"
+        - protocol: TCP
+          port: metrics
       from:
         - namespaceSelector:
             matchLabels:
@@ -33,6 +33,14 @@ spec:
         - port: 443
           protocol: TCP
         - port: 25
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              name: "gotify"
+          podSelector: {}
+      ports:
+        - port: 8080 # original port of gotify
           protocol: TCP
     - to:
         - namespaceSelector:
