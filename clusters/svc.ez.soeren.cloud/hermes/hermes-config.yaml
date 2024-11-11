@@ -1,0 +1,21 @@
+---
+http:
+  address: "0.0.0.0:8080"
+metrics_addr: "0.0.0.0:9223"
+events_impl: [http]
+
+db:
+  type: sqlite
+  name: "/data/sqlite.db"
+
+awtrix:
+  - uri: "awtrix-office"
+    addr: "http://awtrix-office.dd.soeren.cloud"
+  - uri: "awtrix-livingroom"
+    addr: "http://awtrix-livingroom.dd.soeren.cloud"
+
+dead_letter_queue: "gotify"
+gotify:
+  - uri: "gotify"
+    token_file: "/etc/hermes/gotify"
+    addr: "http://gotify.gotify"
