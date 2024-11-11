@@ -1,1 +1,0 @@
-../../../apps/ghostfolio/components/postgres/upsert-secret-ghostfolio-postgres.sh
