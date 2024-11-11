@@ -28,12 +28,13 @@ spec:
       securityContext:
         runAsUser: 32325
         runAsGroup: 32325
+        fsGroup: 32325
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
       containers:
         - name: "hermes"
-          image: "ghcr.io/soerenschneider/hermes:1.2.0"
+          image: "ghcr.io/soerenschneider/hermes:1.3.0"
           imagePullPolicy: "IfNotPresent"
           command:
             - "/hermes"
@@ -66,9 +67,14 @@ spec:
             - configMapRef:
                 name: "hermes-config"
           volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
             - name: "config-volume"
               mountPath: "/config"
       volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "150Mi"
         - name: "config-volume"
           configMap:
             name: "hermes-config"
