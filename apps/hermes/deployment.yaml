@@ -66,6 +66,16 @@ spec:
           envFrom:
             - configMapRef:
                 name: "hermes-config"
+          livenessProbe:
+            httpGet:
+              path: "/health"
+              port: "hermes"
+            initialDelaySeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: "/health"
+              port: "hermes"
           volumeMounts:
             - name: "storage"
               mountPath: "/data"
