@@ -64,18 +64,15 @@ spec:
                 name: "paperless"
                 optional: true
           livenessProbe:
-            httpGet:
-              path: "/"
+            tcpSocket:
               port: "paperless-ngx"
             initialDelaySeconds: 30
           readinessProbe:
-            httpGet:
-              path: "/"
+            tcpSocket:
               port: "paperless-ngx"
             initialDelaySeconds: 5
           startupProbe:
-            httpGet:
-              path: "/"
+            tcpSocket:
               port: "paperless-ngx"
             failureThreshold: 60
             periodSeconds: 10
