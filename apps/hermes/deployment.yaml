@@ -34,7 +34,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: "hermes"
-          image: "ghcr.io/soerenschneider/hermes:1.3.0"
+          image: "ghcr.io/soerenschneider/hermes:1.4.0"
           imagePullPolicy: "IfNotPresent"
           command:
             - "/hermes"
