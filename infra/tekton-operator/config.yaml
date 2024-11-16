@@ -1,0 +1,45 @@
+---
+apiVersion: operator.tekton.dev/v1alpha1
+kind: TektonConfig
+metadata:
+  name: config
+spec:
+  targetNamespace: tekton-pipelines
+  profile: basic
+  config:
+    priorityClassName: system-cluster-critical
+  chain:
+    disabled: true
+  pipeline:
+    set-security-context: true
+    performance:
+      disable-ha: true
+    options:
+      disabled: false
+      deployments:
+        tekton-pipelines-controller:
+          spec:
+            template:
+              metadata:
+                annotations:
+                  prometheus.io/port: "9090"
+                  prometheus.io/scrape: "true"
+  pruner:
+    schedule: "0 8 * * *"
+    resources:
+      - taskrun
+      - pipelinerun
+    keep: 3
+    prune-per-resource: true
+  hub:
+    options:
+      disabled: true
+  dashboard:
+    readonly: true
+    options:
+      disabled: false
+      webhookConfigurationOptions: {}
+  platforms:
+    openshift:
+      pipelinesAsCode:
+        enable: false

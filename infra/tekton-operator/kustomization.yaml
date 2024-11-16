@@ -1,0 +1,42 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: tekton-operator
+resources:
+  - https://storage.googleapis.com/tekton-releases/operator/previous/v0.73.1/release.yaml
+  - config.yaml
+patches:
+  - target:
+      kind: Deployment
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/resources
+        value:
+          requests:
+            memory: 96M
+            cpu: 15m
+          limits:
+            memory: 192M
+      - op: add
+        path: /spec/template/spec/securityContext
+        value:
+          runAsUser: 32456
+          runAsGroup: 32456
+          fsGroup: 32456
+          runAsNonRoot: true
+          seccompProfile:
+            type: "RuntimeDefault"
+      - op: add
+        path: /spec/template/spec/containers/0/securityContext
+        value:
+          runAsUser: 32456
+          runAsGroup: 32456
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          privileged: false
+          runAsNonRoot: true
+          capabilities:
+            drop:
+              - "ALL"
+          seccompProfile:
+            type: "RuntimeDefault"
