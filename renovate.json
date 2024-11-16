@@ -4,6 +4,9 @@
   "kubernetes": {
     "fileMatch": ["\\.yaml$"]
   },
+  "flux": {
+    "fileMatch": ["\\.yaml$"]
+  },
   "packageRules": [
     {
       "description": ["Custom versioning for minio"],
