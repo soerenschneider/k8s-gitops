@@ -26,7 +26,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: "taskchampion"
-          image: "ghcr.io/gothenburgbitfactory/taskchampion-sync-server:main@sha256:c86c747938658f21fcbedbe921c51c36feee918b1f7fa43b2cc2b69581cca490"
+          image: "ghcr.io/gothenburgbitfactory/taskchampion-sync-server:main@sha256:9ddbb6248d19c1ee8d5bbf3ed9425a133ad4337657ad3ba873cd2635460ab2a6"
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 8080
