@@ -36,7 +36,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: vmalert
-          image: victoriametrics/vmalert:v1.106.0
+          image: victoriametrics/vmalert:v1.107.0
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8880
