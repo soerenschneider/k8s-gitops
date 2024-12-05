@@ -20,6 +20,9 @@ spec:
       labels:
         app.kubernetes.io/name: external-secrets-webhook
         app.kubernetes.io/instance: external-secrets
+      annotations:
+        "prometheus.io/scrape": "true"
+        "prometheus.io/port": "8080"
     spec:
       hostNetwork: false
       serviceAccountName: external-secrets-webhook

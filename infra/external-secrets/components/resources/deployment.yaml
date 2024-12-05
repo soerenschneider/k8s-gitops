@@ -6,11 +6,8 @@ metadata:
   name: external-secrets
   namespace: external-secrets
   labels:
-    helm.sh/chart: external-secrets-0.9.19
     app.kubernetes.io/name: external-secrets
     app.kubernetes.io/instance: external-secrets
-    app.kubernetes.io/version: "v0.10.3"
-    app.kubernetes.io/managed-by: Helm
 spec:
   replicas: 1
   revisionHistoryLimit: 10
@@ -23,6 +20,9 @@ spec:
       labels:
         app.kubernetes.io/name: external-secrets
         app.kubernetes.io/instance: external-secrets
+      annotations:
+        "prometheus.io/scrape": "true"
+        "prometheus.io/port": "8080"
     spec:
       serviceAccountName: external-secrets
       automountServiceAccountToken: true

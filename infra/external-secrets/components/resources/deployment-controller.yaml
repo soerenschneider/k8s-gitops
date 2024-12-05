@@ -20,6 +20,9 @@ spec:
       labels:
         app.kubernetes.io/name: external-secrets-cert-controller
         app.kubernetes.io/instance: external-secrets
+      annotations:
+        "prometheus.io/scrape": "true"
+        "prometheus.io/port": "8080"
     spec:
       serviceAccountName: external-secrets-cert-controller
       automountServiceAccountToken: true
