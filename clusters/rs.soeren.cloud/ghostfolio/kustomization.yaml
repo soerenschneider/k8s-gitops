@@ -1,22 +1,22 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: ghostfolio
+namespace: "ghostfolio"
 resources:
-  - ../../../apps/ghostfolio
-  - namespace.yaml
-  - postgres-data-pv.yaml
-  - sops-secret-ghostfolio.yaml
+  - "../../../apps/ghostfolio"
+  - "namespace.yaml"
+  - "postgres-data-pv.yaml"
 components:
   - ../../../apps/ghostfolio/components/istio
   - ../../../apps/ghostfolio/components/postgres
+  - ../../../apps/ghostfolio/components/postgres-pvc
   - ../../../apps/ghostfolio/components/redis
 patches:
   - target:
-      kind: VirtualService
-      name: ghostfolio
+      kind: "VirtualService"
+      name: "ghostfolio"
     patch: |
-      - op: replace
-        path: /spec/hosts
+      - op: "replace"
+        path: "/spec/hosts"
         value:
-          - ghostfolio.rs.soeren.cloud
+          - "ghostfolio.rs.soeren.cloud"

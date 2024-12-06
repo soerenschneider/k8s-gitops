@@ -11,6 +11,9 @@ spec:
   storageClassName: local-storage
   local:
     path: /srv/k8s/ghostfolio-postgres
+  claimRef:
+    namespace: "ghostfolio"
+    name: "ghostfolio-postgres"
   nodeAffinity:
     required:
       nodeSelectorTerms:
