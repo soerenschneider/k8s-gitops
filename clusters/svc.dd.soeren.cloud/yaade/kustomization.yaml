@@ -5,4 +5,5 @@ namespace: yaade
 resources:
   - namespace.yaml
   - ../../../apps/yaade
-  - ../../../apps/yaade/components/istio/virtualservice.yaml
+components:
+  - ../../../apps/yaade/components/istio

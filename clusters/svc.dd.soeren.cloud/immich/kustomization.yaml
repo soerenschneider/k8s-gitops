@@ -7,7 +7,6 @@ resources:
   - namespace.yaml
   - immich-pv.yaml
   - postgres-pv.yaml
-  - immich-pv.yaml
 components:
   - ../../../apps/immich/components/istio
   - ../../../apps/immich/components/pvc

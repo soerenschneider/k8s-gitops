@@ -3,7 +3,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../../../apps/media/prowlarr
-  - networkpolicy.yaml
 patches:
   - target:
       kind: Deployment
@@ -65,3 +64,19 @@ patches:
                   secretKeyRef:
                     key: POSTGRES_PASSWORD
                     name: postgres-prowlarr
+  - target:
+      kind: NetworkPolicy
+      name: prowlarr
+    patch: |-
+      - op: replace
+        path: /spec/ingress/0/from
+        value:
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: media
+          - namespaceSelector:
+              matchLabels:
+                kubernetes.io/metadata.name: istio-system
+            podSelector:
+              matchLabels:
+                istio: ingressgateway

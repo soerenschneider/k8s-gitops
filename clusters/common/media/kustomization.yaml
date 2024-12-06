@@ -6,8 +6,8 @@ resources:
   - prowlarr
   - radarr
   - sonarr
-  - ../../../apps/media/components/postgres/postgres-deployment.yaml
-  - ../../svc.dd.soeren.cloud/media/postgres-pv.yaml
-  - ../../../apps/media/components/postgres/postgres-pvc.yaml
-  - ../../../apps/media/components/postgres/postgres-service.yaml
-  - ../../../apps/media/components/reverse-proxy-istio/media-virtualservice.yaml
+components:
+  - ../../../apps/media/components/postgres
+  - ../../../apps/media/components/postgres-pvc
+  - ../../../apps/media/components/reverse-proxy
+  - ../../../apps/media/components/reverse-proxy-istio
