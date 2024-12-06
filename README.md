@@ -2,7 +2,7 @@
 
 ![security](https://github.com/soerenschneider/k8s-gitops/actions/workflows/security-scanners.yaml/badge.svg)
 ![lint](https://github.com/soerenschneider/k8s-gitops/actions/workflows/lint.yaml/badge.svg)
-
+![validate](https://github.com/soerenschneider/k8s-gitops/actions/workflows/validate.yaml/badge.svg)
 
 ## Key Technologies
 
