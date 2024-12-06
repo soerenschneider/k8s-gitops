@@ -27,17 +27,26 @@ misconfigurations:
   - id: "AVD-KSV-0048"
     paths:
       - "infra/reloader/components/rbac/clusterrole.yaml"
+      - "infra/flux/gotk-components.yaml"
   - id: "AVD-KSV-0049"
     paths:
       - "infra/external-secrets/components/resources/rbac-clusterroles.yaml"
+      - "infra/flux/gotk-components.yaml"
   - id: "AVD-KSV-0041"
     paths:
       - "infra/external-secrets/components/resources/rbac-bindings.yaml"
       - "infra/reloader/components/rbac/clusterrole.yaml"
+      - "infra/flux/gotk-components.yaml"
       - "apps/monitoring/kube-state-metrics/components/rbac/cluster-role.yaml"
+  - id: "AVD-KSV-0046"
+    paths:
+      - "infra/flux/gotk-components.yaml"
   - id: "AVD-KSV-0109"
     paths:
       - "clusters/common/taskd/configmap-ca.yaml"
+  - id: "AVD-KSV-0111"
+    paths:
+      - "infra/flux/gotk-components.yaml"
   - id: "AVD-KSV-0113"
     paths:
       - "apps/monitoring/prometheus-vault-token-syncer/rbac.yaml"
