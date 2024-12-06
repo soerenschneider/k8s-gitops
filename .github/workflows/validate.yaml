@@ -1,16 +1,15 @@
+---
 name: Validate Manifests
 on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - "main"
     paths-ignore:
-      - README.md
+      - "README.md"
 
 jobs:
   validate-manifests:
     runs-on: ubuntu-latest
-    env:
-      BIN_PATH: /usr/bin
     steps:
       - name: Install Kustomize
         run: |

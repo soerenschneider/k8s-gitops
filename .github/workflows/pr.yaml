@@ -1,6 +1,6 @@
 ---
 name: Pull Request Action
-on:
+on:  # yamllint disable-line rule:truthy
   push:
     branches:
       - updates
