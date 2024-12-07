@@ -1,0 +1,70 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: "build-gh-release"
+spec:
+  description: "This pipeline clones a github repo, builds it and uploads assets."
+  params:
+    - name: "clone-url"
+      type: "string"
+      description: "The git repo URL to clone from."
+    - name: "owner"
+      type: "string"
+    - name: "repository"
+      type: "string"
+    - name: "revision"
+      type: "string"
+      default: ""
+  workspaces:
+    - name: "shared-data"
+      description: "This workspace contains the cloned repo files, so they can be read by the next task."
+    - name: "github-token"
+      description: "The GitHub token used to upload built assets."
+    - name: "signify"
+      description: "Signify private key and passphrase used to sign release artifacts."
+  tasks:
+    - name: "git-clone"
+      taskRef:
+        name: "git-clone"
+      workspaces:
+        - name: "output"
+          workspace: "shared-data"
+      params:
+        - name: "url"
+          value: $(params.clone-url)
+        - name: "revision"
+          value: $(params.revision)
+    - name: "golang-build-release"
+      runAfter: ["fetch-source"]
+      taskRef:
+        name: "golang-build-release"
+      workspaces:
+        - name: "source"
+          workspace: "shared-data"
+    - name: "sign-release"
+      runAfter: ["golang-build-release"]
+      taskRef:
+        name: "signify"
+      params:
+        - name: "file"
+          value: "builds/checksum.sha256"
+      workspaces:
+        - name: "source"
+          workspace: "shared-data"
+        - name: "signify"
+          workspace: "signify"
+    - name: "upload-assets"
+      runAfter: ["sign-release"]
+      taskRef:
+        name: "upload-assets"
+      workspaces:
+        - name: "binaries"
+          workspace: "shared-data"
+        - name: "github-token"
+          workspace: "github-token"
+      params:
+        - name: "owner"
+          value: $(params.owner)
+        - name: "repository"
+          value: $(params.repository)

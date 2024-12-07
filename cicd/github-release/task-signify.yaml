@@ -1,0 +1,29 @@
+---
+apiVersion: tekton.dev/v1
+kind: "Task"
+metadata:
+  name: "signify"
+spec:
+  description: "Sign a file using signify"
+  params:
+    - description: "Task to sign files"
+      name: "file"
+      type: "string"
+  results:
+    - description: "The file containing the signature created in this task"
+      name: "signature"
+      type: "string"
+  workspaces:
+    - name: "source"
+    - name: "signify"
+  steps:
+    - name: "signify"
+      image: "ghcr.io/soerenschneider/swiss-army-knife-image:main-20241114132438"
+      env:
+        - name: "HOME"
+          value: "/tmp"
+        - name: "FILE"
+          value: $(params.file)
+      script: |
+        #!/usr/bin/env sh
+        cat $(workspaces.signify.path)/passphrase | signify-openbsd -S -x "$(workspaces.source.path)/${FILE}.sig" -s "$(workspaces.signify.path)/..data/github.sec" -m "$(workspaces.source.path)/${FILE}"

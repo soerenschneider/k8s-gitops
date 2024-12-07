@@ -1,0 +1,20 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: "golang-build-release"
+spec:
+  description: "Build golang release binaries"
+  workspaces:
+    - name: "source"
+  steps:
+    - name: "build"
+      image: "golang:1.23.4"
+      env:
+        - name: "HOME"
+          value: "/tmp"
+      script: |
+        #!/usr/bin/env sh
+        git config --global --add safe.directory $(workspaces.source.path)
+        cd $(workspaces.source.path)
+        make release
