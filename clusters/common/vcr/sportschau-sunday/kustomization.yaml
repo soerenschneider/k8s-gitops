@@ -25,8 +25,7 @@ patches:
           - --signal=SIGINT
           - 30m
           - yt-dlp
-          - --merge-output-format=mp4
-          - --keep-video
+          - --quiet
           - --output
           - "/data/sportschau-%(epoch-3600>%Y%m%d-%H%M%S)s.%(ext)s"
           - "https://www.ardmediathek.de/live/Y3JpZDovL3dkci5kZS9CZWl0cmFnLTNkYTY2NGRlLTE4YzItNDY1MC1hNGZmLTRmNjQxNDcyMDcyYg"
