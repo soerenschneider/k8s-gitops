@@ -10,6 +10,7 @@ spec:
   steps:
     - name: "build"
       image: "golang:1.23.4"
+      imagePullPolicy: IfNotPresent
       env:
         - name: "HOME"
           value: "/tmp"

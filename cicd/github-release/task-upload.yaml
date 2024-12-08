@@ -18,6 +18,7 @@ spec:
   steps:
     - name: scripts
       image: "ghcr.io/soerenschneider/scripts:main-20241009193124"
+      imagePullPolicy: IfNotPresent
       env:
         - name: "HOME"
           value: "/tmp"

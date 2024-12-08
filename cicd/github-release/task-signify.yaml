@@ -19,6 +19,7 @@ spec:
   steps:
     - name: "signify"
       image: "ghcr.io/soerenschneider/swiss-army-knife-image:main-20241114132438"
+      imagePullPolicy: IfNotPresent
       env:
         - name: "HOME"
           value: "/tmp"
