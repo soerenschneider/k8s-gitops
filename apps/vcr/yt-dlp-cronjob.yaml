@@ -22,7 +22,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: yt-dlp
-              image: ghcr.io/soerenschneider/yt-dlp:2024.10.22
+              image: ghcr.io/soerenschneider/yt-dlp:2024.12.3
               imagePullPolicy: IfNotPresent
               securityContext:
                 runAsUser: 65535
