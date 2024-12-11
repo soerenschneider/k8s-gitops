@@ -27,7 +27,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: "immich-machine-learning"
-          image: "ghcr.io/immich-app/immich-machine-learning:v1.120.2"
+          image: "ghcr.io/immich-app/immich-machine-learning:v1.122.2"
           securityContext:
             runAsUser: 25001
             runAsGroup: 25001
