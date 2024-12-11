@@ -5,7 +5,7 @@ locals {
 #trivy:ignore:AVD-AWS-0143
 resource "aws_iam_user" "user" {
   name = local.aws_name
-  path = "/system/k8s/${var.cluster_name}"
+  path = "/system/k8s/${var.cluster_name}/"
 }
 
 resource "aws_iam_access_key" "user" {
