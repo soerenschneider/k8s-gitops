@@ -23,7 +23,7 @@ resource "aws_route53_record" "wildcard_record_v4" {
 }
 
 resource "aws_route53_record" "wildcard_record_v6" {
-  count = length(var.wildcard_records_v4) == 0 ? 0 : 1
+  count = length(var.wildcard_records_v6) == 0 ? 0 : 1
 
   zone_id = aws_route53_zone.subdomain.id
   name    = "*.${var.subdomain}"
