@@ -23,9 +23,9 @@ spec:
             seccompProfile:
               type: RuntimeDefault
           containers:
-            - name: nmap-prober
-              image: ghcr.io/soerenschneider/nmap-prober:1.0.0
-              imagePullPolicy: IfNotPresent
+            - name: "nmap-prober"
+              image: "ghcr.io/soerenschneider/nmap-prober:1.0.1"
+              imagePullPolicy: "IfNotPresent"
               securityContext:
                 runAsUser: 11364
                 runAsGroup: 11364
