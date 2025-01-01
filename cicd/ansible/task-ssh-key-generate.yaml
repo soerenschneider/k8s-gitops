@@ -1,0 +1,18 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: "ssh-key-generate"
+spec:
+  description: "Generates a ssh public key pair"
+  workspaces:
+    - name: "keypair"
+  steps:
+    - name: "generate-ssh-key"
+      image: "cr.svc.ez.soeren.cloud/alpine"
+      imagePullPolicy: Always
+      env:
+        - name: "HOME"
+          value: "/tmp"
+      script: |-
+        ssh-keygen -t ed25519 -f /workspace/keypair/key -N ""

@@ -1,0 +1,99 @@
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: "ansible"
+spec:
+  description: "This pipeline clones a github repo, builds it and uploads assets."
+  params:
+    - name: "ansible-repo-clone-url"
+      type: "string"
+      description: "URL of the Ansible repo to clone"
+    - name: "ansible-inventory-repo-clone-url"
+      type: "string"
+      description: "URL of the Ansible inventory repo to clone"
+    - name: "revision"
+      type: "string"
+      default: ""
+    - description: "Endpoint of Vault API"
+      name: "vault-address"
+      type: "string"
+    - description: "Vault SSH role"
+      name: "vault-ssh-role"
+      type: "string"
+    - description: "Vault SSH mount"
+      name: "vault-ssh-mount"
+      type: "string"
+    - description: "Vault Kubernetes auth role"
+      name: "vault-kubernetes-auth-role"
+      type: "string"
+    - description: "Vault Kubernetes auth mount"
+      name: "vault-kubernetes-auth-mount"
+      type: "string"
+  workspaces:
+    - name: "shared-data"
+      description: "This workspace contains the cloned repo files, so they can be read by the next task."
+    - name: "ssh-creds"
+      description: "Workspace containing the SSH keys to clone from GitHub"
+  tasks:
+    - name: "git-clone-ansible"
+      taskRef:
+        name: "git-clone"
+      workspaces:
+        - name: "output"
+          workspace: "shared-data"
+      params:
+        - name: "url"
+          value: $(params.ansible-repo-clone-url)
+        - name: "revision"
+          value: $(params.revision)
+        - name: "subdirectory"
+          value: "ansible"
+    - name: "git-clone-ansible-inventory"
+      taskRef:
+        name: "git-clone"
+      workspaces:
+        - name: "output"
+          workspace: "shared-data"
+        - name: "ssh-directory"
+          workspace: "ssh-creds"
+      params:
+        - name: "url"
+          value: $(params.ansible-inventory-repo-clone-url)
+        - name: "revision"
+          value: $(params.revision)
+        - name: "subdirectory"
+          value: "inventory"
+    - name: "ssh-key-generate"
+      taskRef:
+        name: "ssh-key-generate"
+      workspaces:
+        - name: "keypair"
+          workspace: "shared-data"
+    - name: "ssh-key-sign"
+      runAfter: ["ssh-key-generate"]
+      taskRef:
+        name: "ssh-key-sign"
+      workspaces:
+        - name: "keypair"
+          workspace: "shared-data"
+      params:
+        - name: "vault-address"
+          value: $(params.vault-address)
+        - name: "vault-ssh-role"
+          value: $(params.vault-ssh-role)
+        - name: "vault-ssh-mount"
+          value: $(params.vault-ssh-mount)
+        - name: "vault-kubernetes-auth-role"
+          value: $(params.vault-kubernetes-auth-role)
+        - name: "vault-kubernetes-auth-mount"
+          value: $(params.vault-kubernetes-auth-mount)
+    - name: "ansible-run-playbook"
+      runAfter: ["git-clone-ansible", "git-clone-ansible-inventory", "ssh-key-sign"]
+      taskRef:
+        name: "ansible-run-playbook"
+      workspaces:
+        - name: "source"
+          workspace: "shared-data"
+        - name: "keypair"
+          workspace: "shared-data"

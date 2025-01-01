@@ -1,0 +1,31 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: "ansible-run-playbook"
+spec:
+  description: "Runs an Ansible playbook"
+  workspaces:
+    - name: "source"
+    - name: "keypair"
+  steps:
+    - name: "ansible-run-playbook"
+      image: "cr.svc.ez.soeren.cloud/ansible"
+      imagePullPolicy: Always
+      env:
+        - name: "HOME"
+          value: "/tmp"
+      command:
+        - sleep
+        - "300"
+    - name: "ansible-run-playbook"
+      image: "cr.svc.ez.soeren.cloud/ansible"
+      imagePullPolicy: Always
+      env:
+        - name: "HOME"
+          value: "/tmp"
+      command:
+        - ansible-playbook
+        - -i inventory/inventory.yml
+        - -e ansible_ssh_private_key_file=$(workspaces.keypair.path)/key
+        - ansible/playbooks/jukebox/playbook.yml

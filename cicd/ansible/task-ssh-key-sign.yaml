@@ -1,0 +1,43 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: "ssh-key-sign"
+spec:
+  description: "Sign a ssh public key"
+  workspaces:
+    - name: "keypair"
+  params:
+    - description: "Endpoint of Vault API"
+      name: "vault-address"
+      type: "string"
+    - description: "Vault SSH role"
+      name: "vault-ssh-role"
+      type: "string"
+    - description: "Vault SSH mount"
+      name: "vault-ssh-mount"
+      type: "string"
+      default: "ssh"
+    - description: "Vault Kubernetes auth role"
+      name: "vault-kubernetes-auth-role"
+      type: "string"
+    - description: "Vault Kubernetes auth mount"
+      name: "vault-kubernetes-auth-mount"
+      type: "string"
+      default: "kubernetes"
+  steps:
+    - name: "sign-ssh-key"
+      image: "ghcr.io/soerenschneider/vault-ssh-cli:1.9.1"
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: "HOME"
+          value: "/tmp"
+      args:
+        - "--vault-address=$(params.vault-address)"
+        - "sign-user-key"
+        - "--pub-key-file=$(workspaces.keypair.path)/key.pub"
+        - "--signed-key-file=$(workspaces.keypair.path)/key-cert.pub"
+        - "--vault-ssh-role=$(params.vault-ssh-role)"
+        - "--vault-ssh-mount=$(params.vault-ssh-mount)"
+        - "--vault-auth-kubernetes-role=$(params.vault-kubernetes-auth-role)"
+        - "--vault-auth-kubernetes-mount=$(params.vault-kubernetes-auth-mount)"
