@@ -1,0 +1,17 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../../cicd/ansible
+  - external-secret-github-ssh.yaml
+configMapGenerator:
+  - name: ansible-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - ansible.cfg
+  - name: ssh-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - known_hosts

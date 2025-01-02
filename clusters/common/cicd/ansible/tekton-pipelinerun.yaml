@@ -1,0 +1,54 @@
+---
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: "ansible-"
+spec:
+  pipelineRef:
+    name: ansible
+  taskRunTemplate:
+    serviceAccountName: ansible
+    podTemplate:
+      securityContext:
+        runAsUser: 12563
+        runAsGroup: 12563
+        fsGroup: 12563
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+  workspaces:
+    - name: "ssh-creds"
+      secret:
+        secretName: github-ssh
+    - name: "ansible-config"
+      configMap:
+        name: "ansible-config"
+    - name: "ansible-ssh-config"
+      configMap:
+        name: "ssh-config"
+    - name: shared-data
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          storageClassName: openebs-hostpath
+          resources:
+            requests:
+              storage: 1Gi
+  params:
+    - name: "ansible-repo-clone-url"
+      value: "https://github.com/soerenschneider/ansible.git"
+    - name: "ansible-inventory-repo-clone-url"
+      value: "git@github.com:soerenschneider/ansible-inventory-prod.git"
+    - name: "vault-address"
+      value: "https://vault.ha.soeren.cloud"
+    - name: "vault-ssh-role"
+      value: "user"
+    - name: "vault-ssh-mount"
+      value: "ssh/clients"
+    - name: "vault-kubernetes-auth-role"
+      value: "cicd-ansible"
+    - name: "vault-kubernetes-auth-mount"
+      value: "svc.ez.soeren.cloud"
+    - name: "playbook"
+      value: "jukebox/playbook.yml"
