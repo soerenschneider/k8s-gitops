@@ -1,0 +1,23 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: "ssh-key-generate"
+spec:
+  description: "Generates a ssh public key pair"
+  workspaces:
+    - name: "keypair"
+  params:
+    - name: "key-type"
+      description: "The type of the SSH key"
+      type: "string"
+      default: "ed25519"
+  steps:
+    - name: "generate-ssh-key"
+      image: "cr.svc.ez.soeren.cloud/ansible"
+      imagePullPolicy: IfNotPresent
+      env:
+        - name: "HOME"
+          value: "/tmp"
+      script: |-
+        ssh-keygen -t $(params.key-type) -f $(workspaces.keypair.path)/key -N ""

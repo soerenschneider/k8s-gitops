@@ -4,9 +4,10 @@ kind: Kustomization
 namespace: "cicd-ansible"
 resources:
   - https://api.hub.tekton.dev/v1/resource/tekton/task/git-clone/0.9/raw
-  - task-ssh-key-generate.yaml
-  - task-ssh-key-sign.yaml
-  - task-ansible-run-playbook.yaml
-  - pipeline.yaml
   - namespace.yaml
   - rbac.yaml
+  - tekton-task-vault-login.yaml
+  - tekton-task-ssh-key-generate.yaml
+  - tekton-task-ssh-key-sign.yaml
+  - tekton-task-ansible-run-playbook.yaml
+  - tekton-pipeline.yaml

@@ -4,7 +4,9 @@ kind: Pipeline
 metadata:
   name: "ansible"
 spec:
-  description: "This pipeline clones a github repo, builds it and uploads assets."
+  description: |
+    Clones Ansible playbooks, roles and inventory repositories, authenticates against Vault, generates SSH
+    key pair, signs them and finally runs Ansible playbooks.
   params:
     - name: "ansible-repo-clone-url"
       type: "string"
@@ -30,12 +32,27 @@ spec:
     - description: "Vault Kubernetes auth mount"
       name: "vault-kubernetes-auth-mount"
       type: "string"
+    - description: "The playbook to run"
+      name: "playbook"
+      type: "string"
   workspaces:
     - name: "shared-data"
       description: "This workspace contains the cloned repo files, so they can be read by the next task."
     - name: "ssh-creds"
       description: "Workspace containing the SSH keys to clone from GitHub"
+    - name: "ansible-config"
+    - name: "ansible-ssh-config"
   tasks:
+    - name: "vault-login"
+      taskRef:
+        name: "vault-login"
+      params:
+        - name: "vault-address"
+          value: $(params.vault-address)
+        - name: "auth-role"
+          value: $(params.vault-kubernetes-auth-role)
+        - name: "auth-mount"
+          value: $(params.vault-kubernetes-auth-mount)
     - name: "git-clone-ansible"
       taskRef:
         name: "git-clone"
@@ -80,16 +97,14 @@ spec:
       params:
         - name: "vault-address"
           value: $(params.vault-address)
+        - name: "vault-token"
+          value: $(tasks.vault-login.results.vault_token)
         - name: "vault-ssh-role"
           value: $(params.vault-ssh-role)
         - name: "vault-ssh-mount"
           value: $(params.vault-ssh-mount)
-        - name: "vault-kubernetes-auth-role"
-          value: $(params.vault-kubernetes-auth-role)
-        - name: "vault-kubernetes-auth-mount"
-          value: $(params.vault-kubernetes-auth-mount)
     - name: "ansible-run-playbook"
-      runAfter: ["git-clone-ansible", "git-clone-ansible-inventory", "ssh-key-sign"]
+      runAfter: ["vault-login", "git-clone-ansible", "git-clone-ansible-inventory", "ssh-key-sign"]
       taskRef:
         name: "ansible-run-playbook"
       workspaces:
@@ -97,3 +112,12 @@ spec:
           workspace: "shared-data"
         - name: "keypair"
           workspace: "shared-data"
+        - name: "ansible-config"
+          workspace: "ansible-config"
+        - name: "ansible-ssh-config"
+          workspace: "ansible-ssh-config"
+      params:
+        - name: "vault-token"
+          value: $(tasks.vault-login.results.vault_token)
+        - name: "playbook"
+          value: $(params.playbook)

@@ -1,0 +1,45 @@
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: "vault-login"
+spec:
+  description: "Authenticates against Vault and saves the Vault token"
+  params:
+    - description: "Endpoint of Vault API"
+      name: "vault-address"
+      type: "string"
+    - description: "Method of Vault authentication"
+      name: "auth-method"
+      type: "string"
+      default: "kubernetes"
+    - description: "Mount point of Vault authentication method"
+      name: "auth-mount"
+      type: "string"
+      default: "kubernetes"
+    - description: "Mount point of Vault authentication method"
+      name: "auth-role"
+      type: "string"
+  results:
+    - description: "Vault token"
+      name: "vault_token"
+      type: "string"
+  steps:
+    - name: "vault-login"
+      image: "cr.svc.ez.soeren.cloud/vault-login"
+      imagePullPolicy: Always
+      env:
+        - name: "HOME"
+          value: "/tmp"
+        - name: "VAULT_ADDR"
+          value: $(params.vault-address)
+        - name: "VAULT_AUTH_TYPE"
+          value: $(params.auth-method)
+        - name: "VAULT_AUTH_MOUNT"
+          value: $(params.auth-mount)
+        - name: "VAULT_AUTH_ROLE"
+          value: $(params.auth-role)
+        - name: "VAULT_AUTH_OUTPUT_TYPE"
+          value: "file"
+        - name: "VAULT_AUTH_OUTPUT_SECRET_NAME"
+          value: $(results.vault_token.path)

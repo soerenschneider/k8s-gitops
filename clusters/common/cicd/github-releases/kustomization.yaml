@@ -4,5 +4,4 @@ kind: Kustomization
 namespace: cicd
 resources:
   - ../../../cicd/github-release
-  - external-secret-github.yaml
   - namespace.yaml
