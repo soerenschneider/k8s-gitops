@@ -14,7 +14,7 @@ spec:
       default: "ed25519"
   steps:
     - name: "generate-ssh-key"
-      image: "cr.svc.ez.soeren.cloud/ansible"
+      image: "ghcr.io/soerenschneider/ansible-docker:2.18.1"
       imagePullPolicy: IfNotPresent
       env:
         - name: "HOME"

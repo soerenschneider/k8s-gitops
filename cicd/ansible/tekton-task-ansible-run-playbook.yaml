@@ -29,7 +29,7 @@ spec:
       default: ""
   steps:
     - name: "ansible"
-      image: "cr.svc.ez.soeren.cloud/ansible"
+      image: "ghcr.io/soerenschneider/ansible-docker:2.18.1"
       imagePullPolicy: "IfNotPresent"
       env:
         - name: "VAULT_TOKEN"
