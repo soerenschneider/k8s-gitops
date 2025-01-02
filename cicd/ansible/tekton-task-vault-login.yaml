@@ -26,8 +26,8 @@ spec:
       type: "string"
   steps:
     - name: "vault-login"
-      image: "cr.svc.ez.soeren.cloud/vault-login"
-      imagePullPolicy: Always
+      image: "ghcr.io/soerenschneider/vault-login"
+      imagePullPolicy: "IfNotPresent"
       env:
         - name: "HOME"
           value: "/tmp"
