@@ -26,7 +26,7 @@ spec:
       type: "string"
   steps:
     - name: "vault-login"
-      image: "ghcr.io/soerenschneider/vault-login"
+      image: "ghcr.io/soerenschneider/vault-login:1.0.0"
       imagePullPolicy: "IfNotPresent"
       env:
         - name: "HOME"
