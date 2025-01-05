@@ -1,0 +1,76 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gollum
+  labels:
+    app.kubernetes.io/name: gollum
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gollum
+  template:
+    metadata:
+      labels:
+        app: gollum
+        app.kubernetes.io/name: gollum
+        app.kubernetes.io/instance: gollum-prod
+        app.kubernetes.io/component: gollum
+        app.kubernetes.io/part-of: gollum
+    spec:
+      securityContext:
+        runAsUser: 34322
+        runAsGroup: 34322
+        fsGroup: 34322
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: gollum
+          image: cr.svc.dd.soeren.cloud/gollum
+          imagePullPolicy: Always
+          command:
+            - /manager
+          args:
+            - --leader-elect
+            - --health-probe-bind-address=:8081
+          env:
+            - name: GH_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: gollum-gh-token
+                  key: GH_TOKEN
+                  optional: true
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 34322
+            runAsGroup: 34322
+            privileged: false
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            limits:
+              memory: "512Mi"
+            requests:
+              cpu: "10m"
+              memory: "256Mi"
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      serviceAccountName: controller-manager
+      terminationGracePeriodSeconds: 10
