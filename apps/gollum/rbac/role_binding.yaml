@@ -10,6 +10,6 @@ roleRef:
   kind: ClusterRole
   name: gollum-operator
 subjects:
-- kind: ServiceAccount
-  name: controller-manager
-  namespace: gollum-system
+  - kind: ServiceAccount
+    name: controller-manager
+    namespace: gollum-system

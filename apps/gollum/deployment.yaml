@@ -1,23 +1,22 @@
----
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: "apps/v1"
+kind: "Deployment"
 metadata:
-  name: gollum
+  name: "gollum"
   labels:
-    app.kubernetes.io/name: gollum
+    app.kubernetes.io/name: "gollum"
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: gollum
+      app.kubernetes.io/name: "gollum"
   template:
     metadata:
       labels:
-        app: gollum
-        app.kubernetes.io/name: gollum
-        app.kubernetes.io/instance: gollum-prod
-        app.kubernetes.io/component: gollum
-        app.kubernetes.io/part-of: gollum
+        app: "gollum"
+        app.kubernetes.io/name: "gollum"
+        app.kubernetes.io/instance: "gollum-prod"
+        app.kubernetes.io/component: "gollum"
+        app.kubernetes.io/part-of: "gollum"
     spec:
       securityContext:
         runAsUser: 34322
@@ -25,22 +24,25 @@ spec:
         fsGroup: 34322
         runAsNonRoot: true
         seccompProfile:
-          type: RuntimeDefault
+          type: "RuntimeDefault"
       containers:
-        - name: gollum
-          image: cr.svc.dd.soeren.cloud/gollum
-          imagePullPolicy: Always
+        - name: "gollum"
+          image: "ghcr.io/soerenschneider/gollum:1.0.0"
+          imagePullPolicy: "IfNotPresent"
           command:
-            - /manager
+            - "/manager"
+          ports:
+            - containerPort: 8081
+              name: "metrics"
           args:
-            - --leader-elect
-            - --health-probe-bind-address=:8081
+            - "--leader-elect"
+            - "--health-probe-bind-address=:8081"
           env:
             - name: GH_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: gollum-gh-token
-                  key: GH_TOKEN
+                  name: "gollum-gh-token"
+                  key: "GH_TOKEN"
                   optional: true
           securityContext:
             runAsNonRoot: true
@@ -50,27 +52,27 @@ spec:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             seccompProfile:
-              type: RuntimeDefault
+              type: "RuntimeDefault"
             capabilities:
               drop:
-                - ALL
+                - "ALL"
           resources:
             limits:
-              memory: "512Mi"
+              memory: "196Mi"
             requests:
               cpu: "10m"
-              memory: "256Mi"
+              memory: "64Mi"
           livenessProbe:
             httpGet:
-              path: /healthz
-              port: 8081
+              path: "/healthz"
+              port: "metrics"
             initialDelaySeconds: 15
             periodSeconds: 20
           readinessProbe:
             httpGet:
-              path: /readyz
-              port: 8081
+              path: "/readyz"
+              port: "metrics"
             initialDelaySeconds: 5
             periodSeconds: 10
-      serviceAccountName: controller-manager
+      serviceAccountName: "controller-manager"
       terminationGracePeriodSeconds: 10
