@@ -10,15 +10,15 @@ spec:
     - name: "github-token"
   params:
     - description: "The name of the owner"
-      name: owner
-      type: string
+      name: "owner"
+      type: "string"
     - description: "The name of the repository"
-      name: repository
-      type: string
+      name: "repository"
+      type: "string"
   steps:
-    - name: scripts
+    - name: "scripts"
       image: "ghcr.io/soerenschneider/scripts:main-20241009193124"
-      imagePullPolicy: IfNotPresent
+      imagePullPolicy: "IfNotPresent"
       env:
         - name: "HOME"
           value: "/tmp"
