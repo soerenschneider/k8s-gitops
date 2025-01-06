@@ -4,5 +4,6 @@ namespace: gollum-system
 resources:
   - namespace.yaml
   - deployment.yaml
+  - service_account.yaml
   - crd
   - rbac
