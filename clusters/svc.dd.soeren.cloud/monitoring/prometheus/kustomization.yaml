@@ -10,6 +10,7 @@ components:
   - ../../../../apps/monitoring/prometheus/components/rbac
   - ../../../../apps/monitoring/prometheus/components/reverse-proxy
   - ../../../../apps/monitoring/prometheus/components/tls-client-cert
+  - ../../../../apps/monitoring/prometheus/components/tokens
 configMapGenerator:
   - name: monitoring-prometheus-config
     files:
