@@ -4,6 +4,8 @@ metadata:
   name: "gollum"
   labels:
     app.kubernetes.io/name: "gollum"
+  annotations:
+    ignore-check.kube-linter.io/non-existent-service-account: "False positive"
 spec:
   replicas: 1
   selector:
