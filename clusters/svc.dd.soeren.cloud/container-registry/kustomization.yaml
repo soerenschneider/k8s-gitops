@@ -7,3 +7,12 @@ resources:
   - namespace.yaml
 components:
   - ../../../apps/container-registry/components/istio
+patches:
+  - target:
+      kind: VirtualService
+      name: container-registry
+    patch: |-
+      - op: replace
+        path: "/spec/hosts"
+        value:
+          - "cr.svc.dd.soeren.cloud"
