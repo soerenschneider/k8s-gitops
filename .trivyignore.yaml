@@ -30,6 +30,7 @@ misconfigurations:
       - "infra/flux/gotk-components.yaml"
   - id: "AVD-KSV-0049"
     paths:
+      - "apps/gollum/rbac/leader_election_role.yaml"
       - "infra/external-secrets/components/resources/rbac-clusterroles.yaml"
       - "infra/flux/gotk-components.yaml"
   - id: "AVD-KSV-0041"
