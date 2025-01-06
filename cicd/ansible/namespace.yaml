@@ -1,7 +1,7 @@
 ---
-kind: Namespace
+kind: "Namespace"
 apiVersion: v1
 metadata:
-  name: ansible
+  name: "cicd-ansible"
   labels:
-    name: ansible
+    name: "cicd-ansible"
