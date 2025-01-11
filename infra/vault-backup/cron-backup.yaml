@@ -1,0 +1,90 @@
+---
+apiVersion: "batch/v1"
+kind: "CronJob"
+metadata:
+  name: "vault-backup"
+spec:
+  timeZone: "Europe/Berlin"
+  schedule: "0 9 * * *"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsUser: 23561
+            runAsGroup: 23561
+            fsGroup: 23561
+            runAsNonRoot: true
+            seccompProfile:
+              type: "RuntimeDefault"
+          initContainers:
+            - name: "vault-login"
+              image: "ghcr.io/soerenschneider/vault-login:1.0.0"
+              imagePullPolicy: "IfNotPresent"
+              envFrom:
+                - configMapRef:
+                    name: vault-backup
+              env:
+                - name: "HOME"
+                  value: "/data"
+                - name: "VAULT_LOGIN_AUTH_TYPE"
+                  value: "kubernetes"
+                - name: "VAULT_LOGIN_OUTPUT_TYPE"
+                  value: "file"
+                - name: "VAULT_LOGIN_OUTPUT_SECRET_NAME"
+                  value: "/data/vault-token"
+              resources:
+                requests:
+                  memory: "32Mi"
+                  cpu: "5m"
+                limits:
+                  memory: "128Mi"
+              volumeMounts:
+                - name: "storage"
+                  mountPath: "/data"
+          containers:
+            - name: "vault-backup"
+              image: "ghcr.io/soerenschneider/vault-backup:1.0.0"
+              imagePullPolicy: "IfNotPresent"
+              env:
+                - name: "HOME"
+                  value: "/data"
+                - name: "TMPDIR"
+                  value: "/data/tmp"
+                - name: "RESTIC_HOST"
+                  value: "kubernetes"
+              envFrom:
+                - configMapRef:
+                    name: "vault-backup"
+                - secretRef:
+                    name: "vault-backup"
+                    optional: true
+              command:
+                - "backup-vault"
+              securityContext:
+                runAsUser: 23561
+                runAsGroup: 23561
+                runAsNonRoot: true
+                privileged: false
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
+              resources:
+                requests:
+                  memory: "64Mi"
+                  cpu: "15m"
+                limits:
+                  memory: "1Gi"
+              volumeMounts:
+                - name: "storage"
+                  mountPath: "/data"
+          volumes:
+            - name: "storage"
+              emptyDir: {}
