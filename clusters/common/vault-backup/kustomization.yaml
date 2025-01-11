@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../infra/vault-backup
+  - external-secret-vault-backup.yaml
+configMapGenerator:
+  - name: vault-backup
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - VAULT_ADDR=https://vault.ha.soeren.cloud
+      - RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/vault-prod
+      - VAULT_LOGIN_AUTH_ROLE=vault-backup
+      - VAULT_RESTIC_AWS_CREDENTIALS_SECRET_PATH=soeren.cloud/env/prod/restic/vault-prod/aws-credentials
+      - VAULT_RESTIC_PASSWORD_SECRET_PATH=vault-backup/restic
