@@ -35,7 +35,7 @@ spec:
                 - name: "VAULT_LOGIN_OUTPUT_TYPE"
                   value: "file"
                 - name: "VAULT_LOGIN_OUTPUT_SECRET_NAME"
-                  value: "/data/vault-token"
+                  value: "/data/.vault-token"
               resources:
                 requests:
                   memory: "32Mi"
@@ -47,7 +47,7 @@ spec:
                   mountPath: "/data"
           containers:
             - name: "vault-backup"
-              image: "ghcr.io/soerenschneider/vault-backup:1.0.0"
+              image: "ghcr.io/soerenschneider/vault-backup:1.1.0"
               imagePullPolicy: "IfNotPresent"
               env:
                 - name: "HOME"
@@ -64,6 +64,7 @@ spec:
                     optional: true
               command:
                 - "backup-vault"
+                - "backup-prune"
               securityContext:
                 runAsUser: 23561
                 runAsGroup: 23561
