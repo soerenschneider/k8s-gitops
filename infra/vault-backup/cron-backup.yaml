@@ -36,6 +36,18 @@ spec:
                   value: "file"
                 - name: "VAULT_LOGIN_OUTPUT_SECRET_NAME"
                   value: "/data/.vault-token"
+              securityContext:
+                runAsUser: 23561
+                runAsGroup: 23561
+                runAsNonRoot: true
+                privileged: false
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
               resources:
                 requests:
                   memory: "32Mi"
