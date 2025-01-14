@@ -26,20 +26,20 @@ spec:
       type: "string"
   steps:
     - name: "vault-login"
-      image: "ghcr.io/soerenschneider/vault-login:1.0.0"
+      image: "ghcr.io/soerenschneider/vault-login:1.1.0"
       imagePullPolicy: "IfNotPresent"
       env:
         - name: "HOME"
           value: "/tmp"
         - name: "VAULT_ADDR"
           value: $(params.vault-address)
-        - name: "VAULT_AUTH_TYPE"
+        - name: "VAULT_LOGIN_AUTH_TYPE"
           value: $(params.auth-method)
-        - name: "VAULT_AUTH_MOUNT"
+        - name: "VAULT_LOGIN_AUTH_MOUNT"
           value: $(params.auth-mount)
-        - name: "VAULT_AUTH_ROLE"
+        - name: "VAULT_LOGIN_AUTH_ROLE"
           value: $(params.auth-role)
-        - name: "VAULT_AUTH_OUTPUT_TYPE"
+        - name: "VAULT_LOGIN_AUTH_OUTPUT_TYPE"
           value: "file"
-        - name: "VAULT_AUTH_OUTPUT_SECRET_NAME"
+        - name: "VAULT_LOGIN_AUTH_OUTPUT_SECRET_NAME"
           value: $(results.vault_token.path)
