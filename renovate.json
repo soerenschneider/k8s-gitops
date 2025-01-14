@@ -20,6 +20,10 @@
     {
       "matchDatasources": ["docker"],
       "updateTypes": ["minor", "patch"]
+    },
+    {
+      "automerge": true,
+      "matchUpdateTypes": ["patch"]
     }
   ],
   "regexManagers": [
