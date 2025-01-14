@@ -2,20 +2,29 @@
 # Manual edits may be lost in future updates.
 
 provider "registry.opentofu.org/hashicorp/aws" {
-  version     = "5.76.0"
-  constraints = "5.76.0"
+  version     = "5.83.1"
+  constraints = "5.83.1"
   hashes = [
-    "h1:moPdV2R92u1jEp/JBlULlXbjDhzd4B3Q2pgDxzErjAk=",
-    "zh:1d1dfb5246cae9c87f0b63548d4a70644b6d39f78a6bc077bdcf293e0c82d9d6",
-    "zh:3b0722b1775fde2613504b075b8b86610c4f47e2e87d76ef03022456b24846c5",
-    "zh:606fb45b0971fe14aa790c7f5140d49ef4e02bdd83d89dfc52fdecaa655ce868",
-    "zh:63ccc60cf91e5fe686bb7b5374c02716f4b7b1227a3953c38eebdf093f98e5b9",
-    "zh:84ebdfadb095707634d404e80abca73459ca54bea8fff631d7545d996bb63297",
-    "zh:8b33cea6d1f48679de2d0a7c551487c472c82ec5169348a3ac5007ffec5339e6",
-    "zh:a46dcec6c2e5156fbcc7cf84bb0c51f990b4ea5786e6d2d913cfbdbf97d26fef",
-    "zh:cb88bf56e6fbbf2d3ae923508a93fae887b741fe4ea75a5737833a63be43f77f",
-    "zh:df778f5d2f586da21afaaef501d49835f351b9040cb0a3d00585eab86b0f149d",
-    "zh:f1d05985145b9891015043581a1e7b0ce94e64ad1a83f09505023aa0d1655754",
+    "h1:67BbDAFLnM6z8rhZJcWHYUiB1hIDGXOtzR8ewoDDSzk=",
+    "h1:6T+S93U22avyDTB51XqBK6jPHoKzW0n3I1jQCJTU/Fo=",
+    "h1:CvK76mtPKKUuX8TepEvRrp0QkdWsQzAz0z2EhV2zJn0=",
+    "h1:I9HVelkajSP2LAeuiUjgQJaPcqnMRLShldCVB8sJytc=",
+    "h1:KNV5R12NOsMua0EPnllfw2TLZXgdkfEw2KY1fnGprNM=",
+    "h1:PPAh4PrYxLbg3LM1YhXEN8OvkzUygBgkaih+bs7tYq0=",
+    "h1:R+7lq24i9TDbnbQJi4Qpcxo2dJs9NwuyP835MkWLV9E=",
+    "h1:aCBWSjw8jEdGVuPcWn7lJsbffG7mTcG7HessjsEHYU8=",
+    "h1:q+eAu9zwW/VKyPPC8btEOt1TOl37xkBw6RKtqxj/elY=",
+    "h1:zGQgvbOwV3sC3j9a9wBuq2vpx2x+4fiIq7f+s2D7N9I=",
+    "zh:2c9da07251745052dcd8c5b733d8cf0190fc1f3fc0fee1d9f611f28f3587ad23",
+    "zh:338879de22fccaa09201665d58406796a4cbc12ad02ef2004ed20e6d462afe03",
+    "zh:3ba302f546f22ec00b06d1f1a59533d82634ff6af8b1d3d3300979c8ec12c305",
+    "zh:73c3a4d698c3b444fd344bba63619cc9aa93ae87f1bfa3990ac0054924043013",
+    "zh:7c591eb269339d7875f7370644098dcd2d5cdbca4d7b91088885547391f91edc",
+    "zh:8ea25460c5d015436d3fcc648e3d9219ea407990f81ef86d72057396b318bff7",
+    "zh:99bf82aba4bdf0472010a101e995e4ff7fcd829a317f17f29575b2cdac925681",
+    "zh:e00b2211709fe79f325a90caf8380cab69385c39868ac64857a8eae1d7a263ee",
+    "zh:e2e350aff921e26c55a2b537cae415bd2a07b2132f784121a7d6295a45f07e84",
+    "zh:e53a624c20e2273825e217c8f7aec7456ee07df774235df03ca929e72247cf4b",
   ]
 }
 
