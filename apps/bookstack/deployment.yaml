@@ -30,7 +30,7 @@ spec:
       initContainers:
         # https://stackoverflow.com/questions/38483837/please-provide-a-valid-cache-path-error-in-laravel
         - name: init
-          image: solidnerd/bookstack:24.10.3
+          image: solidnerd/bookstack:24.12.1
           imagePullPolicy: IfNotPresent
           securityContext:
             privileged: false
@@ -58,7 +58,7 @@ spec:
             - "mkdir -v -p /var/www/bookstack/storage/framework/sessions /var/www/bookstack/storage/framework/views /var/www/bookstack/storage/framework/cache/data /var/www/bookstack/storage/uploads/images /var/www/bookstack/storage/uploads/files /var/www/bookstack/storage/logs"
       containers:
         - name: "bookstack"
-          image: "solidnerd/bookstack:24.10.3"
+          image: "solidnerd/bookstack:24.12.1"
           imagePullPolicy: "IfNotPresent"
           ports:
             - containerPort: 8080
