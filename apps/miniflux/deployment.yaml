@@ -33,7 +33,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "miniflux/miniflux:2.2.4"
+        - image: "miniflux/miniflux:2.2.5"
           imagePullPolicy: "IfNotPresent"
           name: "miniflux"
           ports:
