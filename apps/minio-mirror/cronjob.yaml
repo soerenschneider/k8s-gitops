@@ -23,7 +23,7 @@ spec:
           containers:
             - name: minio-client
               # renovate: datasource=github-releases depName=minio/minio versioning="regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})"
-              image: quay.io/minio/minio:RELEASE.2024-12-18T13-15-44Z
+              image: quay.io/minio/minio:RELEASE.2025-01-18T00-31-37Z
               imagePullPolicy: IfNotPresent
               command:
                 - /bin/bash
