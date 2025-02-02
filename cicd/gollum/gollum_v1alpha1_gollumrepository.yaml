@@ -1,0 +1,26 @@
+apiVersion: gollum.soeren.cloud/v1alpha1
+kind: Repository
+metadata:
+  labels:
+    app.kubernetes.io/name: gollum
+    app.kubernetes.io/managed-by: kustomize
+  name: soerenschneider-tunnelguard
+spec:
+  owner: "soerenschneider"
+  repo: "tunnelguard"
+  pipelineRunName: gollum
+  pipelineNames:
+    assets: build-gh-release
+  versionFilter:
+    impl: "semver"
+    arg: ">= v1.0.0"
+  workspaces:
+    signify:
+      type: "secret"
+      secretName: "signify"
+    shared-data:
+      type: "volume"
+      storageClassName: "openebs-hostpath"
+    github-token:
+      type: "secret"
+      secretName: "github"
