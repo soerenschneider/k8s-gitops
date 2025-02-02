@@ -4,4 +4,4 @@ kind: Kustomization
 namespace: external-secrets
 resources:
   - namespace.yaml
-  - https://raw.githubusercontent.com/external-secrets/external-secrets/v0.10.3/deploy/crds/bundle.yaml
+  - https://raw.githubusercontent.com/external-secrets/external-secrets/v0.10.5/deploy/crds/bundle.yaml
