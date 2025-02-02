@@ -9,6 +9,7 @@ resources:
 components:
   - "../../../apps/gotify/components/istio"
   - "../../../apps/gotify/components/db-mysql"
+  - "../../../apps/gotify/components/networkpolicy-hermes"
 patches:
   - target:
       kind: "VirtualService"
