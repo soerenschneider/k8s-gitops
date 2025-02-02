@@ -91,7 +91,7 @@ spec:
       volumes:
         - name: "vector-config"
           configMap:
-            name: "vector"
+            name: "vector-config"
         - name: data
           hostPath:
             path: "/var/lib/vector"
