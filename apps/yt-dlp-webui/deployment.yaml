@@ -1,0 +1,89 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "yt-dlp-webui"
+  labels:
+    app.kubernetes.io/name: "yt-dlp-webui"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "yt-dlp-webui"
+  strategy:
+    type: "RollingUpdate"
+  template:
+    metadata:
+      labels:
+        app: "yt-dlp-webui"
+        app.kubernetes.io/name: "yt-dlp-webui"
+        app.kubernetes.io/component: "yt-dlp-webui"
+        app.kubernetes.io/part-of: "yt-dlp-webui"
+    spec:
+      securityContext:
+        runAsUser: 44412
+        runAsGroup: 44412
+        fsGroup: 44412
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      initContainers:
+        - name: "seed"
+          image: "ghcr.io/marcopiovanello/yt-dlp-web-ui:latest@sha256:6510683f8ae6c87931671fcc8fb86452ecd89cf94630faebd8ee710a55a4c96b"
+          imagePullPolicy: "IfNotPresent"
+          command: ["mkdir", "-p", "/storage/downloads"]
+          securityContext:
+            runAsUser: 44412
+            runAsGroup: 44412
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          resources:
+            requests:
+              memory: "16Mi"
+              cpu: "5m"
+            limits:
+              memory: "512Mi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/storage"
+      containers:
+        - name: "yt-dlp-webui"
+          image: "ghcr.io/marcopiovanello/yt-dlp-web-ui:latest@sha256:6510683f8ae6c87931671fcc8fb86452ecd89cf94630faebd8ee710a55a4c96b"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 44412
+            runAsGroup: 44412
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "148Mi"
+              cpu: "10m"
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 3033
+              name: "yt-dlp-webui"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/storage"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: "location"
+          whenUnsatisfiable: "ScheduleAnyway"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "100Mi"
