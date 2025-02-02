@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alert-forge
+  labels:
+    app: alert-forge
+    app.kubernetes.io/name: alert-forge
+    app.kubernetes.io/instance: alert-forge-prod
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: alert-forge
+  template:
+    metadata:
+      labels:
+        app: alert-forge
+        app.kubernetes.io/name: alert-forge
+        app.kubernetes.io/instance: alert-forge-prod
+      annotations:
+        prometheus.io/port: "9169"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 51232
+        runAsGroup: 51232
+        fsGroup: 51232
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "alert-forge"
+          image: "ghcr.io/soerenschneider/alert-forge:1.0.0"
+          imagePullPolicy: "Always"
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            privileged: false
+            runAsNonRoot: true
+            runAsUser: 51232
+            runAsGroup: 51232
+            capabilities:
+              drop:
+                - "ALL"
+            seccompProfile:
+              type: "RuntimeDefault"
+          command:
+            - "/alert-forge"
+            - "-config-file"
+            - "/config/config.yaml"
+          env: []
+          ports:
+            - containerPort: 8888
+              name: "api"
+            - containerPort: 9169
+              name: "metrics"
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "5m"
+            limits:
+              memory: "128Mi"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/storage"
+            - name: "config-volume"
+              mountPath: "/config"
+      volumes:
+        - name: "storage"
+          emptyDir: {}
+        - name: "config-volume"
+          configMap:
+            name: "config"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: "cpu_speed"
+                    operator: "NotIn"
+                    values:
+                      - "fast"

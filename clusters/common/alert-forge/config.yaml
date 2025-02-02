@@ -1,0 +1,27 @@
+---
+alertmanager_instances:
+  - http://router.dd.soeren.cloud:9093
+
+awtrix_instances:
+  - http://awtrix-office.dd.soeren.cloud
+  - http://awtrix-livingroom.dd.soeren.cloud
+
+reports:
+  enabled: true
+  timezone: "Europe/Berlin"
+  cron_expression: "0 8,14,20 * * *"
+  awtrix_instances:
+    - http://awtrix-office.dd.soeren.cloud
+
+  email:
+    from_file: "/etc/app/email-from"
+    to_file: "/etc/app/email-to"
+    server: "smtp.strato.de"
+    port: 587
+    username_file: "/etc/app/email-username"
+    password_file: "/etc/app/email-password"
+
+blacklist:
+  service: deadman
+
+sqlite_db_file: /storage/sqlite.db
