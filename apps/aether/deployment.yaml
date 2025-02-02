@@ -33,7 +33,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: aether
-          image: ghcr.io/soerenschneider/aether:1.0.0
+          image: ghcr.io/soerenschneider/aether:1.0.2
           imagePullPolicy: IfNotPresent
           command:
             - "/aether"

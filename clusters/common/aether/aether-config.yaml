@@ -25,8 +25,9 @@ datasources:
     type: weather
 email:
   at: 06:00
+  send_at_start: false
   from_file: "/etc/aether-secrets/email_from"
-  host: smtp.strato.de:587
+  host: smtp.strato.de
   is_utc: true
   password_file: "/etc/aether-secrets/email_password"
   recipient_file: "/etc/aether-secrets/email_to"
