@@ -30,7 +30,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: homer
-          image: b4bz/homer:v24.11.4
+          image: b4bz/homer:v25.02.1
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
