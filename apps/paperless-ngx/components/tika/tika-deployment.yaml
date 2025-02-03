@@ -27,7 +27,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: tika
-          image: apache/tika:3.0.0.0
+          image: apache/tika:3.1.0.0
           ports:
             - containerPort: 9998
               name: tika
