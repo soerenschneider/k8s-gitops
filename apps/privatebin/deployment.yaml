@@ -29,7 +29,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: "privatebin"
-          image: "docker.io/privatebin/nginx-fpm-alpine:1.7.5@sha256:1c13d24b0b3b85a4c544898162056de5f4e043c0abca693a2e5b8a79c6767e99"
+          image: "docker.io/privatebin/nginx-fpm-alpine:1.7.6@sha256:70a96fca84a983778771f0651c8db22694e75f4393bc01c3247c393c9c607791"
           imagePullPolicy: "IfNotPresent"
           resources:
             requests:
