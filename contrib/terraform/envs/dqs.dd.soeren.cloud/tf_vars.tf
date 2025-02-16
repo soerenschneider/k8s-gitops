@@ -4,12 +4,12 @@ variable "parent_zone_id" {
 }
 
 variable "use_cert_manager" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "use_external_dns" {
-  type = bool
+  type    = bool
   default = false
 }
 
@@ -22,11 +22,11 @@ variable "cluster_name" {
 }
 
 variable "wildcard_records_v4" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
 variable "wildcard_records_v6" {
-  type = list(string)
+  type    = list(string)
   default = []
 }

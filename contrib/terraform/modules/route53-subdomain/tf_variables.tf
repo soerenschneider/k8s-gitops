@@ -8,11 +8,11 @@ variable "subdomain" {
 }
 
 variable "wildcard_records_v4" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 
 variable "wildcard_records_v6" {
-  type = list(string)
+  type    = list(string)
   default = []
 }

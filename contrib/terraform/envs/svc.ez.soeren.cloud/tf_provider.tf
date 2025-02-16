@@ -23,7 +23,7 @@ provider "aws" {
       project     = "k8s-gitops"
       project_url = "https://github.com/k8s-gitops/contrib/terraform"
       managed_by  = "terraform"
-      env         = "svc.dd.soeren.cloud"
+      env         = "svc.ez.soeren.cloud"
     }
   }
 }
