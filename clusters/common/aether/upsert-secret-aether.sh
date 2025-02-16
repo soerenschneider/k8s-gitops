@@ -1,1 +1,0 @@
-../../../apps/aether/upsert-secret-aether.sh

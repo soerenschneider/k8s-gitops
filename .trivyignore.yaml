@@ -13,14 +13,14 @@ misconfigurations:
       - "apps/**/postgres-deployment.yaml"
       - "apps/immich/components/pgvector/postgres-sts.yaml"
       - "apps/paperless-ngx/paperless-ngx-deployment.yaml"
-      - "apps/keycloak/deployment.yaml" # errors if not running as 1000
+      - "apps/keycloak/deployment.yaml"  # errors if not running as 1000
   - id: "AVD-KSV-0021"
     paths:
       - "apps/vector/daemonset.yaml"
       - "apps/**/postgres-deployment.yaml"
       - "apps/paperless-ngx/paperless-ngx-deployment.yaml"
       - "apps/immich/components/pgvector/postgres-sts.yaml"
-      - "apps/keycloak/deployment.yaml" # errors if not running as 1000
+      - "apps/keycloak/deployment.yaml"  # errors if not running as 1000
   - id: "AVD-KSV-0023"
     paths:
       - "apps/vector/daemonset.yaml"
@@ -57,5 +57,5 @@ misconfigurations:
       - "infra/external-secrets/components/resources/rbac-bindings.yaml"
   - id: "AVD-KSV-01010"
     paths:
-      - "**/taskwarrior-configmap.yaml" # false positive
-      - "apps/mariadb-galera/components/tls-wsrep/cm-sst-cnf.yaml" # false positive
+      - "**/taskwarrior-configmap.yaml"  # false positive
+      - "apps/mariadb-galera/components/tls-wsrep/cm-sst-cnf.yaml"  # false positive
