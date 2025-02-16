@@ -1,9 +1,6 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
-resources:
-  - cert-issuer.yaml
-  - cert-certificate.yaml
 patches:
   - target:
       kind: Deployment
@@ -14,13 +11,7 @@ patches:
         value:
           name: config-task
           mountPath: "/home/aether/.taskrc"
-          subPath: ".taskrc"
-      - op: add
-        path: /spec/template/spec/containers/0/volumeMounts/-
-        value:
-          name: secret-taskd-credentials
-          mountPath: "/home/aether/.taskd_credentials"
-          subPath: "taskd_credentials"
+          subPath: "config"
       - op: add
         path: /spec/template/spec/containers/0/volumeMounts/-
         value:
@@ -30,55 +21,15 @@ patches:
         path: /spec/template/spec/volumes/-
         value:
           name: config-task
-          configMap:
-            name: taskrc
-      - op: add
-        path: /spec/template/spec/volumes/-
-        value:
-          name: secret-task-keypair
           secret:
-            secretName: aether-cert
+            secretName: aether-taskwarrior
       - op: add
         path: "/spec/template/spec/volumes/-"
         value:
           name: "task-data"
           emptyDir:
             sizeLimit: "512Mi"
-      - op: "add"
-        path: "/spec/template/spec/volumes/-"
-        value:
-          name: "secret-taskd-credentials"
-          secret:
-            secretName: "aether-taskwarrior"
-      - op: "add"
-        path: "/spec/template/spec/containers/-"
-        value:
-          name: "task-sync"
-          image: "ghcr.io/soerenschneider/task-syncer:main-20240211152232"
-          imagePullPolicy: "IfNotPresent"
-          securityContext:
-            readOnlyRootFilesystem: true
-            allowPrivilegeEscalation: false
-            seccompProfile:
-              type: RuntimeDefault
-            capabilities:
-              drop:
-                - ALL
-          resources:
-            requests:
-              memory: 64Mi
-              cpu: 5m
-            limits:
-              cpu: 512m
-              memory: 256Mi
-          volumeMounts:
-            - name: config-task
-              mountPath: "/home/tasksyncer/.taskrc"
-              subPath: ".taskrc"
-            - name: secret-task-keypair
-              mountPath: "/certs"
-            - name: task-data
-              mountPath: "/task-data"
-            - name: secret-taskd-credentials
-              mountPath: "/home/tasksyncer/.taskd_credentials"
-              subPath: "taskd_credentials"
+  - target:
+      kind: Deployment
+      name: aether
+    path: container.yaml

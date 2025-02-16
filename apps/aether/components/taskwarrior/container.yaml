@@ -1,0 +1,35 @@
+- op: "add"
+  path: "/spec/template/spec/containers/-"
+  value:
+    name: "task-sync"
+    image: "ghcr.io/soerenschneider/task-syncer:3.21.2"
+    imagePullPolicy: "IfNotPresent"
+    securityContext:
+      privileged: false
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 65532
+      runAsGroup: 65532
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
+    resources:
+      requests:
+        memory: 32Mi
+        cpu: 5m
+      limits:
+        cpu: 256m
+        memory: 128Mi
+    command:
+      - "sh"
+      - "-c"
+      - "while :; do task sync; sleep 1800; done"
+    volumeMounts:
+      - name: config-task
+        mountPath: "/home/aether/.taskrc"
+        subPath: "config"
+      - name: task-data
+        mountPath: "/task-data"
