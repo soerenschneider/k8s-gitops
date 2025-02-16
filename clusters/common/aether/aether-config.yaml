@@ -11,24 +11,37 @@ datasources:
   - type: taskwarrior
     taskrc_file: "/home/aether/.taskrc"
   - apikey_file: "/etc/aether-secrets/weather_apikey"
-    latitude: '51.2277'
-    longitude: '6.7735'
+    latitude: 51.2277
+    longitude: 6.7735
+    nice_name: "Düsseldorf"
     type: weather
-  - cached: true
-    symbols:
-      - VGWL.DE
-      - 22UA.F
-    type: stocks
+    count: 12
+#  - cached: true
+#    symbols:
+#      - VGWL.DE
+#      - 22UA.F
+#    type: stocks
+  - type: alertmanager
+    host: router.ez.soeren.cloud:9093
+    scheme: http
+  - type: astral
+    latitude: 51.2277
+    longitude: 6.7735
   - apikey_file: "/etc/aether-secrets/weather_apikey"
-    latitude: '41.1579'
-    longitude: '-8.6291'
+    latitude: 41.1579
+    longitude: -8.6291
+    nice_name: "Porto"
     type: weather
+    count: 6
 email:
-  at: 06:00
-  send_at_start: false
+  at: 08:00
+  timezone: Europe/Berlin
   from_file: "/etc/aether-secrets/email_from"
   host: smtp.strato.de
   is_utc: true
   password_file: "/etc/aether-secrets/email_password"
   recipient_file: "/etc/aether-secrets/email_to"
   username_file: "/etc/aether-secrets/email_username"
+http:
+  use_gzip: true
+  minify: false

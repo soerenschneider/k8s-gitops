@@ -7,9 +7,6 @@ configMapGenerator:
   - name: aether-config
     files:
       - aether-config.yaml
-  - name: taskrc
-    files:
-      - .taskrc
 patches:
   - target:
       kind: Deployment
