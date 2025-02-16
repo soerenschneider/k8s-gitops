@@ -59,7 +59,7 @@ spec:
                 - "ALL"
       containers:
         - name: "nginx"
-          image: "nginx:1.27.3-alpine"
+          image: "nginx:1.27.4-alpine"
           ports:
             - containerPort: 8080
               name: "nginx"
