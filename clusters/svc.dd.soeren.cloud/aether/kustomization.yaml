@@ -15,7 +15,7 @@ patches:
       - op: replace
         path: /spec/hosts
         value:
-          - aether.svc.ez.soeren.cloud
+          - aether.svc.dd.soeren.cloud
   - target:
       kind: Deployment
       name: aether
