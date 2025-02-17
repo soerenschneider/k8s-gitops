@@ -8,6 +8,7 @@ resources:
 components:
   - ../../../apps/mosquitto/components/istio
   - ../../../apps/mosquitto/components/tls
+  - ../../../apps/mosquitto/components/exporter
 patches:
   - target:
       kind: VirtualService
