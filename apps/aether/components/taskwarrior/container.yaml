@@ -2,8 +2,9 @@
   path: "/spec/template/spec/containers/-"
   value:
     name: "task-sync"
-    image: "ghcr.io/soerenschneider/task-syncer:3.21.2"
+    image: "ghcr.io/soerenschneider/aether:1.1.1"
     imagePullPolicy: "IfNotPresent"
+    workingDir: "/home/aether"
     securityContext:
       privileged: false
       allowPrivilegeEscalation: false

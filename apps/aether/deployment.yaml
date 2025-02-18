@@ -32,9 +32,9 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: aether
-          image: ghcr.io/soerenschneider/aether:1.0.2
-          imagePullPolicy: IfNotPresent
+        - name: "aether"
+          image: "ghcr.io/soerenschneider/aether:1.1.1"
+          imagePullPolicy: "IfNotPresent"
           command:
             - "/aether"
             - "-config"
