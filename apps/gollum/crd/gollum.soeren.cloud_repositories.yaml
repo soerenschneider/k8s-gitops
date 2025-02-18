@@ -48,17 +48,21 @@ spec:
             spec:
               description: RepositorySpec defines the desired state of Repository.
               properties:
-                PipelineNames:
-                  additionalProperties:
-                    type: string
-                  type: object
                 cloneUsingSsh:
                   type: boolean
                 memorizeReleases:
                   default: true
                   type: boolean
+                omitVersions:
+                  items:
+                    type: string
+                  type: array
                 owner:
                   type: string
+                pipelineNames:
+                  additionalProperties:
+                    type: string
+                  type: object
                 pipelineRunName:
                   type: string
                 repo:
@@ -82,10 +86,10 @@ spec:
                     type: object
                   type: object
               required:
-                - PipelineNames
                 - cloneUsingSsh
                 - memorizeReleases
                 - owner
+                - pipelineNames
                 - pipelineRunName
                 - repo
                 - workspaces
