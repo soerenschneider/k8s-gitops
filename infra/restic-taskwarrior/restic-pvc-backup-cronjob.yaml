@@ -1,0 +1,85 @@
+---
+apiVersion: "batch/v1"
+kind: "CronJob"
+metadata:
+  name: "restic-taskwarrior-backup"
+spec:
+  schedule: "15 5 * * *"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: "restic"
+            restic/name: "taskwarrior"
+            restic/operation: "backup"
+            restic/type: "directory"
+            sidecar.istio.io/inject: "false"
+        spec:
+          restartPolicy: "OnFailure"
+          securityContext:
+            runAsUser: 16523
+            runAsGroup: 16523
+            fsGroup: 16523
+            runAsNonRoot: true
+          containers:
+            - name: "restic"
+              image: "cr.svc.ez.soeren.cloud/restic"
+              imagePullPolicy: "Always"
+              command:
+                - sh
+                - -c
+                - "task sync && task export all > /task-data/tasks.json && restic_backup.py"
+              securityContext:
+                runAsUser: 16523
+                runAsGroup: 16523
+                runAsNonRoot: true
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
+              env:
+                - name: "HOME"
+                  value: "/home/restic"
+                - name: "PUSHGATEWAY_URL"
+                  value: "http://pushgateway.monitoring"
+                - name: "TMPDIR"
+                  value: "/tmp"
+                - name: "RESTIC_CACHE_DIR"
+                  value: "/tmp"
+                - name: "_RESTIC_TYPE"
+                  value: "directory"
+                - name: "RESTIC_TARGETS"
+                  value: "/task-data/tasks.json"
+                - name: "RESTIC_HOST"
+                  value: "kubernetes"
+                - name: "RESTIC_COMPRESSION"
+                  value: "max"
+              envFrom: []
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "20m"
+                limits:
+                  memory: "1G"
+              volumeMounts:
+                - name: "taskwarrior-config"
+                  mountPath: "/home/restic/.taskrc"
+                  subPath: "config"
+                  readOnly: true
+                - name: "tmp"
+                  mountPath: "/tmp"
+                - name: "task-data"
+                  mountPath: "/task-data/"
+          volumes:
+            - name: "taskwarrior-config"
+              secret:
+                secretName: "taskwarrior-config"
+            - name: "tmp"
+              emptyDir: {}
+            - name: "task-data"
+              emptyDir: {}

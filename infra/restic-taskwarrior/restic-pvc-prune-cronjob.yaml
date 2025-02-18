@@ -1,0 +1,68 @@
+---
+apiVersion: "batch/v1"
+kind: "CronJob"
+metadata:
+  name: "restic-taskwarrior-prune"
+spec:
+  schedule: "0 23 * * *"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: "restic"
+            restic/name: "taskwarrior"
+            restic/operation: "prune"
+            restic/type: "directory"
+            sidecar.istio.io/inject: "false"
+        spec:
+          restartPolicy: "OnFailure"
+          securityContext:
+            runAsUser: 16523
+            runAsGroup: 16523
+            fsGroup: 16523
+            runAsNonRoot: true
+          containers:
+            - name: "restic-prune"
+              image: "ghcr.io/soerenschneider/restic:main-20240225135719"
+              imagePullPolicy: "IfNotPresent"
+              command:
+                - "restic_prune.py"
+              securityContext:
+                runAsUser: 16523
+                runAsGroup: 16523
+                runAsNonRoot: true
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
+              env:
+                - name: "PUSHGATEWAY_URL"
+                  value: "http://pushgateway.monitoring"
+                - name: "TMPDIR"
+                  value: "/tmp"
+                - name: "_RESTIC_TYPE"
+                  value: "directory"
+                - name: "RETENTION_DAYS"
+                  value: "7"
+                - name: "RETENTION_WEEKS"
+                  value: "4"
+                - name: "RETENTION_MONTHS"
+                  value: "6"
+              envFrom: []
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "20m"
+                limits:
+                  memory: "1G"
+              volumeMounts:
+                - name: "tmp"
+                  mountPath: "/tmp"
+          volumes:
+            - name: "tmp"
+              emptyDir: {}

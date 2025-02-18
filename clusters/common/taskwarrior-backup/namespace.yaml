@@ -1,0 +1,7 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: taskwarrior-backup
+  labels:
+    name: taskwarrior-backup

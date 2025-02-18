@@ -1,0 +1,28 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: taskwarrior-backup
+resources:
+  - namespace.yaml
+  - ../../../infra/restic-taskwarrior
+  - external-secret-taskwarrior-conf.yaml
+  - external-secret-taskwarrior-restic.yaml
+patches:
+  - target:
+      kind: CronJob
+    patch: |-
+      - op: add
+        path: /spec/jobTemplate/spec/template/spec/containers/0/envFrom/-
+        value:
+          secretRef:
+            name: taskwarrior-restic
+      - op: add
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/-"
+        value:
+          name: "RESTIC_REPOSITORY"
+          value: "s3:https://s3.amazonaws.com/soerenschneider-restic-prod/taskwarrior-prod"
+      - op: add
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/-"
+        value:
+          name: "RESTIC_BACKUP_ID"
+          value: "taskwarrior-prod"
