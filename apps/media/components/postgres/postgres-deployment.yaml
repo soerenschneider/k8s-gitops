@@ -22,7 +22,7 @@ spec:
         runAsNonRoot: true
       containers:
         - name: postgres
-          image: postgres:16.6
+          image: postgres:16.7
           securityContext:
             runAsUser: 999
             runAsGroup: 999
