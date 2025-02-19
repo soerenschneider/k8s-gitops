@@ -25,7 +25,7 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "restic-backup-prune"
-              image: "ghcr.io/soerenschneider/restic-pg16:main-20240225135720"
+              image: "ghcr.io/soerenschneider/restic:1.0.0"
               imagePullPolicy: "IfNotPresent"
               command:
                 - "/usr/local/bin/restic_prune.py"

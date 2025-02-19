@@ -25,7 +25,7 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "restic-prune"
-              image: "ghcr.io/soerenschneider/restic:main-20240225135719"
+              image: "ghcr.io/soerenschneider/restic:1.0.0"
               imagePullPolicy: "IfNotPresent"
               command:
                 - "restic_prune.py"
