@@ -5,6 +5,9 @@
     image: "ghcr.io/soerenschneider/aether:1.1.1"
     imagePullPolicy: "IfNotPresent"
     workingDir: "/home/aether"
+    env:
+      - name: "TMPDIR"
+        value: "/task-data"
     securityContext:
       privileged: false
       allowPrivilegeEscalation: false
