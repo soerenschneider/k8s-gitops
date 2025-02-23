@@ -8,10 +8,12 @@ resources:
   - pv.yaml
   - config-cm.yaml
   - external-secret-radicale.yaml
+  - external-secret-radicale-restic.yaml
 components:
   - ../../../apps/radicale/components/istio
   - ../../../apps/radicale/components/istio-proxy
   - ../../../apps/radicale/components/pvc
+  - ../../../apps/radicale/components/restic-pvc
 patches:
   - target:
       kind: VirtualService
@@ -58,3 +60,4 @@ configMapGenerator:
   - name: radicale-restic-pvc  # TODO: https://github.com/kubernetes-sigs/kustomize/issues/4402
     literals:
       - RESTIC_HOSTNAME=svc.dd.soeren.cloud
+      - RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/radicale
