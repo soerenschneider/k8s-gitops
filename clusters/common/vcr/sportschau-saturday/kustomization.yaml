@@ -19,13 +19,11 @@ patches:
       - op: replace
         path: "/spec/jobTemplate/spec/template/spec/containers/0/command"
         value:
-          - timeout
-          - --preserve-status
-          - --kill-after=60s
-          - --signal=SIGINT
-          - 120m
           - yt-dlp
+          - --downloader=ffmpeg
+          - --downloader-args=ffmpeg:-t 02:00:00
+          - --downloader-args=ffmpeg_i:-reconnect 1
+          - --hls-use-mpegts
           - --quiet
-          - --output
-          - "/data/sportschau-%(epoch-3600>%Y%m%d-%H%M%S)s.%(ext)s"
-          - "https://www.ardmediathek.de/live/Y3JpZDovL2Rhc2Vyc3RlLmRlL2xpdmUvY2xpcC9hYmNhMDdhMy0zNDc2LTQ4NTEtYjE2Mi1mZGU4ZjY0NmQ0YzQ"
+          - --output=/data/sportschau-%(epoch-3600>%Y%m%d-%H%M%S)s.%(ext)s
+          - "https://daserste-live.ard-mcdn.de/daserste/live/hls/de/master.m3u8"
