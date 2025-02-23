@@ -35,7 +35,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: navidrome
-          image: deluan/navidrome:0.54.4
+          image: deluan/navidrome:0.54.5
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
