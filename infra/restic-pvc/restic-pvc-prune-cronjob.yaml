@@ -19,19 +19,19 @@ spec:
         spec:
           restartPolicy: "OnFailure"
           securityContext:
-            runAsUser: 65535
-            runAsGroup: 65535
-            fsGroup: 65535
+            runAsUser: 16523
+            runAsGroup: 16523
+            fsGroup: 16523
             runAsNonRoot: true
           containers:
             - name: "restic-pvc-prune"
-              image: "ghcr.io/soerenschneider/restic:1.0.0"
+              image: "ghcr.io/soerenschneider/restic:1.0.1"
               imagePullPolicy: "IfNotPresent"
               command:
                 - "restic_prune.py"
               securityContext:
-                runAsUser: 65535
-                runAsGroup: 65535
+                runAsUser: 16523
+                runAsGroup: 16523
                 runAsNonRoot: true
                 readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
