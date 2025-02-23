@@ -24,6 +24,9 @@ spec:
             - name: yt-dlp
               image: ghcr.io/soerenschneider/yt-dlp:2024.10.22
               imagePullPolicy: IfNotPresent
+              env:
+                - name: "TMPDIR"
+                  value: "/data"
               securityContext:
                 runAsUser: 65535
                 runAsGroup: 65535
@@ -41,7 +44,7 @@ spec:
                   memory: "64Mi"
                   cpu: "5m"
                 limits:
-                  memory: "1Gi"
+                  memory: "4Gi"
               volumeMounts:
                 - name: storage
                   mountPath: /data
