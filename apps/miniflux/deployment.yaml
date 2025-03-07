@@ -28,12 +28,12 @@ spec:
     spec:
       securityContext:
         runAsNonRoot: true
-        runAsUser: 65532
-        runAsGroup: 65532
+        runAsUser: 23239
+        runAsGroup: 23239
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "miniflux/miniflux:2.2.5"
+        - image: "ghcr.io/miniflux/miniflux:2.2.5"
           imagePullPolicy: "IfNotPresent"
           name: "miniflux"
           ports:
@@ -41,8 +41,8 @@ spec:
               name: "miniflux"
           securityContext:
             runAsNonRoot: true
-            runAsUser: 65532
-            runAsGroup: 65532
+            runAsUser: 23239
+            runAsGroup: 23239
             privileged: false
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
@@ -82,6 +82,11 @@ spec:
               value: "10.0.0.0/8"
             - name: METRICS_COLLECTOR
               value: "1"
+          envFrom:
+            - configMapRef:
+                name: "miniflux"
+            - secretRef:
+                name: "miniflux"
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
