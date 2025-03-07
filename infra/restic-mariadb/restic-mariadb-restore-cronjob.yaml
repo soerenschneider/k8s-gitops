@@ -2,9 +2,10 @@
 apiVersion: "batch/v1"
 kind: "CronJob"
 metadata:
-  name: "restic-postgres-prune"
+  name: "restic-mariadb-restore"
 spec:
-  schedule: "30 12 * * *"
+  suspend: true # this is only meant to run manually
+  schedule: "0 0 31 2 *"  # Impossible date (Feb 31st)
   concurrencyPolicy: "Forbid"
   jobTemplate:
     spec:
@@ -13,8 +14,8 @@ spec:
           labels:
             app: "restic"
             restic/name: "unknown"
-            restic/type: "postgres"
-            restic/operation: "prune"
+            restic/type: "mariadb"
+            restic/operation: "restore"
             sidecar.istio.io/inject: "false"
         spec:
           restartPolicy: "OnFailure"
@@ -24,11 +25,12 @@ spec:
             fsGroup: 16523
             runAsNonRoot: true
           containers:
-            - name: "restic-postgres-prune"
+            - name: "restic-restore"
               image: "ghcr.io/soerenschneider/restic:1.1.1"
               imagePullPolicy: "IfNotPresent"
               command:
-                - "/usr/local/bin/restic_prune.py"
+                - sleep
+                - "7200"
               securityContext:
                 runAsUser: 16523
                 runAsGroup: 16523
@@ -41,6 +43,12 @@ spec:
                   drop:
                     - "ALL"
               env:
+                - name: "PGPASSWORD"
+                  valueFrom:
+                    secretKeyRef:
+                      name: "restic-mariadb"
+                      key: "mariadb_PASSWORD"
+                      optional: true
                 - name: "PUSHGATEWAY_URL"
                   value: "http://pushgateway.monitoring"
                 - name: "TMPDIR"
@@ -48,14 +56,16 @@ spec:
                 - name: "RESTIC_CACHE_DIR"
                   value: "/tmp/restic-cache"
                 - name: "_RESTIC_TYPE"
-                  value: "postgres"
+                  value: "mariadb"
+                - name: "RESTIC_COMPRESSION"
+                  value: "max"
               envFrom: []
               resources:
                 requests:
                   memory: "256Mi"
                   cpu: "20m"
                 limits:
-                  memory: "1G"
+                  memory: "4G"
               volumeMounts:
                 - name: "tmp"
                   mountPath: "/tmp"

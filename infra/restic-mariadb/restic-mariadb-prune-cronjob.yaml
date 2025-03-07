@@ -24,8 +24,8 @@ spec:
             fsGroup: 16523
             runAsNonRoot: true
           containers:
-            - name: "restic-backup-prune"
-              image: "ghcr.io/soerenschneider/restic:1.0.0"
+            - name: "restic-mariadb-prune"
+              image: "ghcr.io/soerenschneider/restic:1.1.1"
               imagePullPolicy: "IfNotPresent"
               command:
                 - "/usr/local/bin/restic_prune.py"

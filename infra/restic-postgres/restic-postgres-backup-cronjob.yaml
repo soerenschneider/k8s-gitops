@@ -25,7 +25,7 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "restic-backup"
-              image: "ghcr.io/soerenschneider/restic:1.0.0"
+              image: "ghcr.io/soerenschneider/restic:1.1.1"
               imagePullPolicy: "IfNotPresent"
               securityContext:
                 runAsUser: 16523
@@ -39,16 +39,12 @@ spec:
                   drop:
                     - "ALL"
               env:
-                - name: "POSTGRES_HOST"
-                  valueFrom:
-                    configMapKeyRef:
-                      name: "mealie-restic-postgres"
-                      key: "POSTGRES_SERVER"
                 - name: "PGPASSWORD"
                   valueFrom:
                     secretKeyRef:
-                      name: "mealie-restic-postgres"
+                      name: "restic-postgres"
                       key: "POSTGRES_PASSWORD"
+                      optional: true
                 - name: "PUSHGATEWAY_URL"
                   value: "http://pushgateway.monitoring"
                 - name: "TMPDIR"
@@ -57,13 +53,17 @@ spec:
                   value: "/tmp/restic-cache"
                 - name: "_RESTIC_TYPE"
                   value: "postgres"
+                - name: "RESTIC_HOST"
+                  value: "kubernetes"
+                - name: "RESTIC_COMPRESSION"
+                  value: "max"
               envFrom: []
               resources:
                 requests:
                   memory: "256Mi"
                   cpu: "20m"
                 limits:
-                  memory: "1G"
+                  memory: "4G"
               volumeMounts:
                 - name: "tmp"
                   mountPath: "/tmp"

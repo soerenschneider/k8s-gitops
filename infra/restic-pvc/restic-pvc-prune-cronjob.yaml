@@ -25,7 +25,7 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "restic-pvc-prune"
-              image: "ghcr.io/soerenschneider/restic:1.0.1"
+              image: "ghcr.io/soerenschneider/restic:1.2.0"
               imagePullPolicy: "IfNotPresent"
               command:
                 - "restic_prune.py"
@@ -41,12 +41,12 @@ spec:
                   drop:
                     - "ALL"
               env:
+                - name: "_RESTIC_TYPE"
+                  value: "directory"
                 - name: "PUSHGATEWAY_URL"
                   value: "http://pushgateway.monitoring"
                 - name: "TMPDIR"
                   value: "/tmp"
-                - name: "_RESTIC_TYPE"
-                  value: "directory"
               envFrom: []
               resources:
                 requests:

@@ -24,8 +24,8 @@ spec:
             fsGroup: 16523
             runAsNonRoot: true
           containers:
-            - name: "restic"
-              image: "ghcr.io/soerenschneider/restic:1.0.0"
+            - name: "restic-taskwarrior-backup"
+              image: "ghcr.io/soerenschneider/restic:1.1.1"
               imagePullPolicy: "IfNotPresent"
               command:
                 - sh
