@@ -1,0 +1,64 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - "../../../../infra/restic-pvc"
+patches:
+  - target:
+      kind: "CronJob"
+    patch: |
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "vaultwarden-restic-pvc"
+          - secretRef:
+              name: "vaultwarden-restic-pvc"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "vaultwarden"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsUser"
+        value: 44413
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsGroup"
+        value: 44413
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/fsGroup"
+        value: 44413
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
+        value: 44413
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
+        value: 44413
+      - op: "test"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/name"
+        value: "_RESTIC_TYPE"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/value"
+        value: "sqlite"
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-backup"
+    patch: |
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 6 * * *"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/0/persistentVolumeClaim/claimName"
+        value: "vaultwarden"
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-restore"
+    patch: |
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/0/persistentVolumeClaim/claimName"
+        value: "vaultwarden"
+  - target:
+      kind: "CronJob"
+      name: "restic-pvc-prune"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 22 * * *"

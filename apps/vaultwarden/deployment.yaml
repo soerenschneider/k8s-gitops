@@ -1,0 +1,67 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "vaultwarden"
+  labels:
+    app.kubernetes.io/name: "vaultwarden"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "vaultwarden"
+  strategy:
+    type: "Recreate"
+  template:
+    metadata:
+      labels:
+        app: "vaultwarden"
+        app.kubernetes.io/name: "vaultwarden"
+        app.kubernetes.io/component: "vaultwarden"
+        app.kubernetes.io/part-of: "vaultwarden"
+    spec:
+      securityContext:
+        runAsUser: 44413
+        runAsGroup: 44413
+        fsGroup: 44413
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - name: "vaultwarden"
+          image: "ghcr.io/dani-garcia/vaultwarden:1.33.2-alpine"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 44413
+            runAsGroup: 44413
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          env:
+            - name: ROCKET_PORT
+              value: "8000"
+          resources:
+            requests:
+              memory: "148Mi"
+              cpu: "10m"
+            limits:
+              memory: "256Mi"
+          ports:
+            - containerPort: 8000
+              name: "vaultwarden"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/data"
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: "location"
+          whenUnsatisfiable: "ScheduleAnyway"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "100Mi"
