@@ -19,7 +19,7 @@
     },
     {
       "matchDatasources": ["docker"],
-      "updateTypes": ["minor", "patch"]
+      "updateTypes": ["major", "minor", "patch"]
     },
     {
       "automerge": true,
