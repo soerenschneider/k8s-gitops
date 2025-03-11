@@ -1,0 +1,26 @@
+---
+apiVersion: "v1"
+kind: "PersistentVolume"
+metadata:
+  name: "miniflux-postgres"
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  capacity:
+    storage: "5Gi"
+  volumeMode: "Filesystem"
+  storageClassName: "local-storage"
+  persistentVolumeReclaimPolicy: "Retain"
+  claimRef:
+    namespace: "miniflux"
+    name: "miniflux-postgres"
+  local:
+    path: "/mnt/k8s/miniflux-postgres"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: "kubernetes.io/hostname"
+              operator: "In"
+              values:
+                - "k8s.ez.soeren.cloud"
