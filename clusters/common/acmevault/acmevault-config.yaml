@@ -4,6 +4,10 @@ acmeCustomDnsServers:
   - 8.8.4.4
 acmeDnsProvider: route53
 domains:
+  - domain: auth.ez.soeren.cloud
+    sans: [auth.ha.soeren.cloud]
+  - domain: auth.dd.soeren.cloud
+    sans: [auth.ha.soeren.cloud]
   - domain: nas.ez.soeren.cloud
     sans: [nas.ha.soeren.cloud]
   - domain: nas.dd.soeren.cloud
@@ -16,7 +20,6 @@ domains:
     sans: [dbs.ha.soeren.cloud]
   - domain: dbs.pt.soeren.cloud
     sans: [dbs.ha.soeren.cloud]
-  - domain: testserver.dd.soeren.cloud
   - domain: k8s.ez.soeren.cloud
   - domain: k8s.dd.soeren.cloud
   - domain: k8s.pt.soeren.cloud
