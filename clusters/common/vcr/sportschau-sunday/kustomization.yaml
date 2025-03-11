@@ -21,8 +21,7 @@ patches:
         value:
           - yt-dlp
           - --downloader=ffmpeg
-          - --downloader-args=ffmpeg:-t 00:30:00
-          - --downloader-args=ffmpeg_i:-reconnect 1
+          - --downloader-args=ffmpeg:-t 00:30:00 -reconnect 1 -reconnect_streamed 1
           - --hls-use-mpegts
           - --quiet
           - --output=/data/sportschau-%(epoch-3600>%Y%m%d-%H%M%S)s.%(ext)s
