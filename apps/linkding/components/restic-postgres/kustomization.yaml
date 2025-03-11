@@ -14,20 +14,7 @@ configMapGenerator:
 patches:
   - target:
       kind: "CronJob"
-      name: "restic-postgres-backup"
-    patch: |-
-      - op: "replace"
-        path: "/spec/schedule"
-        value: "5 6 * * *"
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
-        value: "linkding"
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/valueFrom/configMapKeyRef/name"
-        value: "linkding-restic-postgres"
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/1/valueFrom/secretKeyRef/name"
-        value: "linkding-postgres"
+    patch: |
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
         value:
@@ -35,19 +22,28 @@ patches:
               name: "linkding-restic-postgres"
           - secretRef:
               name: "linkding-restic-postgres"
-          - secretRef:
-              name: "linkding-postgres"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "linkding"
+  - target:
+      kind: "CronJob"
+      name: "restic-postgres-backup"
+    patch: |
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 6 * * *"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name"
+        value: "linkding-postgres"
+      - op: "add"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom/-"
+        value:
+          secretRef:
+            name: "linkding-postgres"
   - target:
       kind: "CronJob"
       name: "restic-postgres-prune"
     patch: |-
       - op: "replace"
-        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
-        value: "linkding"
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
-        value:
-          - configMapRef:
-              name: "linkding-restic-postgres"
-          - secretRef:
-              name: "linkding-restic-postgres"
+        path: "/spec/schedule"
+        value: "5 22 * * *"
