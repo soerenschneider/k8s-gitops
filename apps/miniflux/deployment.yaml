@@ -4,6 +4,7 @@ kind: Deployment
 metadata:
   name: miniflux
   labels:
+    name: miniflux
     app.kubernetes.io/name: miniflux
     app.kubernetes.io/instance: miniflux-prod
     app.kubernetes.io/component: server

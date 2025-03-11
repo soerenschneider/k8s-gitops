@@ -4,3 +4,16 @@ kind: Component
 resources:
   - postgres-deployment.yaml
   - postgres-service.yaml
+  - networkpolicy.yaml
+patches:
+  - target:
+      kind: "NetworkPolicy"
+      name: "miniflux"
+    patch: |-
+      - op: "add"
+        path: "/spec/egress/-"
+        value:
+          to:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: postgres

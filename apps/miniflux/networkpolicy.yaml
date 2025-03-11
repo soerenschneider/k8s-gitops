@@ -4,7 +4,9 @@ kind: NetworkPolicy
 metadata:
   name: miniflux
 spec:
-  podSelector: {}
+  podSelector:
+    matchLabels:
+      app: miniflux
   policyTypes:
     - Ingress
     - Egress
@@ -22,13 +24,9 @@ spec:
   egress:
     - to:
         - ipBlock:
-            cidr: 192.168.0.0/16
-      ports:
-        - port: 5432
-          protocol: TCP
-    - to:
+            cidr: 0.0.0.0/0
         - ipBlock:
-            cidr: 192.168.0.0/16
+            cidr: ::/0
       ports:
         - port: 443
           protocol: TCP
@@ -49,10 +47,3 @@ spec:
           podSelector:
             matchLabels:
               k8s-app: kube-dns
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              name: keycloak
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: keycloak

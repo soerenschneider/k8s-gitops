@@ -1,0 +1,55 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ../../../../infra/restic-postgres
+patches:
+  - target:
+      kind: "CronJob"
+    patch: |
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "miniflux-restic-postgres"
+          - secretRef:
+              name: "miniflux-restic-postgres"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "miniflux"
+  - target:
+      kind: "CronJob"
+      name: "restic-postgres-backup"
+    patch: |
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 6 * * *"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name"
+        value: "miniflux-postgres"
+      - op: "add"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom/-"
+        value:
+          secretRef:
+            name: "miniflux-postgres"
+  - target:
+      kind: "CronJob"
+      name: "restic-postgres-prune"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 22 * * *"
+  - target:
+      kind: "NetworkPolicy"
+      name: "postgres"
+    patch: |-
+      - op: "add"
+        path: "/spec/ingress/-"
+        value:
+          ports:
+            - protocol: "TCP"
+              port: "postgres"
+          from:
+            - podSelector:
+                matchLabels:
+                  app.kubernetes.io/name: "restic"

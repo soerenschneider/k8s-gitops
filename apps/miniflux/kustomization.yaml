@@ -7,5 +7,5 @@ resources:
   - networkpolicy.yaml
 configMapGenerator:
   - name: miniflux
-    files:
-      - miniflux.properties
+    literals:
+      - RUN_MIGRATIONS=1

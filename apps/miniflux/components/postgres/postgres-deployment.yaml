@@ -38,7 +38,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: postgres
-          image: postgres:16.7
+          image: postgres:17.4
           securityContext:
             runAsUser: 999
             runAsGroup: 999
@@ -69,7 +69,6 @@ spec:
           resources:
             limits:
               memory: "1Gi"
-              cpu: "500m"
             requests:
               memory: "256Mi"
               cpu: "50m"

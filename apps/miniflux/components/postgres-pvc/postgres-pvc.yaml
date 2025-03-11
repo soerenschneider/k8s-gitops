@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mealie-postgres
+  name: "miniflux-postgres"
 spec:
   accessModes:
-    - ReadWriteOnce
+    - "ReadWriteOnce"
   resources:
     requests:
-      storage: 1Gi
+      storage: "512Mi"
