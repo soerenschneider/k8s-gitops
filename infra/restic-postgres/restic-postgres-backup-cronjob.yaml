@@ -12,6 +12,7 @@ spec:
         metadata:
           labels:
             app: "restic"
+            app.kubernetes.io/name: restic
             restic/name: "unknown"
             restic/type: "postgres"
             restic/operation: "backup"
