@@ -8,6 +8,7 @@ resources:
   - mealie-pv.yaml
   - postgres-pv.yaml
   - external-secret-mealie.yaml
+  - external-secret-mealie-postgres.yaml
 components:
   - ../../../apps/mealie/components/mealie-pvc
   - ../../../apps/mealie/components/oidc
