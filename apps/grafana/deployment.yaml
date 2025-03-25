@@ -34,7 +34,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "grafana/grafana:11.5.2"
+        - image: "grafana/grafana:11.5.3"
           name: "grafana"
           securityContext:
             allowPrivilegeEscalation: false
