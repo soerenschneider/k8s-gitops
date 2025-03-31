@@ -1,1 +1,0 @@
-../../../apps/grafana/components/oidc/upsert-secret-grafana-oidc.sh

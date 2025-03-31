@@ -10,7 +10,7 @@ misconfigurations:
   - id: "AVD-KSV-0020"
     paths:
       - "apps/vector/daemonset.yaml"
-      - "apps/**/postgres-deployment.yaml"
+      - "apps/**/postgres-*.yaml"
       - "apps/immich/components/pgvector/postgres-sts.yaml"
       - "apps/paperless-ngx/paperless-ngx-deployment.yaml"
       - "apps/keycloak/deployment.yaml"  # errors if not running as 1000
