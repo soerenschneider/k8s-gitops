@@ -24,6 +24,8 @@ misconfigurations:
   - id: "AVD-KSV-0023"
     paths:
       - "apps/vector/daemonset.yaml"
+  - id: "AVD-KSV-0033"
+  - id: "AVD-KSV-0034"
   - id: "AVD-KSV-0048"
     paths:
       - "infra/reloader/components/rbac/clusterrole.yaml"
