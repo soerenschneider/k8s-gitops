@@ -30,7 +30,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: "gollum"
-          image: "ghcr.io/soerenschneider/gollum:1.0.0"
+          image: "ghcr.io/soerenschneider/gollum:1.1.0"
           imagePullPolicy: "IfNotPresent"
           command:
             - "/manager"
