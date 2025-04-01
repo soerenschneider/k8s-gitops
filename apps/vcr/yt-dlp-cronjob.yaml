@@ -22,7 +22,7 @@ spec:
               type: RuntimeDefault
           containers:
             - name: yt-dlp
-              image: ghcr.io/soerenschneider/yt-dlp:2025.3.26
+              image: ghcr.io/soerenschneider/yt-dlp:2025.3.31
               imagePullPolicy: IfNotPresent
               env:
                 - name: "TMPDIR"
