@@ -34,7 +34,7 @@ spec:
       containers:
         - name: "alert-forge"
           image: "ghcr.io/soerenschneider/alert-forge:1.0.0"
-          imagePullPolicy: "Always"
+          imagePullPolicy: "IfNotPresent"
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
