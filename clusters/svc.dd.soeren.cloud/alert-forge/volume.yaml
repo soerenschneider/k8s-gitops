@@ -21,4 +21,4 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - k8s.ez.soeren.cloud
+                - k8s.dd.soeren.cloud

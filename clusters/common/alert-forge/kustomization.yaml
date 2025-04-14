@@ -6,7 +6,6 @@ resources:
   - ../../../apps/alert-forge
   - external-secret-alert-forge.yaml
   - namespace.yaml
-  - volume.yaml
 configMapGenerator:
   - name: "config"
     files:
