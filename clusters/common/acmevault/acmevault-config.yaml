@@ -8,6 +8,8 @@ domains:
     sans: [auth.ha.soeren.cloud]
   - domain: auth.dd.soeren.cloud
     sans: [auth.ha.soeren.cloud]
+  - domain: auth-2.dd.soeren.cloud
+    sans: [auth.ha.soeren.cloud]
   - domain: nas.ez.soeren.cloud
     sans: [nas.ha.soeren.cloud]
   - domain: nas.dd.soeren.cloud
@@ -17,6 +19,8 @@ domains:
   - domain: dbs.ez.soeren.cloud
     sans: [dbs.ha.soeren.cloud]
   - domain: dbs.dd.soeren.cloud
+    sans: [dbs.ha.soeren.cloud]
+  - domain: dbs-2.dd.soeren.cloud
     sans: [dbs.ha.soeren.cloud]
   - domain: dbs.pt.soeren.cloud
     sans: [dbs.ha.soeren.cloud]
