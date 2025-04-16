@@ -9,6 +9,7 @@ resources:
   - postgres-pv.yaml
   - external-secret-mealie.yaml
   - external-secret-mealie-postgres.yaml
+  - external-secret-mealie-postgres-restic.yaml
 components:
   - ../../../apps/mealie/components/mealie-pvc
   - ../../../apps/mealie/components/oidc
@@ -40,7 +41,10 @@ configMapGenerator:
       - "BASE_URL=https://mealie.svc.dd.soeren.cloud"
   - name: "mealie-oidc"  # TODO: https://github.com/kubernetes-sigs/kustomize/issues/4402
     literals:
-      - "OIDC_CONFIGURATION_URL=https://keycloak.svc.dd.soeren.cloud/realms/myrealm/.well-known/openid-configuration"
-      - "OIDC_USER_GROUP=mealie_user"
-      - "OIDC_ADMIN_GROUP=mealie_admin"
+      - "OIDC_CONFIGURATION_URL=https://auth.dd.soeren.cloud/realms/soerencloud/.well-known/openid-configuration"
       - "OIDC_PROVIDER_NAME=keycloak"
+      - "OIDC_ADMIN_GROUP=/admins"
+      - "OIDC_GROUPS_CLAIM=groups"
+  - name: "mealie-restic-postgres"
+    literals:
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/mealie-postgres"
