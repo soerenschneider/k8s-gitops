@@ -27,6 +27,7 @@ spec:
     - name: "git-clone"
       taskRef:
         name: "git-clone"
+      retries: 3
       workspaces:
         - name: "output"
           workspace: "shared-data"
@@ -35,15 +36,21 @@ spec:
           value: $(params.clone-url)
         - name: "revision"
           value: $(params.revision)
+        - name: "depth"
+          value: 0
+        - name: "refspec"
+          value: "+refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*"
     - name: "golang-build-release"
       runAfter: ["git-clone"]
       taskRef:
         name: "golang-build-release"
+      retries: 3
       workspaces:
         - name: "source"
           workspace: "shared-data"
     - name: "sign-release"
       runAfter: ["golang-build-release"]
+      retries: 3
       taskRef:
         name: "signify"
       params:
@@ -55,6 +62,7 @@ spec:
         - name: "signify"
           workspace: "signify"
     - name: "upload-assets"
+      retries: 3
       runAfter: ["sign-release"]
       taskRef:
         name: "upload-assets"
@@ -68,3 +76,5 @@ spec:
           value: $(params.owner)
         - name: "repository"
           value: $(params.repository)
+        - name: "tag"
+          value: $(params.revision)

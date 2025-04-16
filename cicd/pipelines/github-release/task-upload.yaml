@@ -15,9 +15,13 @@ spec:
     - description: "The name of the repository"
       name: "repository"
       type: "string"
+    - description: "The tag of the release"
+      name: "tag"
+      type: "string"
+      default: "latest"
   steps:
     - name: "scripts"
-      image: "ghcr.io/soerenschneider/scripts:main-20241009193124"
+      image: "ghcr.io/soerenschneider/scripts:1.2.1"
       imagePullPolicy: "IfNotPresent"
       env:
         - name: "HOME"
@@ -26,6 +30,8 @@ spec:
           value: $(params.repository)
         - name: "GH_OWNER"
           value: $(params.owner)
+        - name: "TAG"
+          value: $(params.tag)
       script: |
         #!/usr/bin/env sh
-        ./gh-upload-assets -o "${GH_OWNER}" -r "${GH_REPOSITORY}" -f $(workspaces.github-token.path)/GH_TOKEN $(workspaces.binaries.path)/builds
+        ./gh-upload-assets --tag="${TAG}" -o "${GH_OWNER}" -r "${GH_REPOSITORY}" -f $(workspaces.github-token.path)/GH_TOKEN $(workspaces.binaries.path)/builds
