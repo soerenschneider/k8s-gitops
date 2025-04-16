@@ -58,7 +58,7 @@ misconfigurations:
   - id: "AVD-KSV-0113"
     paths:
       - "apps/monitoring/prometheus-vault-token-syncer/rbac.yaml"
-      - "cicd/ansible/rbac.yaml"
+      - "cicd/pipelines/ansible/rbac.yaml"
   - id: "AVD-KSV-0114"
     paths:
       - "infra/external-secrets/components/resources/rbac-bindings.yaml"
