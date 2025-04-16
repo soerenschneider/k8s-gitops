@@ -7,7 +7,6 @@ resources:
   - namespace.yaml
   - postgres-pv.yaml
   - external-secret-linkding.yaml
-  - external-secret-oauth2-proxy.yaml
 components:
   - ../../../apps/linkding/components/istio
   - ../../../apps/linkding/components/oidc
@@ -15,9 +14,14 @@ components:
   - ../../../apps/linkding/components/postgres-pvc
   - ../../../apps/linkding/components/restic-postgres
 configMapGenerator:
-  - name: oauth2-proxy  # TODO: https://github.com/kubernetes-sigs/kustomize/issues/4402
+  - name: linkding
+    behavior: merge
     literals:
-      - OAUTH2_PROXY_OIDC_ISSUER_URL=https://keycloak.svc.dd.soeren.cloud/realms/myrealm
+      - OIDC_OP_AUTHORIZATION_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud/protocol/openid-connect/auth
+      - OIDC_OP_TOKEN_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud/protocol/openid-connect/token
+      - OIDC_OP_USER_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud/protocol/openid-connect/userinfo
+      - OIDC_OP_JWKS_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud/protocol/openid-connect/certs
+      - OIDC_OP_LOGOUT_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud/protocol/openid-connect/logout
 patches:
   - target:
       kind: Deployment
