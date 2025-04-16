@@ -20,6 +20,9 @@ spec:
         app.kubernetes.io/instance: "gollum-prod"
         app.kubernetes.io/component: "gollum"
         app.kubernetes.io/part-of: "gollum"
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
     spec:
       securityContext:
         runAsUser: 34322
@@ -40,6 +43,8 @@ spec:
           args:
             - "--leader-elect"
             - "--health-probe-bind-address=:8081"
+            - "--metrics-secure=false"
+            - "--metrics-bind-address=:8080"
           env:
             - name: GH_TOKEN
               valueFrom:
