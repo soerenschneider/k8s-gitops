@@ -82,6 +82,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: "linkding"
+            - secretRef:
+                name: "linkding"
+                optional: true
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: location

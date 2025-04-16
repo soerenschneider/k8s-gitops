@@ -4,42 +4,5 @@ kind: Component
 configMapGenerator:
   - name: linkding
     behavior: merge
-    envs:
-      - linkding.properties
-  - name: oauth2-proxy
-    behavior: merge
-    envs:
-      - oauth2-proxy.properties
-patches:
-  - target:
-      kind: "Deployment"
-      name: "linkding"
-    path: "oauth2-proxy.yaml"
-  - target:
-      kind: "Service"
-      name: "linkding"
-    patch: |
-      - op: "replace"
-        path: "/spec/ports/0/targetPort"
-        value: "oauth2-proxy"
-  - target:
-      kind: "Deployment"
-      name: "oauth2-proxy"
-    patch: |-
-      - op: add
-        path: /spec/template/spec/containers/0/env
-        value:
-          - name: LD_SUPERUSER_NAME
-            valueFrom:
-              secretKeyRef:
-                name: "linkding"
-                key: "LD_SUPERUSER_NAME"
-  - target:
-      kind: "NetworkPolicy"
-      name: "linkding"
-    patch: |-
-      - op: replace
-        path: "/spec/ingress/0/ports"
-        value:
-          - protocol: "TCP"
-            port: "oauth2-proxy"
+    literals:
+      - LD_ENABLE_OIDC=True
