@@ -5,10 +5,10 @@ metadata:
   labels:
     app.kubernetes.io/name: "gollum"
     app.kubernetes.io/managed-by: "kustomize"
-  name: "soerenschneider-tunnelguard"
+  name: "soerenschneider-ssh-aegis"
 spec:
   owner: "soerenschneider"
-  repo: "tunnelguard"
+  repo: "ssh-aegis"
   cloneUsingSsh: false
   pipelineRunName: "gollum"
   pipelineNames:
