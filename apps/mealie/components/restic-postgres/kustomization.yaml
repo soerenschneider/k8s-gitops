@@ -5,6 +5,7 @@ resources:
   - ../../../../infra/restic-postgres
 configMapGenerator:
   - name: "mealie-restic-postgres"
+    behavior: "merge"
     literals:
       - "RETENTION_DAYS=7"
       - "RETENTION_WEEKS=4"

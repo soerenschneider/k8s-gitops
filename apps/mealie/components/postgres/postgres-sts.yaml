@@ -39,7 +39,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: postgres
-          image: postgres:16.7
+          image: postgres:17.4
           securityContext:
             runAsUser: 999
             runAsGroup: 999
@@ -68,8 +68,6 @@ spec:
                 secretKeyRef:
                   key: "POSTGRES_PASSWORD"
                   name: "mealie-postgres"
-            - name: "PGDATA"
-              value: "/data/pgdata"
           ports:
             - containerPort: 5432
               name: "postgres"
@@ -102,7 +100,7 @@ spec:
             - name: var-run
               mountPath: /var/run
             - name: storage
-              mountPath: /data
+              mountPath: /var/lib/postgresql
       volumes:
         - name: tmp
           emptyDir:

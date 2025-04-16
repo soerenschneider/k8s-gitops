@@ -33,7 +33,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: mealie
-          image: "ghcr.io/mealie-recipes/mealie:v2.7.1"
+          image: "ghcr.io/mealie-recipes/mealie:v2.8.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: "TZ"
@@ -64,10 +64,10 @@ spec:
                 name: "mealie"
           resources:
             requests:
-              memory: "196Mi"
+              memory: "256Mi"
               cpu: "20m"
             limits:
-              memory: "768Mi"
+              memory: "1Gi"
           livenessProbe:
             tcpSocket:
               port: 9000
@@ -91,8 +91,13 @@ spec:
             periodSeconds: 5
           volumeMounts:
             - name: "storage"
-              mountPath: "/app/data/"
+              mountPath: "/app/data"
+            - name: "nltk"
+              mountPath: "/nltk_data"
       volumes:
         - name: "storage"
+          emptyDir:
+            sizeLimit: "5Gi"
+        - name: "nltk"
           emptyDir:
             sizeLimit: "5Gi"
