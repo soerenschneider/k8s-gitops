@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: nginx
-          image: nginx:1.27.4-alpine
+          image: nginx:1.27.5-alpine
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false
