@@ -34,7 +34,7 @@ spec:
           type: "RuntimeDefault"
       initContainers:
         - name: init
-          image: "nextcloud:29.0.14-fpm"
+          image: "nextcloud:29.0.16-fpm"
           command: ["sh", "-c", "rsync -ar /usr/src/nextcloud/ /dest/html"]
           volumeMounts:
             - name: "shared-data"
@@ -94,7 +94,7 @@ spec:
               readOnly: true
               mountPath: "/var/www"
         - name: "nextcloud"
-          image: "nextcloud:29.0.14-fpm"
+          image: "nextcloud:29.0.16-fpm"
           imagePullPolicy: "IfNotPresent"
           envFrom:
             - configMapRef:
