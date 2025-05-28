@@ -34,7 +34,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "ghcr.io/miniflux/miniflux:2.2.8"
+        - image: "ghcr.io/miniflux/miniflux:2.2.9"
           imagePullPolicy: "IfNotPresent"
           name: "miniflux"
           ports:
