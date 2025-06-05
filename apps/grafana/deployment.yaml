@@ -85,6 +85,10 @@ spec:
           volumeMounts:
             - name: "storage"
               mountPath: "/var/lib/grafana"
+            - name: "tmp"
+              mountPath: "/tmp"
       volumes:
         - name: "storage"
+          emptyDir: {}
+        - name: "tmp"
           emptyDir: {}

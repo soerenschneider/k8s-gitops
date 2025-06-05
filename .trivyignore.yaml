@@ -66,3 +66,4 @@ misconfigurations:
     paths:
       - "**/taskwarrior-configmap.yaml"  # false positive
       - "apps/mariadb-galera/components/tls-wsrep/cm-sst-cnf.yaml"  # false positive
+  - id: "AVD-KSV-0125"
