@@ -1,11 +1,11 @@
 ---
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: pushgateway
+  name: victoriametrics
 spec:
   hosts:
-    - pushgateway
+    - victoriametrics
   gateways:
     - istio-system/gateway
   http:
@@ -14,6 +14,6 @@ spec:
             prefix: /
       route:
         - destination:
-            host: pushgateway
+            host: victoriametrics
             port:
               number: 80
