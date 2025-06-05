@@ -94,7 +94,7 @@ spec:
             name: "vector-config"
         - name: data
           hostPath:
-            path: "/var/lib/vector"
+            path: "/var/lib/vector-k8s"
         - hostPath:
             path: "/var/log/"
           name: "var-log"

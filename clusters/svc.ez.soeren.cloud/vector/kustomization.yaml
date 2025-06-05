@@ -5,6 +5,16 @@ namespace: vector
 resources:
   - ../../../apps/vector
   - namespace.yaml
+patches:
+  - target:
+      kind: DaemonSet
+      name: vector
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: "DC"
+          value: "ez"
 configMapGenerator:
   - name: vector-config
     behavior: merge
