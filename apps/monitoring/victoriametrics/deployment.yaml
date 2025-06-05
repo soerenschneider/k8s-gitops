@@ -47,6 +47,7 @@ spec:
             - "--storageDataPath=/storage"
             - "--httpListenAddr=:8428"
             - "--retentionPeriod=6"
+            - "--maxConcurrentInserts=64"
           ports:
             - containerPort: 8428
               name: "victoriametrics"
