@@ -35,7 +35,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: navidrome
-          image: deluan/navidrome:0.55.2
+          image: docker.io/deluan/navidrome:0.55.2
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
@@ -55,6 +55,9 @@ spec:
               cpu: 5m
             limits:
               memory: 512Mi
+          env:
+            - name: "SQLITE_TMPDIR"
+              value: "/data"
           envFrom:
             - configMapRef:
                 name: navidrome
