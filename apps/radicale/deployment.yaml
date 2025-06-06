@@ -28,7 +28,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "tomsquest/docker-radicale:3.4.1.1"
+        - image: "tomsquest/docker-radicale:3.5.4.0"
           name: "radicale"
           securityContext:
             allowPrivilegeEscalation: false
