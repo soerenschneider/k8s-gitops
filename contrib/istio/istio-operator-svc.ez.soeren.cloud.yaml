@@ -17,8 +17,8 @@ spec:
       - name: istio-ingressgateway
         enabled: true
         k8s:
-#          serviceAnnotations:
-#            metallb.universe.tf/address-pool: ez
+          serviceAnnotations:
+            metallb.universe.tf/address-pool: ez
           service:
             ports:
               - port: 80
@@ -27,6 +27,10 @@ spec:
               - port: 443
                 targetPort: 8443
                 name: "https"
+              - port: 4222
+                targetPort: 4222
+                name: "nats"
+                protocol: TCP
               - port: 5671
                 targetPort: 5671
                 name: "amqp-tls"

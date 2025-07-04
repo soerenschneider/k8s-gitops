@@ -17,8 +17,8 @@ spec:
       - name: istio-ingressgateway
         enabled: true
         k8s:
-#          serviceAnnotations:
-#            metallb.universe.tf/address-pool: pt
+          serviceAnnotations:
+            metallb.universe.tf/address-pool: pt
           service:
             ports:
               - port: 80
