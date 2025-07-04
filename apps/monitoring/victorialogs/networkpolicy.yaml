@@ -1,0 +1,61 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: victorialogs
+  namespace: monitoring
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: victorialogs
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: metrics
+      from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 192.168.0.0/16
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 443
+          protocol: TCP
+        - port: 80
+          protocol: TCP
+        - port: 9093
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              networking/namespace: kube-system
+          podSelector: {}
+      ports:
+        - port: 53
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: istio-system
+          podSelector: {}
+      ports:
+        - port: 15012
+          protocol: TCP

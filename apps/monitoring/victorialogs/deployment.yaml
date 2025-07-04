@@ -1,0 +1,111 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: victorialogs
+  namespace: monitoring
+  labels:
+    app: victorialogs
+    app.kubernetes.io/name: victorialogs
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: victorialogs
+      app.kubernetes.io/name: victorialogs
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: victorialogs
+        app.kubernetes.io/name: victorialogs
+        app.kubernetes.io/instance: victorialogs-prod
+        app.kubernetes.io/component: victorialogs
+        app.kubernetes.io/part-of: monitoring
+      annotations:
+        prometheus.io/port: "8880"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 65532
+        runAsGroup: 65532
+        fsGroup: 65532
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: "victorialogs"
+          image: "docker.io/victoriametrics/victoria-logs:v1.22.2-victorialogs"
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--storageDataPath=/storage"
+            - "--httpListenAddr=:8428"
+            - "--retentionPeriod=6"
+          ports:
+            - containerPort: 8428
+              name: "victorialogs"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 65532
+            runAsGroup: 65532
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "50m"
+            limits:
+              memory: "2Gi"
+          livenessProbe:
+            httpGet:
+              path: "/-/healthy"
+              port: "victorialogs"
+          readinessProbe:
+            httpGet:
+              path: "/-/ready"
+              port: "victorialogs"
+          volumeMounts:
+            - name: "storage"
+              mountPath: "/storage"
+      affinity:
+        podAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: "app.kubernetes.io/part-of"
+                      operator: "In"
+                      values:
+                        - "monitoring"
+                topologyKey: "kubernetes.io/hostname"
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 50
+              preference:
+                matchExpressions:
+                  - key: "location"
+                    operator: "NotIn"
+                    values:
+                      - "ez"
+            - weight: 10
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: NotIn
+                    values:
+                      - slow
+      volumes:
+        - name: storage
+          emptyDir: {}
