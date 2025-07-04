@@ -4,7 +4,7 @@ kind: "CronJob"
 metadata:
   name: "restic-mariadb-restore"
 spec:
-  suspend: true # this is only meant to run manually
+  suspend: true  # this is only meant to run manually
   schedule: "0 0 31 2 *"  # Impossible date (Feb 31st)
   concurrencyPolicy: "Forbid"
   jobTemplate:

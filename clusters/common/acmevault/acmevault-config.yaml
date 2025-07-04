@@ -11,11 +11,11 @@ domains:
   - domain: auth-2.dd.soeren.cloud
     sans: [auth.ha.soeren.cloud]
   - domain: nas.ez.soeren.cloud
-    sans: [nas.ha.soeren.cloud]
+    sans: [nas.soeren.cloud, nas.ha.soeren.cloud]
   - domain: nas.dd.soeren.cloud
-    sans: [nas.ha.soeren.cloud]
+    sans: [nas.soeren.cloud, nas.ha.soeren.cloud]
   - domain: nas.pt.soeren.cloud
-    sans: [nas.ha.soeren.cloud]
+    sans: [nas.soeren.cloud, nas.ha.soeren.cloud]
   - domain: dbs.ez.soeren.cloud
     sans: [dbs.ha.soeren.cloud]
   - domain: dbs.dd.soeren.cloud

@@ -40,7 +40,7 @@ spec:
               name: "gotify"
           podSelector: {}
       ports:
-        - port: 8080 # original port of gotify
+        - port: 8080  # original port of gotify
           protocol: TCP
     - to:
         - namespaceSelector:

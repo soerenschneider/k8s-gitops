@@ -1,0 +1,77 @@
+---
+apiVersion: k0sctl.k0sproject.io/v1beta1
+kind: Cluster
+metadata:
+  name: k0s-cluster
+spec:
+  hosts:
+    - ssh:
+        address: k8s-prd-master-1.dd.soerenschneider.net
+        user: soeren
+        port: 22
+      role: controller+worker
+    - ssh:
+        address: k8s-prd-master-2.ez.soerenschneider.net
+        user: soeren
+        port: 22
+      role: controller+worker
+    - ssh:
+        address: k8s-prd-master-3.pt.soerenschneider.net
+        user: soeren
+        port: 22
+      role: controller+worker
+    - ssh:
+        address: k8s-prd-node-ez-1.ez.soerenschneider.net
+        user: soeren
+        port: 22
+      role: worker
+      installFlags:
+        - "--labels=location=ez,cpu_speed=fast"
+    - ssh:
+        address: k8s-prd-node-dd-1.dd.soerenschneider.net
+        user: soeren
+        port: 22
+      role: worker
+      installFlags:
+        - "--labels=location=dd,cpu_speed=fast"
+    - ssh:
+        address: k8s-prd-node-dd-2.dd.soerenschneider.net
+        user: soeren
+        port: 22
+      role: worker
+      installFlags:
+        - "--labels=location=dd,cpu_speed=medium"
+    - ssh:
+        address: k8s-prd-node-pt-1.pt.soerenschneider.net
+        user: soeren
+        port: 22
+      role: worker
+      installFlags:
+        - "--labels=location=pt,cpu_speed=slow"
+    - ssh:
+        address: k8s-prd-node-pt-2.pt.soerenschneider.net
+        user: soeren
+        port: 22
+      role: worker
+      installFlags:
+        - "--labels=location=pt,cpu_speed=medium"
+  k0s:
+    version: 1.25.4+k0s.0
+    config:
+      spec:
+        api:
+          externalAddress: k8s-prd.ha.soeren.cloud
+          sans:
+            - k8s-prd.ha.soeren.cloud
+            - k8s-prd-lb.dd.soeren.cloud
+            - k8s-prd-lb.ez.soeren.cloud
+            - k8s-prd-lb.pt.soeren.cloud
+        network:
+          calico: {}
+          provider: calico
+          clusterDomain: k8s.soeren.cloud
+          kubeProxy:
+            metricsBindAddress: 0.0.0.0:10249
+            mode: iptables
+          podCIDR: 10.244.0.0/16
+          serviceCIDR: 10.96.0.0/12

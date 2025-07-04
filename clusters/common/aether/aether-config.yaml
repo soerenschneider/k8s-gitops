@@ -1,5 +1,7 @@
 ---
 datasources:
+  - endpoint: https://logs.rs.soeren.cloud
+    type: logs
   - endpoint: https://radicale.svc.dd.soeren.cloud
     password_file: "/etc/aether-secrets/caldav_password"
     type: caldav
@@ -16,11 +18,6 @@ datasources:
     nice_name: "Düsseldorf"
     type: weather
     count: 12
-#  - cached: true
-#    symbols:
-#      - VGWL.DE
-#      - 22UA.F
-#    type: stocks
   - type: alertmanager
     host: router.ez.soeren.cloud:9093
     scheme: http

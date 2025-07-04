@@ -51,7 +51,7 @@ misconfigurations:
   - id: "AVD-KSV-0109"
     paths:
       - "clusters/common/taskd/configmap-ca.yaml"
-  - id: "AVD-KSV-0110" # false positive
+  - id: "AVD-KSV-0110"  # false positive
   - id: "AVD-KSV-0111"
     paths:
       - "infra/flux/gotk-components.yaml"

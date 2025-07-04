@@ -36,8 +36,7 @@ spec:
       default: "kubernetes"
   steps:
     - name: "sign-ssh-key"
-      image: "cr.svc.ez.soeren.cloud/vault-ssh-cli"
-      #image: "ghcr.io/soerenschneider/vault-ssh-cli:1.9.1"
+      image: "ghcr.io/soerenschneider/vault-ssh-cli:1.9.1"
       imagePullPolicy: Always
       env:
         - name: "HOME"
