@@ -30,3 +30,9 @@ variable "wildcard_records_v6" {
   type    = list(string)
   default = []
 }
+
+variable "password_store_paths" {
+  type        = list(string)
+  default     = []
+  description = "Paths to write the credentials to."
+}
