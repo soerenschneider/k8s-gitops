@@ -7,4 +7,4 @@ if ! [[ -f $operator ]]; then
     exit 1
 fi
 
-istioctl install --set profile=default -f "${operator}"
+istioctl install -f "${operator}"
