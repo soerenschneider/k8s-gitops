@@ -1,0 +1,60 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openebs-localpv
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://openebs.github.io/dynamic-localpv-provisioner
+    chart: localpv-provisioner
+    targetRevision: 4.1.0
+    helm:
+      values: |
+        hostpathClass:
+          isDefaultClass: true
+        privileged: true
+        podSecurityContext:
+          runAsNonRoot: true
+          runAsUser: 44442
+          runAsGroup: 44442
+          fsGroup: 44442
+          seccompProfile:
+            type: "RuntimeDefault"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openebs
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10
+  ignoreDifferences:  # Ignore differences for dynamic fields
+    - group: storage.k8s.io
+      kind: StorageClass
+      jsonPointers:
+        - /metadata/annotations
+    - group: apps
+      kind: Deployment
+      jsonPointers:
+        - /spec/template/metadata/annotations
+  info:
+    - name: Description
+      value: OpenEBS Dynamic LocalPV Provisioner for hostpath and device-based local storage
+    - name: Repository
+      value: https://github.com/openebs/dynamic-localpv-provisioner
