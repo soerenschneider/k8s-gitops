@@ -5,8 +5,6 @@ namespace: paperless-ngx
 resources:
   - ../../../apps/paperless-ngx
   - namespace.yaml
-  - pv-consumption.yaml
-  - pv-storage.yaml
 components:
   - ../../../apps/paperless-ngx/components/istio
   - ../../../apps/paperless-ngx/components/istio-proxy
