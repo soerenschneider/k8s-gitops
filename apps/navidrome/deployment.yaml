@@ -66,14 +66,14 @@ spec:
               name: "navidrome"
           livenessProbe:
             httpGet:
-              path: "/health"
+              path: "/ping"
               port: "navidrome"
             initialDelaySeconds: 15
             timeoutSeconds: 5
             failureThreshold: 5
           readinessProbe:
             httpGet:
-              path: "/health"
+              path: "/ping"
               port: "navidrome"
             initialDelaySeconds: 5
           volumeMounts:
