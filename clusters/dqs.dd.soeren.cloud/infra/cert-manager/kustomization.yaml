@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ../../../infra/cert-manager
   - clusterissuer.yaml
+  - external-secret-cert-manager.yaml
 namespace: cert-manager
 patches:
   - target:
