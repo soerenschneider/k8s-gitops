@@ -2,6 +2,6 @@
 kind: "Namespace"
 apiVersion: "v1"
 metadata:
-  name: "external-secrets"
+  name: "external-secrets-system"
   labels:
-    name: "external-secrets"
+    name: "external-secrets-system"
