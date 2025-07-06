@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: "k8s-infra"
+  name: "apps"
   namespace: "argocd"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
