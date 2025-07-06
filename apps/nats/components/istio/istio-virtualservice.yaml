@@ -1,0 +1,27 @@
+---
+apiVersion: "networking.istio.io/v1"
+kind: "VirtualService"
+metadata:
+  name: "nats"
+spec:
+  hosts:
+    - "nats"
+  gateways:
+    - "istio-system/gateway"
+  tcp:
+    - match:
+        - port: 4222
+      route:
+        - destination:
+            host: "nats"
+            port:
+              number: 4222
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: "nats"
+            port:
+              number: 80

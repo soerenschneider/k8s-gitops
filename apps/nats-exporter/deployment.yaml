@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "nats-exporter"
+  labels:
+    app: "nats-exporter"
+    app.kubernetes.io/name: "nats-exporter"
+    app.kubernetes.io/instance: "nats-exporter-prod"
+    app.kubernetes.io/component: "nats-exporter"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "nats-exporter"
+  template:
+    metadata:
+      labels:
+        app: "nats-exporter"
+        app.kubernetes.io/name: "nats-exporter"
+        app.kubernetes.io/instance: "nats-exporter-prod"
+        app.kubernetes.io/component: "nats-exporter"
+      annotations:
+        prometheus.io/port: "7777"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 41122
+        runAsGroup: 41122
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: "natsio/prometheus-nats-exporter:0.17.2"
+          imagePullPolicy: "IfNotPresent"
+          name: "nats"
+          args:
+            - "-connz"
+            - "-healthz"
+            - "-subz"
+            - "-varz"
+            - "http://nats"
+          ports:
+            - containerPort: 7777
+              name: "metrics"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 41122
+            runAsGroup: 41122
+            privileged: false
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          readinessProbe:
+            tcpSocket:
+              port: "metrics"
+            initialDelaySeconds: 1
+            timeoutSeconds: 3
+          livenessProbe:
+            tcpSocket:
+              port: "metrics"
+            timeoutSeconds: 3
+            initialDelaySeconds: 15
+          resources:
+            requests:
+              memory: "48Mi"
+              cpu: "5m"
+            limits:
+              memory: "196Mi"
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 20
+              preference:
+                matchExpressions:
+                  - key: cpu_speed
+                    operator: NotIn
+                    values:
+                      - fast
