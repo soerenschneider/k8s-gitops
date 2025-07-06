@@ -13,7 +13,7 @@ Apply the resources to the cluster
 - [vault-auth](../infra/vault-auth)
 - [external-secrets](../infra/external-secrets)
 
-External-secrets must be configured with an appropriate (Cluster)SecretStore, such as [Vault ClusterSecretStore](../clusters/dqs.dd.soeren.cloud/infra/external-secrets/vault.yaml).
+External-secrets must be configured with an appropriate (Cluster)SecretStore, such as [Vault ClusterSecretStore](../clusters/dqs.dd.soeren.cloud/k8s-infra/external-secrets/vault.yaml).
 
 Gather the following information from the cluster 
 - vault-auth service account's JWT. Extract using [vault-kubernetes-get-jwt.sh](../contrib/vault-kubernetes-get-jwt.sh) script.
@@ -27,11 +27,11 @@ Now, K8s is connected to Vault using [Kubernetes Auth method](https://developer.
 
 Now cert-manager can be bootstrapped using the AWS credentials written to Vault by using external-secrets.
 
-Check out [this configuration](../clusters/dqs.dd.soeren.cloud/infra/cert-manager) for inspiration.
+Check out [this configuration](../clusters/dqs.dd.soeren.cloud/k8s-infra-bootstrap/cert-manager) for inspiration.
 
 ## 4. Bootstrapping istio
 
 Bootstrap istio using [install.sh](../contrib/istio/install.sh) which installs istio using Istio Operator and the appropriate config file.
 
-Check out [this configuration](../clusters/dqs.dd.soeren.cloud/infra/istio) (Gateways, certificates) is found in each cluster.
+Check out [this configuration](../clusters/dqs.dd.soeren.cloud/k8s-infra/istio) (Gateways, certificates) is found in each cluster.
 
