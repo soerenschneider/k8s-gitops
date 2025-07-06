@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "jellyporter"
+  labels:
+    app.kubernetes.io/name: "jellyporter"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "jellyporter"
+  serviceName: "jellyporter"
+  template:
+    metadata:
+      labels:
+        app: "jellyporter"
+        app.kubernetes.io/name: "jellyporter"
+    spec:
+      securityContext:
+        runAsUser: 45537
+        runAsGroup: 45537
+        fsGroup: 45537
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: "ghcr.io/soerenschneider/jellyporter:v1.1.0"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 45537
+            runAsGroup: 45537
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          env:
+            - name: "JELLYPORTER_CONFIG_PATH"
+              value: "/config/config.yaml"
+          imagePullPolicy: IfNotPresent
+          name: jellyporter
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "10m"
+            limits:
+              memory: "128Mi"
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              readOnly: true
+              mountPath: /config
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: location
+          whenUnsatisfiable: ScheduleAnyway
+      volumes:
+        - name: data
+          emptyDir: {}
+        - name: config
+          emptyDir: {}
