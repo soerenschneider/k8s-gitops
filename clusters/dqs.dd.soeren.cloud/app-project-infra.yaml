@@ -26,6 +26,8 @@ spec:
 
     - group: admissionregistration.k8s.io
       kind: ValidatingWebhookConfiguration
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
 
     # Storage related
     - group: storage.k8s.io
