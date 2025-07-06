@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: gotenberg
-          image: gotenberg/gotenberg:8.17.3
+          image: gotenberg/gotenberg:8.21.1
           args:
             - gotenberg
             - "--log-level=warn"
