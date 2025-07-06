@@ -3,10 +3,10 @@ apiVersion: "kustomize.config.k8s.io/v1beta1"
 kind: "Kustomization"
 namespace: "gotify"
 resources:
-  - namespace.yaml"
-  - ../../../../apps/gotify"
+  - namespace.yaml
+  - ../../../../apps/gotify
 components:
-  - ../../../../apps/gotify/components/istio"
+  - ../../../../apps/gotify/components/istio
 patches:
   - target:
       kind: "VirtualService"
