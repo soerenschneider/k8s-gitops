@@ -38,7 +38,7 @@ spec:
           type: RuntimeDefault
       containers:
         # renovate: datasource=github-releases depName=minio/minio versioning="regex:^RELEASE\\.(?<major>\\d{4})-(?<minor>\\d{2})-(?<patch>\\d{2})"
-        - image: "quay.io/minio/minio:RELEASE.2025-02-18T16-25-55Z"
+        - image: "quay.io/minio/minio:RELEASE.2025-06-13T11-33-47Z"
           imagePullPolicy: IfNotPresent
           name: minio
           command:
