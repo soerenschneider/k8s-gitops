@@ -26,11 +26,13 @@ spec:
             seccompProfile:
               type: "RuntimeDefault"
           containers:
-            - image: "renovate/renovate:39.229.0"
+            - image: "ghcr.io/renovatebot/renovate:41.17.2-full"
               name: "renovate"
               env:
                 - name: "RENOVATE_BASE_DIR"
                   value: "/storage"
+                - name: "RENOVATE_CONTAINERBASE_DIR"
+                  value: "/tmp/containerbase"
               securityContext:
                 allowPrivilegeEscalation: false
                 readOnlyRootFilesystem: true
@@ -52,8 +54,18 @@ spec:
               volumeMounts:
                 - name: "storage"
                   mountPath: "/storage"
+                - name: "tmp"
+                  mountPath: "/tmp"
+                - name: "home"
+                  mountPath: "/home/ubuntu"
           restartPolicy: Never
           volumes:
             - name: "storage"
               emptyDir:
-                sizeLimit: 15Gi
+                sizeLimit: "15Gi"
+            - name: "tmp"
+              emptyDir:
+                sizeLimit: "5Gi"
+            - name: "home"
+              emptyDir:
+                sizeLimit: "5Gi"
