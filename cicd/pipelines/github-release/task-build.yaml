@@ -9,7 +9,7 @@ spec:
     - name: "source"
   steps:
     - name: "build"
-      image: "golang:1.24.3"
+      image: "golang:1.24.4"
       imagePullPolicy: IfNotPresent
       env:
         - name: "HOME"
