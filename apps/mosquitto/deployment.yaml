@@ -31,7 +31,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "eclipse-mosquitto:2.0.21"
+        - image: "eclipse-mosquitto:2.0.22"
           name: "mosquitto"
           securityContext:
             allowPrivilegeEscalation: false
