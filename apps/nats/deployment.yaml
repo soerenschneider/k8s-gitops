@@ -31,7 +31,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "nats:2.11.1-alpine3.21"
+        - image: "nats:2.11.4-alpine3.21"
           imagePullPolicy: "IfNotPresent"
           name: "nats"
           args:
