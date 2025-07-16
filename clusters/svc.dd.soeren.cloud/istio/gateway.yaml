@@ -47,6 +47,12 @@ spec:
       hosts:
         - "*"
     - port:
+        number: 4222
+        name: "nats"
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
         number: 8883
         name: mqtt-tls
         protocol: TCP
