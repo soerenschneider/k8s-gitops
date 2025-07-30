@@ -32,7 +32,7 @@ spec:
           type: "RuntimeDefault"
       serviceAccountName: "reloader"
       containers:
-        - image: "ghcr.io/stakater/reloader:v1.4.5"
+        - image: "ghcr.io/stakater/reloader:v1.4.6"
           imagePullPolicy: "IfNotPresent"
           name: "reloader"
           ports:
