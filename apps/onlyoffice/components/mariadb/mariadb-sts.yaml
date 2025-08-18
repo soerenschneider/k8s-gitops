@@ -27,7 +27,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: mariadb
-          image: mariadb:11.8.2
+          image: mariadb:11.8.3
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: "onlyoffice"
