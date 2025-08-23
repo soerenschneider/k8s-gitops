@@ -1,0 +1,16 @@
+---
+apiVersion: "external-secrets.io/v1"
+kind: "ClusterSecretStore"
+metadata:
+  name: "vault"
+  namespace: "external-secrets"
+spec:
+  provider:
+    vault:
+      server: "https://vault.ha.soeren.cloud"
+      path: "secret"
+      version: "v2"
+      auth:
+        kubernetes:
+          mountPath: "svc.dd.soeren.cloud"
+          role: "external-secrets"

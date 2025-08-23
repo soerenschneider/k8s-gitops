@@ -1,0 +1,18 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+namespace: "gotify"
+resources:
+  - namespace.yaml
+  - ../../../../apps/gotify
+components:
+  - ../../../../apps/gotify/components/istio
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "gotify"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "gotify.dqs.dd.soeren.cloud"

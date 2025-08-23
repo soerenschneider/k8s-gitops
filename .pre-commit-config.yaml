@@ -1,8 +1,19 @@
 ---
 repos:
+  - repo: local
+    hooks:
+      - id: trivy-docker
+        name: trivy-config
+        entry: ghcr.io/aquasecurity/trivy:0.64.1 config --skip-dirs="/src/.pre-commit-trivy-cache" --cache-dir=/src/.pre-commit-trivy-cache --exit-code 1 --config=/src/trivy.yaml /src
+        language: docker_image
+        pass_filenames: false
+      - id: trivy-fs
+        name: trivy-fs
+        entry: ghcr.io/aquasecurity/trivy:0.64.1 fs --skip-dirs="/src/.pre-commit-trivy-cache" --cache-dir=/src/.pre-commit-trivy-cache --exit-code 1 --config=/src/trivy.yaml /src
+        language: docker_image
+        pass_filenames: false
   - repo: https://github.com/soerenschneider/pre-commit-hooks
     rev: v1.5.1
     hooks:
       - id: yamllint
       - id: gitleaks
-      - id: trivy

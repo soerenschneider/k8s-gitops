@@ -1,0 +1,199 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: "k8s-infra"
+  namespace: "argocd"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Project for applications that require cluster-scoped resources
+
+  # Source repositories
+  sourceRepos:
+    - '*'  # Allow all repositories
+
+  # Destinations
+  destinations:
+    - namespace: '*'
+      server: https://kubernetes.default.svc
+      name: in-cluster
+
+  # Cluster resource whitelist - allows creation of cluster-scoped resources
+  clusterResourceWhitelist:
+    - group: ""  # core API group (empty string)
+      kind: Namespace
+
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+    - group: admissionregistration.k8s.io
+      kind: MutatingWebhookConfiguration
+
+    # Storage related
+    - group: storage.k8s.io
+      kind: StorageClass
+    - group: storage.k8s.io
+      kind: CSIDriver
+    - group: storage.k8s.io
+      kind: CSINode
+    - group: storage.k8s.io
+      kind: VolumeAttachment
+    - group: snapshot.storage.k8s.io
+      kind: VolumeSnapshotClass
+
+    # Custom Resource Definitions
+    - group: apiextensions.k8s.io
+      kind: CustomResourceDefinition
+
+    # RBAC resources
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+
+    # Node related
+    - group: ""
+      kind: Node
+    - group: ""
+      kind: PersistentVolume
+
+    # Networking
+    - group: networking.k8s.io
+      kind: IngressClass
+    - group: networking.k8s.io
+      kind: NetworkPolicy
+
+    # Security
+    - group: policy
+      kind: PodSecurityPolicy
+    - group: policy
+      kind: PodDisruptionBudget
+
+    # Admission controllers
+    - group: admissionregistration.k8s.io
+      kind: ValidatingAdmissionWebhook
+    - group: admissionregistration.k8s.io
+      kind: MutatingAdmissionWebhook
+
+    # Metrics and monitoring
+    - group: metrics.k8s.io
+      kind: NodeMetrics
+    - group: metrics.k8s.io
+      kind: PodMetrics
+
+    # Scheduling
+    - group: scheduling.k8s.io
+      kind: PriorityClass
+
+    # Certificate management
+    - group: certificates.k8s.io
+      kind: CertificateSigningRequest
+
+    # OpenEBS specific resources
+    - group: openebs.io
+      kind: '*'
+    - group: cstor.openebs.io
+      kind: '*'
+    - group: jiva.openebs.io
+      kind: '*'
+    - group: mayastor.openebs.io
+      kind: '*'
+
+    # Cert-manager resources
+    - group: cert-manager.io
+      kind: ClusterIssuer
+
+    # Ingress controllers
+    - group: networking.istio.io
+      kind: '*'
+    - group: traefik.containo.us
+      kind: '*'
+
+    # Service mesh
+    - group: install.istio.io
+      kind: '*'
+    - group: security.istio.io
+      kind: '*'
+
+    # Operators and CRDs
+    - group: operators.coreos.com
+      kind: '*'
+    - group: operator.openshift.io
+      kind: '*'
+
+    # Kubernetes native cluster resources
+    - group: node.k8s.io
+      kind: RuntimeClass
+
+    # FluxCD resources (if using GitOps)
+    - group: source.toolkit.fluxcd.io
+      kind: '*'
+    - group: kustomize.toolkit.fluxcd.io
+      kind: '*'
+    - group: helm.toolkit.fluxcd.io
+      kind: '*'
+
+    # External Secrets Operator
+    - group: external-secrets.io
+      kind: ClusterSecretStore
+
+  # Namespace resource whitelist - allows creation of namespaced resources
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'
+
+  # Roles - define what can be done within this project
+  roles:
+    - name: cluster-admin
+      description: Full access to cluster resources
+      policies:
+        - p, proj:cluster-resources:cluster-admin, applications, *, cluster-resources/*, allow
+        - p, proj:cluster-resources:cluster-admin, repositories, *, *, allow
+        - p, proj:cluster-resources:cluster-admin, clusters, *, *, allow
+      groups:
+        - cluster-resources:admins
+
+    - name: cluster-deployer
+      description: Can deploy and sync applications with cluster resources
+      policies:
+        - p, proj:cluster-resources:cluster-deployer, applications, get, cluster-resources/*, allow
+        - p, proj:cluster-resources:cluster-deployer, applications, sync, cluster-resources/*, allow
+        - p, proj:cluster-resources:cluster-deployer, applications, create, cluster-resources/*, allow
+        - p, proj:cluster-resources:cluster-deployer, applications, update, cluster-resources/*, allow
+        - p, proj:cluster-resources:cluster-deployer, applications, delete, cluster-resources/*, allow
+        - p, proj:cluster-resources:cluster-deployer, repositories, get, *, allow
+      groups:
+        - cluster-resources:deployers
+
+    - name: cluster-viewer
+      description: Read-only access to cluster resources
+      policies:
+        - p, proj:cluster-resources:cluster-viewer, applications, get, cluster-resources/*, allow
+        - p, proj:cluster-resources:cluster-viewer, repositories, get, *, allow
+      groups:
+        - cluster-resources:viewers
+
+  # Sync windows - define when sync is allowed
+  syncWindows:
+    - kind: allow
+      schedule: '* * * * *'
+      duration: 24h
+      applications:
+        - '*'
+      manualSync: true
+    - kind: deny
+      schedule: '0 2 * * *'  # Deny automatic sync at 2 AM
+      duration: 2h
+      applications:
+        - '*'
+      manualSync: false
+
+  # Orphaned resources monitoring
+  orphanedResources:
+    warn: true
+    ignore:
+      - group: storage.k8s.io
+        kind: VolumeAttachment
+      - group: ""
+        kind: PersistentVolume
+        name: "pvc-*"  # Ignore PVs created by PVCs
