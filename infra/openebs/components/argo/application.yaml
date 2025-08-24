@@ -11,9 +11,11 @@ spec:
   source:
     repoURL: https://openebs.github.io/dynamic-localpv-provisioner
     chart: localpv-provisioner
-    targetRevision: 4.1.0
+    targetRevision: 4.3.2
     helm:
       values: |
+        localpv:
+          basePath: "/mnt/storage"
         hostpathClass:
           isDefaultClass: true
         privileged: true
