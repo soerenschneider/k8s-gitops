@@ -5,15 +5,6 @@ resources:
   - ../../../../infra/cert-manager
   - clusterissuer.yaml
   - external-secret-cert-manager.yaml
+components:
+  - ../../../../infra/cert-manager/components/argo
 namespace: cert-manager
-patches:
-  - target:
-      kind: Deployment
-      name: cert-manager
-    patch: |-
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: "--dns01-recursive-nameservers-only"
-      - op: add
-        path: /spec/template/spec/containers/0/args/-
-        value: "--dns01-recursive-nameservers=8.8.8.8:53,1.1.1.1:53"
