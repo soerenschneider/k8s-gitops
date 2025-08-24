@@ -1,0 +1,58 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  source:
+    repoURL: "https://charts.jetstack.io"
+    chart: "cert-manager"
+    targetRevision: "v1.18.2"
+    helm:
+      values: |
+        dns01RecursiveNameservers: "8.8.8.8,1.1.1.1,8.8.4.4"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 44421
+          runAsGroup: 44421
+          fsGroup: 44421
+          seccompProfile:
+            type: "RuntimeDefault"
+        containerSecurityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 44421
+          capabilities:
+            drop:
+              - ALL
+        resources:
+          limits:
+            cpu: 256m
+            memory: 256Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - PrunePropagationPolicy=foreground
+      - PruneLast=true
+      - RespectIgnoreDifferences=true
+      - ApplyOutOfSyncOnly=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10
