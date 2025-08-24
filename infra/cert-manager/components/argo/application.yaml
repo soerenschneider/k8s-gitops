@@ -13,7 +13,8 @@ spec:
     targetRevision: "v1.18.2"
     helm:
       values: |
-        dns01RecursiveNameservers: "8.8.8.8,1.1.1.1,8.8.4.4"
+        dns01RecursiveNameserversOnly: true
+        dns01RecursiveNameservers: "8.8.8.8:53,1.1.1.1:53,8.8.4.4:53"
         securityContext:
           runAsNonRoot: true
           runAsUser: 44421
@@ -38,7 +39,7 @@ spec:
             memory: 64Mi
   destination:
     server: https://kubernetes.default.svc
-    namespace: cert-manager-system
+    namespace: cert-manager
   syncPolicy:
     automated:
       prune: true
