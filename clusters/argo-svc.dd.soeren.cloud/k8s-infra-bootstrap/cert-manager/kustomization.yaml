@@ -5,7 +5,6 @@ resources:
   - ../../../../infra/cert-manager
 components:
   - ../../../../infra/cert-manager/components/argo
-namespace: cert-manager
 patches:
   - target:
       kind: "Application"
