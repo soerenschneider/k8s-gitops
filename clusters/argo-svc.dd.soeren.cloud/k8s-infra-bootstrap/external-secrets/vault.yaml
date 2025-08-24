@@ -4,6 +4,8 @@ kind: "ClusterSecretStore"
 metadata:
   name: "vault"
   namespace: "external-secrets"
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   provider:
     vault:

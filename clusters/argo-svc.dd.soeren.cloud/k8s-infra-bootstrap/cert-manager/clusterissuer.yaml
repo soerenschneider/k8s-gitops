@@ -4,6 +4,8 @@ kind: ClusterIssuer
 metadata:
   name: letsencrypt-dns-prod
   namespace: cert-manager
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   acme:
     email: letsencrypt@soerensoerensen.de
