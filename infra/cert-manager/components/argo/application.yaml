@@ -13,6 +13,7 @@ spec:
     targetRevision: "v1.18.2"
     helm:
       values: |
+        installCRDs: true
         dns01RecursiveNameserversOnly: true
         dns01RecursiveNameservers: "8.8.8.8:53,1.1.1.1:53,8.8.4.4:53"
         securityContext:
@@ -30,13 +31,34 @@ spec:
           capabilities:
             drop:
               - ALL
+        # Resource configuration
         resources:
-          limits:
-            cpu: 256m
-            memory: 256Mi
           requests:
-            cpu: 50m
-            memory: 64Mi
+            cpu: 10m
+            memory: 32Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi
+        
+        # Webhook configuration
+        webhook:
+          resources:
+            requests:
+              cpu: 5m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
+        
+        # CAInjector configuration
+        cainjector:
+          resources:
+            requests:
+              cpu: 5m
+              memory: 16Mi
+            limits:
+              cpu: 50m
+              memory: 64Mi
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager
@@ -44,6 +66,9 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
+      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
