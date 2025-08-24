@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://openebs.github.io/dynamic-localpv-provisioner
     chart: localpv-provisioner
-    targetRevision: 4.3.2
+    targetRevision: 4.3.0
     helm:
       values: |
         localpv:
