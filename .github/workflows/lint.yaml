@@ -11,7 +11,7 @@ jobs:
   kube-linter:
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v5"
       - name: "Scan yamls"
         id: "kube-lint-scan"
         uses: "stackrox/kube-linter-action@v1"
@@ -21,7 +21,7 @@ jobs:
   yamllint:
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v4"
+      - uses: "actions/checkout@v5"
       - name: "Install yamllint"
         run: |
           pip install yamllint
