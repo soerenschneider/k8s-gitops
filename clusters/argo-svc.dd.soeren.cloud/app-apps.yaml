@@ -4,14 +4,18 @@ metadata:
   name: "apps"
   namespace: "argocd"
 spec:
+  goTemplate: true
+  goTemplateOptions:
+    - "missingkey=error"
   generators:
-    - directory:
+    - git:
         repoURL: "https://github.com/soerenschneider/k8s-gitops.git"
         revision: "HEAD"
-        path: "clusters/argo-svc.dd.soeren.cloud/apps/*"
+        directories:
+          - path: "clusters/argo-svc.dd.soeren.cloud/apps/*"
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{.path.basename}}'
       namespace: "argocd"
       annotations:
         argocd.argoproj.io/sync-wave: "3"
@@ -20,9 +24,10 @@ spec:
       source:
         repoURL: "https://github.com/soerenschneider/k8s-gitops.git"
         targetRevision: "HEAD"
-        path: '{{path}}'
+        path: '{{.path.path}}'
       destination:
         server: "https://kubernetes.default.svc"
+        namespace: '{{.path.basename}}'
       syncPolicy:
         automated:
           prune: true
