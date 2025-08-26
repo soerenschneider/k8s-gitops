@@ -39,6 +39,16 @@
         "# renovate: datasource=(?<datasource>docker)( versioning=(?<versioning>.*?))?\\s.+_image: \"(?<depName>.*?):(?<currentValue>.*)\"",
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?_version: \"(?<currentValue>.*)\""
       ]
+    },
+
+    {
+      "fileMatch": ["**/*.yaml", "**/*.yml"],
+      "matchStrings": [
+        "https://storage\\.googleapis\\.com/tekton-releases/operator/previous/v(?<currentValue>[^/]+)/release\\.yaml"
+      ],
+      "datasourceTemplate": "github-releases",
+      "depNameTemplate": "tektoncd/operator",
+      "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ]
 }
