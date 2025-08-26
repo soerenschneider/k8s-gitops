@@ -11,3 +11,12 @@ configMapGenerator:
   - name: homer-config
     files:
       - config.yml
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "homer"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "homer.svc.dd.soeren.cloud"
