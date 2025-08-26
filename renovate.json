@@ -2,10 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base", ":rebaseStalePrs"],
   "kubernetes": {
-    "fileMatch": ["\\.yaml$"]
+    "fileMatch": [".*y[a]?ml$"]
   },
   "flux": {
-    "fileMatch": ["\\.yaml$"]
+    "fileMatch": [".*y[a]?ml$"]
   },
   "packageRules": [
     {
@@ -42,7 +42,7 @@
     },
 
     {
-      "fileMatch": ["**/*.yaml", "**/*.yml"],
+      "fileMatch": ["kustomization.*y[a]?ml$"],
       "matchStrings": [
         "https://storage\\.googleapis\\.com/tekton-releases/operator/previous/v(?<currentValue>[^/]+)/release\\.yaml"
       ],
