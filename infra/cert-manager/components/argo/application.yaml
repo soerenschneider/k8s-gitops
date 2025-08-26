@@ -39,7 +39,6 @@ spec:
           limits:
             cpu: 100m
             memory: 128Mi
-        
         # Webhook configuration
         webhook:
           resources:
@@ -49,7 +48,6 @@ spec:
             limits:
               cpu: 50m
               memory: 64Mi
-        
         # CAInjector configuration
         cainjector:
           resources:
