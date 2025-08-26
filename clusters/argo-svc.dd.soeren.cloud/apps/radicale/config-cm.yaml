@@ -18,6 +18,7 @@ data:
     stock = utf-8
     [auth]
     # bcrypt requires the installation of radicale[bcrypt].
+    type = htpasswd
     htpasswd_filename = /etc/radicale/users
     htpasswd_encryption = autodetect
     # Incorrect authentication delay (seconds)
