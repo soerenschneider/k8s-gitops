@@ -1,0 +1,25 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+namespace: "hermes"
+components:
+  - "../../../../apps/hermes/components/istio"
+  - "../../../../apps/hermes/components/secret"
+  - "../../../../apps/hermes/components/pvc"
+resources:
+  - "namespace.yaml"
+  - "external-secret-hermes.yaml"
+  - "../../../../apps/hermes"
+configMapGenerator:
+  - name: "hermes-config"
+    files:
+      - "hermes-config.yaml"
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "hermes"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "hermes.svc.dd.soeren.cloud"

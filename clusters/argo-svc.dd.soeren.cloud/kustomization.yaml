@@ -4,6 +4,6 @@ kind: Kustomization
 resources:
   - app-project-apps.yaml
   - app-project-infra.yaml
-  - app-apps.yaml
+  - applicationset-apps.yaml
   - app-infra-bootstrap.yaml
-  - app-infra.yaml
+  - applicationset-infra.yaml
