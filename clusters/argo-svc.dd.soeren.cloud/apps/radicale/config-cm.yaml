@@ -18,7 +18,8 @@ data:
     stock = utf-8
     [auth]
     # bcrypt requires the installation of radicale[bcrypt].
-    htpasswd_encryption = bcrypt
+    htpasswd_filename = /etc/radicale/users
+    htpasswd_encryption = autodetect
     # Incorrect authentication delay (seconds)
     delay = 2
     # Message displayed in the client when a password is needed
