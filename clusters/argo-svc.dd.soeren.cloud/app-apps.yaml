@@ -1,20 +1,29 @@
----
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: "apps"
   namespace: "argocd"
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
 spec:
-  project: "apps"
-  source:
-    repoURL: "https://github.com/soerenschneider/k8s-gitops.git"
-    targetRevision: "HEAD"
-    path: "clusters/argo-svc.dd.soeren.cloud/apps"
-  destination:
-    server: "https://kubernetes.default.svc"
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+  generators:
+    - directory:
+        repoURL: "https://github.com/soerenschneider/k8s-gitops.git"
+        revision: "HEAD"
+        path: "clusters/argo-svc.dd.soeren.cloud/apps/*"
+  template:
+    metadata:
+      name: '{{path.basename}}'
+      namespace: "argocd"
+      annotations:
+        argocd.argoproj.io/sync-wave: "3"
+    spec:
+      project: "apps"
+      source:
+        repoURL: "https://github.com/soerenschneider/k8s-gitops.git"
+        targetRevision: "HEAD"
+        path: '{{path}}'
+      destination:
+        server: "https://kubernetes.default.svc"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
