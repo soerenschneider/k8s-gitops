@@ -19,7 +19,7 @@ spec:
       name: '{{.path.basename}}'
       namespace: "argocd"
       annotations:
-        argocd.argoproj.io/sync-wave: "3"
+        argocd.argoproj.io/sync-wave: "1"
     spec:
       project: "k8s-infra"
       source:
