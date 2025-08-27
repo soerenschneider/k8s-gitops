@@ -16,7 +16,7 @@ spec:
           - path: "clusters/argo-svc.dd.soeren.cloud/apps/*"
   template:
     metadata:
-      name: '{{.path.basename}}'
+      name: 'apps-{{.path.basename}}'
       namespace: "argocd"
       annotations:
         argocd.argoproj.io/sync-wave: "3"

@@ -16,7 +16,7 @@ spec:
           - path: "clusters/argo-svc.dd.soeren.cloud/k8s-infra/*"
   template:
     metadata:
-      name: '{{.path.basename}}'
+      name: 'k8s-infra-{{.path.basename}}'
       namespace: "argocd"
       annotations:
         argocd.argoproj.io/sync-wave: "2"
