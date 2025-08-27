@@ -5,3 +5,10 @@ resources:
   - ../../../../infra/cert-manager
 components:
   - ../../../../infra/cert-manager/components/argo
+patches:
+  - target:
+      kind: "Application"
+    patch: |-
+      - op: "replace"
+        path: "/spec/project"
+        value: "k8s-infra"
