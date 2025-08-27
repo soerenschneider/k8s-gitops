@@ -137,6 +137,10 @@ spec:
     - group: external-secrets.io
       kind: ClusterSecretStore
 
+    # Tekton
+    - group: operator.tekton.dev
+      kind: TektonConfig
+
   # Namespace resource whitelist - allows creation of namespaced resources
   namespaceResourceWhitelist:
     - group: '*'
