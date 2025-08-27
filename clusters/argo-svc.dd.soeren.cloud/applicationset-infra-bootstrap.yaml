@@ -1,0 +1,35 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: "infra-bootstrap"
+  namespace: "argocd"
+spec:
+  goTemplate: true
+  goTemplateOptions:
+    - "missingkey=error"
+  generators:
+    - git:
+        repoURL: "https://github.com/soerenschneider/k8s-gitops.git"
+        revision: "HEAD"
+        directories:
+          - path: "clusters/argo-svc.dd.soeren.cloud/k8s-infra-bootstrap/*"
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+      namespace: "argocd"
+      annotations:
+        argocd.argoproj.io/sync-wave: "3"
+    spec:
+      project: "k8s-infra"
+      source:
+        repoURL: "https://github.com/soerenschneider/k8s-gitops.git"
+        targetRevision: "HEAD"
+        path: '{{.path.path}}'
+      destination:
+        server: "https://kubernetes.default.svc"
+        namespace: '{{.path.basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

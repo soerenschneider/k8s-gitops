@@ -5,5 +5,5 @@ resources:
   - app-project-apps.yaml
   - app-project-infra.yaml
   - applicationset-apps.yaml
-  - app-infra-bootstrap.yaml
+  - applicationset-infra-bootstrap.yaml
   - applicationset-infra.yaml
