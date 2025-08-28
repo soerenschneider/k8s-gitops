@@ -9,7 +9,6 @@ resources:
 components:
   - ../../../apps/grafana/components/istio
   - ../../../apps/grafana/components/oidc
-  - ../../../apps/grafana/components/database-mariadb
 patches:
   - target:
       kind: VirtualService
