@@ -33,3 +33,4 @@ patches:
           name: "media"
           persistentVolumeClaim:
             claimName: "media"
+

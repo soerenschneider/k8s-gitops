@@ -34,3 +34,4 @@ spec:
       storage: "5Gi"
   volumeName: "jellyfin-smb-media"
   storageClassName: ""
+

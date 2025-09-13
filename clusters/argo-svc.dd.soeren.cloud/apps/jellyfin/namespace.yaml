@@ -5,3 +5,4 @@ metadata:
   name: jellyfin
   labels:
     name: jellyfin
+
