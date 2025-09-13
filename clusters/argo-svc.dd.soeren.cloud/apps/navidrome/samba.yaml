@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: "navidrome-smb-music"
+spec:
+  capacity:
+    storage: "5Gi"
+  accessModes:
+    - "ReadOnlyMany"
+  claimRef:
+    namespace: "navidrome"
+    name: "music"
+  csi:
+    driver: "smb.csi.k8s.io"
+    volumeHandle: "navidrome-media"
+    volumeAttributes:
+      source: "//nas.dd.soeren.cloud/music"
+      options: "vers=3,seal"
+    nodeStageSecretRef:
+      name: "smbcreds"
+      namespace: "navidrome"
+  persistentVolumeReclaimPolicy: "Retain"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "music"
+spec:
+  accessModes:
+    - "ReadOnlyMany"
+  resources:
+    requests:
+      storage: "5Gi"
+  volumeName: "navidrome-smb-music"
+  storageClassName: ""

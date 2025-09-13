@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: "jellyfin-smb-media"
+spec:
+  capacity:
+    storage: "5Gi"
+  accessModes:
+    - "ReadOnlyMany"
+  claimRef:
+    namespace: "jellyfin"
+    name: "media"
+  csi:
+    driver: "smb.csi.k8s.io"
+    volumeHandle: "jellyfin-media"
+    volumeAttributes:
+      source: "//nas.dd.soeren.cloud/movies"
+      options: "vers=3,seal"
+    nodeStageSecretRef:
+      name: "smbcreds"
+      namespace: "jellyfin"
+  persistentVolumeReclaimPolicy: "Retain"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: "media"
+spec:
+  accessModes:
+    - "ReadOnlyMany"
+  resources:
+    requests:
+      storage: "5Gi"
+  volumeName: "jellyfin-smb-media"
+  storageClassName: ""

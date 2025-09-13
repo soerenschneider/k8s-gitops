@@ -1,0 +1,23 @@
+database:
+  path: /data/local.db
+
+clients:
+  dd:
+    url: https://nas.dd.soeren.cloud
+    user: soeren
+    api_key_file: /apikeys/apikey_nas_dd_soeren_cloud
+  ez:
+    url: https://jellyfin.svc.dd.soeren.cloud
+    user: soeren
+    api_key_file: /apikeys/apikey_jellyfin_svc_dd_soeren_cloud
+
+events:
+  webhook:
+    addr: "0.0.0.0:9000"
+    path: "/webhook"
+
+sync_interval_mins: 5
+full_sync_interval_mins: 360
+
+metrics_addr: "127.0.0.1:8972"
+metrics_path: "/metrics"
