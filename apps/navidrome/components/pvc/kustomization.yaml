@@ -8,9 +8,12 @@ patches:
       kind: "Deployment"
       name: "navidrome"
     patch: |-
+      - op: "test"
+        path: "/spec/template/spec/volumes/0/name"
+        value: "data"
       - op: "replace"
         path: "/spec/template/spec/volumes/0"
         value:
-          name: "storage"
+          name: "data"
           persistentVolumeClaim:
-            claimName: "navidrome-data"
+            claimName: "data"

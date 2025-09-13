@@ -77,13 +77,18 @@ spec:
               port: "navidrome"
             initialDelaySeconds: 5
           volumeMounts:
-            - name: "storage"
+            - name: "data"
               mountPath: "/data"
+            - name: "music"
+              mountPath: "/music"
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: location
           whenUnsatisfiable: ScheduleAnyway
       volumes:
-        - name: storage
+        - name: "data"
+          emptyDir:
+            sizeLimit: 5Gi
+        - name: "music"
           emptyDir:
             sizeLimit: 5Gi
