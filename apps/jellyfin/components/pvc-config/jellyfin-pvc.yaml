@@ -6,7 +6,6 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  volumeName: jellyfin-config
   resources:
     requests:
       storage: 1Gi
