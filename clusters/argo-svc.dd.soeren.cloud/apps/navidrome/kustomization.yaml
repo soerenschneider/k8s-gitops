@@ -32,4 +32,3 @@ patches:
           name: "music"
           persistentVolumeClaim:
             claimName: "music"
-

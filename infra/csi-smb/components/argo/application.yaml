@@ -27,4 +27,3 @@ spec:
       prune: true
     syncOptions:
       - CreateNamespace=false
-

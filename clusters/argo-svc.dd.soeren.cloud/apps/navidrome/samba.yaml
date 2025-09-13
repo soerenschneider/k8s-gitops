@@ -34,4 +34,3 @@ spec:
       storage: "5Gi"
   volumeName: "navidrome-smb-music"
   storageClassName: ""
-

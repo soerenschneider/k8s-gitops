@@ -22,4 +22,3 @@ full_sync_interval_mins: 360
 
 metrics_addr: "127.0.0.1:8972"
 metrics_path: "/metrics"
-
