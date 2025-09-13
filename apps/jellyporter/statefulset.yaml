@@ -27,7 +27,10 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "ghcr.io/soerenschneider/jellyporter:v1.1.0"
+        - image: "ghcr.io/soerenschneider/jellyporter:main-20250912204714"
+          command:
+            - /jellyporter
+            - run
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -42,6 +45,8 @@ spec:
           env:
             - name: "JELLYPORTER_CONFIG_PATH"
               value: "/config/config.yaml"
+            - name: "SQLITE_TMPDIR"
+              value: "/data"
           imagePullPolicy: IfNotPresent
           name: jellyporter
           resources:
