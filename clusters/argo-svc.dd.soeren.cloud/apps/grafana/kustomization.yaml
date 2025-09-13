@@ -3,12 +3,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: grafana
 resources:
-  - ../../../apps/grafana
+  - ../../../../apps/grafana
   - namespace.yaml
   - external-secret-grafana.yaml
 components:
-  - ../../../apps/grafana/components/istio
-  - ../../../apps/grafana/components/oidc
+  - .../../../../apps/grafana/components/istio
+  - ../../../../apps/grafana/components/oidc
 patches:
   - target:
       kind: VirtualService
