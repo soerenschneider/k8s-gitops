@@ -29,7 +29,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: "memos"
-          image: "ghcr.io/usememos/memos:0.25.0"
+          image: "ghcr.io/usememos/memos:0.25.1"
           imagePullPolicy: "IfNotPresent"
           env:
             - name: "MEMOS_PORT"
