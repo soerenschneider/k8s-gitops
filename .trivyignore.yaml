@@ -55,6 +55,7 @@ misconfigurations:
   - id: "AVD-KSV-0111"
     paths:
       - "infra/flux/gotk-components.yaml"
+      - "infra/auth-oidc/cluster-role-binding-admin.yaml"
   - id: "AVD-KSV-0113"
     paths:
       - "apps/monitoring/prometheus-vault-token-syncer/rbac.yaml"
