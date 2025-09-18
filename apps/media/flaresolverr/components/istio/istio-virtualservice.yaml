@@ -1,0 +1,19 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: "flaresolverr"
+spec:
+  hosts:
+    - "flaresolverr"
+  gateways:
+    - "istio-system/gateway"
+  http:
+    - match:
+        - uri:
+            prefix: "/"
+      route:
+        - destination:
+            host: "flaresolverr"
+            port:
+              number: 80
