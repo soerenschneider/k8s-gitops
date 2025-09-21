@@ -1,0 +1,16 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: mealie
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17.4
+  storage:
+    size: 10Gi
+  bootstrap:
+    initdb:
+      database: mealie
+      owner: mealie
+      secret:
+        name: mealie-postgres

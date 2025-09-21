@@ -1,0 +1,13 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - cluster.yaml
+configMapGenerator:
+  - name: mealie
+    behavior: merge
+    literals:
+      - "DB_ENGINE=postgres"
+      - "POSTGRES_PORT=5432"
+      - "POSTGRES_SERVER=mealie-rw"
+      - "POSTGRES_DB=mealie"
