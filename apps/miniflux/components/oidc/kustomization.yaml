@@ -9,13 +9,10 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/envFrom/-
         value:
-          secretMapRef:
+          secretRef:
             name: miniflux-oidc
 configMapGenerator:
   - name: miniflux
     behavior: merge
     literals:
-      - OAUTH2_USER_CREATION=0
       - OAUTH2_PROVIDER=oidc
-      - OAUTH2_REDIRECT_URL=https://miniflux.svc.pt.soeren.cloud/oauth2/oidc/callback
-      - OAUTH2_OIDC_DISCOVERY_ENDPOINT=https://keycloak.svc.pt.soeren.cloud/realms/myrealm
