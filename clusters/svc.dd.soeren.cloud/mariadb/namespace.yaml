@@ -1,7 +1,0 @@
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: mariadb-galera
-  labels:
-    name: mariadb-galera

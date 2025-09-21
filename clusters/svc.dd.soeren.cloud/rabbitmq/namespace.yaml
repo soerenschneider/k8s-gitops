@@ -1,7 +1,0 @@
----
-kind: "Namespace"
-apiVersion: "v1"
-metadata:
-  name: "rabbitmq"
-  labels:
-    name: "rabbitmq"
