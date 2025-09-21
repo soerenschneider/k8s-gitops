@@ -5,12 +5,12 @@ resources:
   - ../../../../infra/restic-postgres
 configMapGenerator:
   - name: "linkding-restic-postgres"
+    behavior: "merge"
     literals:
       - "RETENTION_DAYS=7"
       - "RETENTION_WEEKS=4"
-      - "RETENTION_MONTHS=6"
+      - "RETENTION_MONTHS=12"
       - "RESTIC_BACKUP_ID=linkding-postgres"
-      - "POSTGRES_SERVER=postgres"
 patches:
   - target:
       kind: "CronJob"
@@ -33,13 +33,16 @@ patches:
         path: "/spec/schedule"
         value: "5 6 * * *"
       - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef/name"
-        value: "linkding-postgres"
-      - op: "add"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom/-"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/valueFrom/secretKeyRef"
         value:
-          secretRef:
-            name: "linkding-postgres"
+          name: "linkding-postgres"
+          key: "password"
+          optional: true
+#      - op: "add"
+#        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom/-"
+#        value:
+#          secretRef:
+#            name: "linkding-postgres"
   - target:
       kind: "CronJob"
       name: "restic-postgres-prune"
