@@ -1,0 +1,66 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ../../../../infra/restic-sqlite
+configMapGenerator:
+  - name: "jellyfin-restic-sqlite"
+    behavior: merge
+    literals:
+      - "RETENTION_DAYS=7"
+      - "RETENTION_WEEKS=4"
+      - "RETENTION_MONTHS=3"
+      - "RESTIC_BACKUP_ID=jellyfin-sqlite"
+patches:
+  - target:
+      kind: "CronJob"
+      name: "restic-sqlite-backup"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "5 6 * * *"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "jellyfin"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsUser"
+        value: 45538
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsGroup"
+        value: 45538
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/fsGroup"
+        value: 45538
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
+        value: 45538
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
+        value: 45538
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "jellyfin-restic-sqlite"
+          - secretRef:
+              name: "jellyfin-restic-sqlite"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/0/persistentVolumeClaim/claimName"
+        value: "jellyfin-config"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/0/mountPath"
+        value: "/app-data"
+  - target:
+      kind: "CronJob"
+      name: "restic-sqlite-prune"
+    patch: |-
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "jellyfin"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - configMapRef:
+              name: "jellyfin-restic-sqlite"
+          - secretRef:
+              name: "jellyfin-restic-sqlite"
