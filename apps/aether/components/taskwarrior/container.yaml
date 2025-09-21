@@ -7,7 +7,7 @@
     imagePullPolicy: "IfNotPresent"
     workingDir: "/home/aether"
     env:
-      - name: "TMPDIR"
+      - name: "HOME"
         value: "/task-data"
     securityContext:
       privileged: false
@@ -38,3 +38,5 @@
         subPath: "config"
       - name: task-data
         mountPath: "/task-data"
+      - name: tmp
+        mountPath: "/tmp"
