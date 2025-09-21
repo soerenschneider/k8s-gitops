@@ -7,7 +7,34 @@ resources:
   - namespace.yaml
   - external-secret-aether.yaml
   - external-secret-aether-taskwarrior.yaml
+images:
+  - name: ghcr.io/soerenschneider/aether
+    newName: cr.svc.dd.soeren.cloud/aether
+    newTag: latest
 patches:
+  - target:
+      kind: Deployment
+      name: aether
+    patch: |
+      - op: replace
+        path: /spec/template/spec/containers/0/imagePullPolicy
+        value: "Always"
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: aether-secret
+          secret:
+            secretName: aether
+            items:
+              - key: oidc_secret_id
+                path: aether_oidc_secret_id
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: aether-secret
+          mountPath: /aether_oidc_secret_id
+          subPath: aether_oidc_secret_id
+          readOnly: true
   - target:
       kind: VirtualService
       name: aether

@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: "jellyporter"
 resources:
   - namespace.yaml
-  - external-secret-samba.yaml
+  - external-secret-jellyporter.yaml
   - ../../../../apps/jellyporter
 components:
   - ../../../../apps/jellyporter/components/pvc

@@ -1,0 +1,27 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: mealie
+resources:
+  - namespace.yaml
+  - external-secret-mealie.yaml
+  - external-secret-mealie-postgres.yaml
+  - ../../../../apps/mealie
+components:
+  - ../../../../apps/mealie/components/istio
+  - ../../../../apps/mealie/components/mealie-pvc
+  - ../../../../apps/mealie/components/oidc
+  - ../../../../apps/mealie/components/postgres-cloudnativepg
+patches:
+  - target:
+      kind: VirtualService
+      name: mealie
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - mealie.svc.dd.soeren.cloud
+configMapGenerator:
+  - name: mealie-oidc
+    literals:
+      - "OIDC_CONFIGURATION_URL=https://auth.dd.soeren.cloud/realms/soerencloud/.well-known/openid-configuration"

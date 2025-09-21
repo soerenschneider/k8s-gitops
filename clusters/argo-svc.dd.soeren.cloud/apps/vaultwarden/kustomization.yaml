@@ -1,0 +1,33 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1"
+kind: "Kustomization"
+namespace: "vaultwarden"
+resources:
+  - "namespace.yaml"
+  - "external-secret-restic.yaml"
+  - "../../../../apps/vaultwarden"
+components:
+  - ../../../../apps/vaultwarden/components/istio
+  - ../../../../apps/vaultwarden/components/pvc
+  - ../../../../apps/vaultwarden/components/restic-pvc
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "vaultwarden"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "vaultwarden.svc.dd.soeren.cloud"
+configMapGenerator:
+  - name: vaultwarden-restic-pvc
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - "RETENTION_DAYS=7"
+      - "RETENTION_WEEKS=4"
+      - "RETENTION_MONTHS=6"
+      - "RESTIC_TARGETS=/data"
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/vaultwarden"
+      - "RESTIC_BACKUP_ID=vaultwarden"
+      - "SQLITE_FILE=/data/db.sqlite3"

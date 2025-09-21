@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: "jellyfin"
 resources:
   - namespace.yaml
+  - external-secret-jellyfin-restic-sqlite.yaml
   - external-secret-samba.yaml
   - samba.yaml
   - ../../../../apps/jellyfin
@@ -11,6 +12,7 @@ components:
   - ../../../../apps/jellyfin/components/istio
   - ../../../../apps/jellyfin/components/pvc-config
   - ../../../../apps/jellyfin/components/storage-healthcheck
+  - ../../../../apps/jellyfin/components/restic-sqlite
 patches:
   - target:
       kind: "VirtualService"
@@ -33,3 +35,11 @@ patches:
           name: "media"
           persistentVolumeClaim:
             claimName: "media"
+configMapGenerator:
+  - name: "jellyfin-restic-sqlite"
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/jellyfin-sqlite"
+      - "RESTIC_HOST=svc.dd.soeren.cloud"
+      - "SQLITE_FILE=/app-data/data/library.db"
