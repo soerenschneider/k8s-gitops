@@ -9,32 +9,34 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: PROWLARR__POSTGRES_HOST
-          value: postgres
+          name: PROWLARR__LOG__DBENABLED
+          value: "false"
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: PROWLARR__POSTGRES_MAIN_DB
+          name: PROWLARR__POSTGRES__HOST
+          value: media-rw
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: PROWLARR__POSTGRES__MAINDB
           value: prowlarr
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: PROWLARR__POSTGRES_USER
+          name: PROWLARR__POSTGRES__USER
           valueFrom:
             secretKeyRef:
               key: POSTGRES_USER
-              name: media-prowlarr-postgres
+              name: prowlarr
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: PROWLARR__POSTGRES_PASSWORD
+          name: PROWLARR__POSTGRES__PASSWORD
           valueFrom:
             secretKeyRef:
               key: POSTGRES_PASSWORD
-              name: media-prowlarr-postgres
-      - op: replace
-        path: /spec/template/spec/initContainers
-        value:
+              name: prowlarr
   - target:
       kind: Deployment
       name: prowlarr

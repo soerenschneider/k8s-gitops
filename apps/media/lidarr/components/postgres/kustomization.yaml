@@ -9,29 +9,34 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: LIDARR__POSTGRES_HOST
-          value: postgres
+          name: LIDARR__LOG__DBENABLED
+          value: "false"
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: LIDARR__POSTGRES_MAIN_DB
+          name: LIDARR__POSTGRES__HOST
+          value: media-rw
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: LIDARR__POSTGRES__MAINDB
           value: lidarr
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: LIDARR__POSTGRES_USER
+          name: LIDARR__POSTGRES__USER
           valueFrom:
             secretKeyRef:
               key: POSTGRES_USER
-              name: media-lidarr-postgres
+              name: lidarr
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: LIDARR__POSTGRES_PASSWORD
+          name: LIDARR__POSTGRES__PASSWORD
           valueFrom:
             secretKeyRef:
               key: POSTGRES_PASSWORD
-              name: media-lidarr-postgres
+              name: lidarr
   - target:
       kind: Deployment
       name: lidarr
