@@ -25,7 +25,7 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: "LIDARR__URL_BASE"
+          name: "LIDARR__SERVER__URLBASE"
           value: "/lidarr"
   - target:
       kind: NetworkPolicy

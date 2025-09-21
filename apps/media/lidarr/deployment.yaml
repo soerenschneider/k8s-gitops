@@ -29,7 +29,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "ghcr.io/onedr0p/lidarr:2.4.3"
+        - image: "ghcr.io/home-operations/lidarr:2.14.2.4785"
           imagePullPolicy: "IfNotPresent"
           name: "lidarr"
           ports:
@@ -77,8 +77,10 @@ spec:
             - name: "TZ"
               value: "Europe/Berlin"
           volumeMounts:
-            - name: "storage"
+            - name: "config"
               mountPath: "/config"
+            - name: "music"
+              mountPath: "/mnt/media"
             - name: "tmp"
               mountPath: "/tmp"
       affinity:
@@ -103,9 +105,12 @@ spec:
                         - "media"
                 topologyKey: "kubernetes.io/hostname"
       volumes:
-        - name: "storage"
+        - name: "config"
           emptyDir:
             sizeLimit: "512Mi"
+        - name: "music"
+          emptyDir:
+            sizeLimit: "5Mi"
         - name: "tmp"
           emptyDir:
             sizeLimit: "1Gi"

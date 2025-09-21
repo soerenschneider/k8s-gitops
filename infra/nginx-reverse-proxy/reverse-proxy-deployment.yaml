@@ -16,7 +16,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: reverse-proxy
-        app.kubernetes.io/instance: media-prod
+        app.kubernetes.io/instance: nginx
         app.kubernetes.io/component: reverse-proxy
         app: reverse-proxy
     spec:
@@ -66,18 +66,6 @@ spec:
               mountPath: /var/cache/nginx
             - name: run
               mountPath: /var/run
-      affinity:
-        podAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                    - key: app.kubernetes.io/part-of
-                      operator: In
-                      values:
-                        - media
-                topologyKey: "kubernetes.io/hostname"
       volumes:
         - name: nginx-config
           configMap:
