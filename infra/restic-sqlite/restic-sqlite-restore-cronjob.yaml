@@ -1,0 +1,68 @@
+---
+apiVersion: "batch/v1"
+kind: "CronJob"
+metadata:
+  name: "restic-sqlite-restore"
+spec:
+  suspend: true  # this is only meant to run manually
+  schedule: "0 0 31 2 *"  # Impossible date (Feb 31st)
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: "restic"
+            restic/name: "unknown"
+            restic/type: "sqlite"
+            restic/operation: "restore"
+            sidecar.istio.io/inject: "false"
+        spec:
+          restartPolicy: "OnFailure"
+          securityContext:
+            runAsUser: 16523
+            runAsGroup: 16523
+            fsGroup: 16523
+            runAsNonRoot: true
+          containers:
+            - name: "restic-sqlite-restore"
+              image: "ghcr.io/soerenschneider/restic:1.2.1"
+              imagePullPolicy: "IfNotPresent"
+              command:
+                - sleep
+                - "7200"
+              securityContext:
+                runAsUser: 16523
+                runAsGroup: 16523
+                runAsNonRoot: true
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
+              env:
+                - name: "_RESTIC_TYPE"
+                  value: "directory"
+                - name: "PUSHGATEWAY_URL"
+                  value: "http://pushgateway.monitoring"
+                - name: "TMPDIR"
+                  value: "/tmp"
+                - name: "RESTIC_CACHE_DIR"
+                  value: "/tmp/restic-cache"
+                - name: "RESTIC_COMPRESSION"
+                  value: "max"
+              envFrom: []
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "20m"
+                limits:
+                  memory: "4G"
+              volumeMounts:
+                - name: "tmp"
+                  mountPath: "/tmp"
+          volumes:
+            - name: "tmp"
+              emptyDir: {}

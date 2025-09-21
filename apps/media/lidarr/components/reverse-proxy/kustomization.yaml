@@ -4,6 +4,22 @@ kind: Component
 patches:
   - target:
       kind: Deployment
+      name: "reverse-proxy"
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: lidarr-config
+          configMap:
+            name: reverse-proxy-lidarr-config
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: lidarr-config
+          mountPath: /etc/nginx/conf.d/locations/lidarr.conf
+          subPath: lidarr.conf
+  - target:
+      kind: Deployment
       name: lidarr
     patch: |-
       - op: add
@@ -21,3 +37,9 @@ patches:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: "reverse-proxy"
+configMapGenerator:
+  - name: reverse-proxy-lidarr-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - lidarr.conf

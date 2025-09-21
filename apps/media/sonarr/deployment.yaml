@@ -31,7 +31,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "ghcr.io/onedr0p/sonarr:4.0.14.2938"
+        - image: "ghcr.io/home-operations/sonarr:4.0.15.2940"
           imagePullPolicy: "IfNotPresent"
           name: "sonarr"
           ports:
@@ -79,8 +79,10 @@ spec:
             - name: "TZ"
               value: "Europe/Berlin"
           volumeMounts:
-            - name: "storage"
+            - name: "config"
               mountPath: "/config"
+            - name: "shows"
+              mountPath: "/mnt/shows"
             - name: "tmp"
               mountPath: "/tmp"
       affinity:
@@ -105,9 +107,12 @@ spec:
                         - "media"
                 topologyKey: "kubernetes.io/hostname"
       volumes:
-        - name: "storage"
+        - name: "config"
           emptyDir:
             sizeLimit: "512Mi"
+        - name: "shows"
+          emptyDir:
+            sizeLimit: "5Mi"
         - name: "tmp"
           emptyDir:
             sizeLimit: "1Gi"

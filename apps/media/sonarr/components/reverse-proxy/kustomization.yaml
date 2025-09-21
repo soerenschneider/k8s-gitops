@@ -9,8 +9,24 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: SONARR__URL_BASE
+          name: SONARR__SERVER__URLBASE
           value: /sonarr
+  - target:
+      kind: Deployment
+      name: "reverse-proxy"
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: sonarr-config
+          configMap:
+            name: reverse-proxy-sonarr-config
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: sonarr-config
+          mountPath: /etc/nginx/conf.d/locations/sonarr.conf
+          subPath: sonarr.conf
   - target:
       kind: NetworkPolicy
       name: "sonarr"
@@ -21,3 +37,9 @@ patches:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: "reverse-proxy"
+configMapGenerator:
+  - name: reverse-proxy-sonarr-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - sonarr.conf

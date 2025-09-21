@@ -4,12 +4,28 @@ kind: Component
 patches:
   - target:
       kind: Deployment
+      name: "reverse-proxy"
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: prowlarr-config
+          configMap:
+            name: reverse-proxy-prowlarr-config
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: prowlarr-config
+          mountPath: /etc/nginx/conf.d/locations/prowlarr.conf
+          subPath: prowlarr.conf
+  - target:
+      kind: Deployment
       name: "prowlarr"
     patch: |-
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: PROWLARR__URL_BASE
+          name: PROWLARR__SERVER__URLBASE
           value: /prowlarr
   - target:
       kind: NetworkPolicy
@@ -21,3 +37,9 @@ patches:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: "reverse-proxy"
+configMapGenerator:
+  - name: reverse-proxy-prowlarr-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - prowlarr.conf

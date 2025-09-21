@@ -9,29 +9,34 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: SONARR__POSTGRES_HOST
-          value: postgres
+          name: SONARR__LOG__DBENABLED
+          value: "false"
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: SONARR__POSTGRES_MAIN_DB
+          name: SONARR__POSTGRES__HOST
+          value: media-rw
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: SONARR__POSTGRES__MAINDB
           value: sonarr
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: SONARR__POSTGRES_USER
+          name: SONARR__POSTGRES__USER
           valueFrom:
             secretKeyRef:
               key: POSTGRES_USER
-              name: media-sonarr-postgres
+              name: sonarr
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: SONARR__POSTGRES_PASSWORD
+          name: SONARR__POSTGRES__PASSWORD
           valueFrom:
             secretKeyRef:
               key: POSTGRES_PASSWORD
-              name: media-sonarr-postgres
+              name: sonarr
   - target:
       kind: Deployment
       name: sonarr

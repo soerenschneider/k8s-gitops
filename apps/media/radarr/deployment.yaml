@@ -31,7 +31,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "ghcr.io/onedr0p/radarr:5.20.1.9773"
+        - image: "ghcr.io/home-operations/radarr:5.28.0.10205"
           imagePullPolicy: "IfNotPresent"
           name: "radarr"
           ports:
@@ -79,8 +79,10 @@ spec:
             - name: "TZ"
               value: "Europe/Berlin"
           volumeMounts:
-            - name: "storage"
+            - name: "config"
               mountPath: "/config"
+            - name: "movies"
+              mountPath: "/mnt/movies"
             - name: "tmp"
               mountPath: "/tmp"
       affinity:
@@ -105,9 +107,12 @@ spec:
                         - "media"
                 topologyKey: "kubernetes.io/hostname"
       volumes:
-        - name: "storage"
+        - name: "config"
           emptyDir:
             sizeLimit: "512Mi"
+        - name: "movies"
+          emptyDir:
+            sizeLimit: "5Mi"
         - name: "tmp"
           emptyDir:
             sizeLimit: "1Gi"

@@ -9,24 +9,34 @@ patches:
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: "RADARR__POSTGRES_MAIN_DB"
-          value: "radarr"
+          name: RADARR__LOG__DBENABLED
+          value: "false"
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: "RADARR__POSTGRES_USER"
-          valueFrom:
-            secretKeyRef:
-              key: "POSTGRES_USER"
-              name: "media-radarr-postgres"
+          name: RADARR__POSTGRES__HOST
+          value: media-rw
       - op: add
         path: /spec/template/spec/containers/0/env/-
         value:
-          name: "RADARR__POSTGRES_PASSWORD"
+          name: RADARR__POSTGRES__MAINDB
+          value: radarr
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: RADARR__POSTGRES__USER
           valueFrom:
             secretKeyRef:
-              key: "POSTGRES_PASSWORD"
-              name: "media-radarr-postgres"
+              key: POSTGRES_USER
+              name: radarr
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: RADARR__POSTGRES__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: POSTGRES_PASSWORD
+              name: radarr
   - target:
       kind: Deployment
       name: radarr

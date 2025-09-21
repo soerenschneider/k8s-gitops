@@ -1,0 +1,13 @@
+---
+apiVersion: "networking.k8s.io/v1"
+kind: "NetworkPolicy"
+metadata:
+  name: "restic-sqlite"
+spec:
+  podSelector:
+    matchLabels:
+      app: "restic"
+      restic/type: "directory"
+  policyTypes:
+    - Ingress
+  ingress: []
