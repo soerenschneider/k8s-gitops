@@ -6,7 +6,6 @@ resources:
   - ../../../../../apps/monitoring/blackbox_exporter
 components:
   - ../../../../../apps/monitoring/blackbox_exporter/components/custom-config
-  - ../../../../../apps/monitoring/blackbox_exporter/components/reverse-proxy
   - ../../../../../apps/monitoring/blackbox_exporter/components/tls-client-cert
 configMapGenerator:
   - name: blackbox-exporter-config

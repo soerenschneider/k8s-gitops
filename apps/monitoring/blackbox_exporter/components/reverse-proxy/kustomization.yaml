@@ -25,3 +25,25 @@ patches:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: "reverse-proxy"
+  - target:
+      kind: Deployment
+      name: "reverse-proxy"
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: blackbox-exporter-config
+          configMap:
+            name: reverse-proxy-blackbox-exporter-config
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: blackbox-exporter-config
+          mountPath: /etc/nginx/conf.d/locations/blackbox-exporter.conf
+          subPath: blackbox-exporter.conf
+configMapGenerator:
+  - name: reverse-proxy-blackbox-exporter-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - blackbox-exporter.conf

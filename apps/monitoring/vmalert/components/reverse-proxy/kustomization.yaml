@@ -25,3 +25,25 @@ patches:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: "reverse-proxy"
+  - target:
+      kind: Deployment
+      name: "reverse-proxy"
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: vmalert-config
+          configMap:
+            name: reverse-proxy-vmalert-config
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: vmalert-config
+          mountPath: /etc/nginx/conf.d/locations/vmalert.conf
+          subPath: vmalert.conf
+configMapGenerator:
+  - name: reverse-proxy-vmalert-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - vmalert.conf

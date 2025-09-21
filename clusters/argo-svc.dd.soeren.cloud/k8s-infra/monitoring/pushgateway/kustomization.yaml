@@ -4,5 +4,3 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ../../../../../apps/monitoring/pushgateway
-components:
-  - ../../../../../apps/monitoring/pushgateway/components/reverse-proxy

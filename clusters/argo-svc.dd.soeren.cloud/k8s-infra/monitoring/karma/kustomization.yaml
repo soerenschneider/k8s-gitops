@@ -4,8 +4,6 @@ kind: Kustomization
 namespace: monitoring
 resources:
   - ../../../../../apps/monitoring/karma
-components:
-  - ../../../../../apps/monitoring/karma/components/reverse-proxy
 patches:
   - target:
       kind: Deployment

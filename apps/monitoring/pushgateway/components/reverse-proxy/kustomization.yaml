@@ -25,3 +25,25 @@ patches:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: "reverse-proxy"
+  - target:
+      kind: Deployment
+      name: "reverse-proxy"
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: pushgateway-config
+          configMap:
+            name: reverse-proxy-pushgateway-config
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: pushgateway-config
+          mountPath: /etc/nginx/conf.d/locations/pushgateway.conf
+          subPath: pushgateway.conf
+configMapGenerator:
+  - name: reverse-proxy-pushgateway-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - pushgateway.conf

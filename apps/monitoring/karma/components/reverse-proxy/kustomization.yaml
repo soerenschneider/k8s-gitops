@@ -17,3 +17,25 @@ patches:
         value:
           name: "LISTEN_PREFIX"
           value: "/karma"
+  - target:
+      kind: Deployment
+      name: "reverse-proxy"
+    patch: |-
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: karma-config
+          configMap:
+            name: reverse-proxy-karma-config
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: karma-config
+          mountPath: /etc/nginx/conf.d/locations/karma.conf
+          subPath: karma.conf
+configMapGenerator:
+  - name: reverse-proxy-karma-config
+    options:
+      disableNameSuffixHash: true
+    files:
+      - karma.conf
