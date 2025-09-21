@@ -29,8 +29,8 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - name: microbin
-          image: danielszabo99/microbin:2.0.4
+        - name: "microbin"
+          image: "ghcr.io/dvdsk/microbin:2.0.1"
           ports:
             - containerPort: 8080
               name: microbin
