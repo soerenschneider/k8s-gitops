@@ -1,1 +1,0 @@
-../../../apps/minio/upsert-secret-minio.sh

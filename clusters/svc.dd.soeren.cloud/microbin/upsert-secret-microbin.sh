@@ -1,1 +1,0 @@
-../../../apps/microbin/upsert-secret-microbin.sh

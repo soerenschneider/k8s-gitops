@@ -1,1 +1,0 @@
-../../common/mariadb-cluster/upsert-secret-restic-mariadb.sh

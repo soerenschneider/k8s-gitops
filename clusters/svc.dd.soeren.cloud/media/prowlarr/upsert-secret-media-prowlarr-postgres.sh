@@ -1,1 +1,0 @@
-../../../../apps/media/prowlarr/components/postgres/upsert-secret-media-prowlarr-postgres.sh

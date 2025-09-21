@@ -1,1 +1,0 @@
-../../../../apps/media/sonarr/components/postgres/upsert-secret-media-sonarr-postgres.sh

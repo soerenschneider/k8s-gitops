@@ -1,1 +1,0 @@
-../../../apps/mariadb-galera/components/restic-mariadb/upsert-secret-restic-mariadb.sh

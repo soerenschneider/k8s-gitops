@@ -1,1 +1,0 @@
-../../../apps/mysqld-exporter/upsert-secret-mysqld-exporter.sh
