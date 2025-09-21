@@ -11,7 +11,6 @@ configMapGenerator:
       - "RETENTION_WEEKS=4"
       - "RETENTION_MONTHS=6"
       - "RESTIC_BACKUP_ID=mealie-postgres"
-      - "POSTGRES_SERVER=postgres"
 patches:
   - target:
       kind: "CronJob"
