@@ -41,6 +41,10 @@ spec:
             capabilities:
               drop:
                 - "ALL"
+          envFrom:
+            - configMapRef:
+                name: "whoogle-config"
+                optional: true
           resources:
             requests:
               memory: "148Mi"
@@ -57,6 +61,9 @@ spec:
         - maxSkew: 1
           topologyKey: "location"
           whenUnsatisfiable: "ScheduleAnyway"
+          labelSelector:
+            matchLabels:
+              app: "whoogle"
       volumes:
         - name: "tmp"
           emptyDir:
