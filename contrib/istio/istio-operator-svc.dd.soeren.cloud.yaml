@@ -4,6 +4,13 @@ kind: IstioOperator
 spec:
   profile: ambient
   values:
+    cni:
+      # fix istio single cluster issue
+      cniBinDir: /opt/cni/bin
+      cniConfDir: /etc/cni/net.d
+      # Add persistent directory for kubeconfig
+      ambient:
+        configDir: /opt/istio-cni
     global:
       istioNamespace: istio-system
       proxy:
