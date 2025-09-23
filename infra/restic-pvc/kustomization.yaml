@@ -5,3 +5,4 @@ resources:
   - "restic-pvc-backup-cronjob.yaml"
   - "restic-pvc-networkpolicy.yaml"
   - "restic-pvc-prune-cronjob.yaml"
+  - "restic-pvc-restore-cronjob.yaml"
