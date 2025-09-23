@@ -26,4 +26,5 @@ patches:
             secretName: aether
 components:
   - ../../../apps/aether/components/istio
+  - ../../../apps/aether/components/oidc
   - ../../../apps/aether/components/taskwarrior

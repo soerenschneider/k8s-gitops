@@ -1,7 +1,7 @@
 ---
 datasources:
-  - endpoint: https://logs.rs.soeren.cloud
-    type: logs
+#  - endpoint: https://logs.rs.soeren.cloud
+#    type: logs
   - endpoint: https://radicale.svc.dd.soeren.cloud
     password_file: "/etc/aether-secrets/caldav_password"
     type: caldav
@@ -41,4 +41,14 @@ email:
   username_file: "/etc/aether-secrets/email_username"
 http:
   use_gzip: true
-  minify: false
+  minify: true
+  oauth:
+    client_id: "aether"
+    client_secret_file: "aether_oidc_secret_id"
+    redirect_url: "https://aether.svc.dd.soeren.cloud/callback"
+    provider_url: "https://auth.dd.soeren.cloud/realms/soerencloud"
+    allowed_groups:
+      - "/admins"
+    scopes:
+      - email
+      - profile
