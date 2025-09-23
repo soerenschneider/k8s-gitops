@@ -26,7 +26,7 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "restic-backup"
-              image: "ghcr.io/soerenschneider/restic:1.2.1"
+              image: "ghcr.io/soerenschneider/restic:1.3.0"
               imagePullPolicy: "IfNotPresent"
               securityContext:
                 runAsUser: 16523
@@ -54,8 +54,6 @@ spec:
                   value: "/tmp/restic-cache"
                 - name: "_RESTIC_TYPE"
                   value: "postgres"
-                - name: "RESTIC_HOST"
-                  value: "kubernetes"
                 - name: "RESTIC_COMPRESSION"
                   value: "max"
               envFrom: []
