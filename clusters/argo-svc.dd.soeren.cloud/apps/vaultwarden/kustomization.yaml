@@ -9,7 +9,6 @@ resources:
 components:
   - ../../../../apps/vaultwarden/components/istio
   - ../../../../apps/vaultwarden/components/pvc
-  - ../../../../apps/vaultwarden/components/restic-pvc
 patches:
   - target:
       kind: "VirtualService"
