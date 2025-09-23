@@ -6,11 +6,9 @@ resources:
   - ../argocd
 patches:
   - target:
-      kind: Kustomization
-      name: gitops-cluster
+      kind: Application
+      name: cluster
     patch: |-
       - op: replace
-        path: /spec/path
-        value: ./clusters/dqs.dd.soeren.cloud
-      - op: remove
-        path: /spec/decryption
+        path: /spec/source/path
+        value: ./clusters/argo-svc.dd.soeren.cloud

@@ -2,5 +2,44 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - namespace.yaml
+  # renovate: datasource=github-releases depName=argoproj/argo-cd
   - https://raw.githubusercontent.com/argoproj/argo-cd/refs/tags/v3.0.9/manifests/core-install.yaml
+  - project-default.yaml
+  - app-cluster.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: argocd-server
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/annotations
+        value:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8083"
+  - target:
+      kind: Deployment
+      name: argocd-repo-server
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/annotations
+        value:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8084"
+  - target:
+      kind: StatefulSet
+      name: argocd-application-controller
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/annotations
+        value:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8082"
+  - target:
+      kind: Deployment
+      name: argocd-applicationset-controller
+    patch: |-
+      - op: add
+        path: /spec/template/metadata/annotations
+        value:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8082"
