@@ -17,6 +17,13 @@ spec:
       from: []
   egress:
     - to:
+        - podSelector: {}
+      ports:
+        - port: 5432
+          protocol: TCP
+        - port: 3306
+          protocol: TCP
+    - to:
         - ipBlock:
             cidr: 192.168.0.0/16
       ports:
