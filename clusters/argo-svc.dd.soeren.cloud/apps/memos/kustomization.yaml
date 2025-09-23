@@ -1,0 +1,32 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: memos
+resources:
+  - namespace.yaml
+  - external-secret-memos.yaml
+  - external-secret-memos-postgres.yaml
+  - external-secret-memos-restic-postgres.yaml
+  - ../../../../apps/memos
+components:
+  - ../../../../apps/memos/components/istio
+  - ../../../../apps/memos/components/database-cloudnative-pg
+  - ../../../../apps/memos/components/restic-postgres
+patches:
+  - target:
+      kind: VirtualService
+      name: memos
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - memos.svc.dd.soeren.cloud
+configMapGenerator:
+  - name: "memos-restic-postgres"
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/memos-postgres"
+      - "POSTGRES_DATABASE_NAME=memos"
+      - "POSTGRES_HOST=memos-r"
+      - "RESTIC_HOST=svc.dd.soeren.cloud"

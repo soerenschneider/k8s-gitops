@@ -1,7 +1,0 @@
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: domain-exporter
-  labels:
-    name: domain-exporter

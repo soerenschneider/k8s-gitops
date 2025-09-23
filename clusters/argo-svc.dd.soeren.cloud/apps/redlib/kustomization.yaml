@@ -1,0 +1,18 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+namespace: "redlib"
+resources:
+  - "namespace.yaml"
+  - "../../../../apps/redlib"
+components:
+  - "../../../../apps/redlib/components/istio"
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "redlib"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "redlib.svc.dd.soeren.cloud"

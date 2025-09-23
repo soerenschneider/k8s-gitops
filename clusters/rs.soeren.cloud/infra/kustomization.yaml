@@ -1,8 +1,0 @@
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - ../../../infra/priority
-  - ../../../infra/local-storageclass
-components:
-  - ../../../infra/local-storageclass/components/mark-default-storageclass

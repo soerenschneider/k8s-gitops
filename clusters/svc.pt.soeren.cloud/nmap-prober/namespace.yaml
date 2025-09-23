@@ -1,7 +1,0 @@
----
-kind: "Namespace"
-apiVersion: "v1"
-metadata:
-  name: "nmap-prober"
-  labels:
-    name: "nmap-prober"

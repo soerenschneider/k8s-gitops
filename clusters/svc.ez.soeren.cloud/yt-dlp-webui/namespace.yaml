@@ -1,7 +1,0 @@
----
-kind: "Namespace"
-apiVersion: "v1"
-metadata:
-  name: "yt-dlp-webui"
-  labels:
-    name: "yt-dlp-webui"
