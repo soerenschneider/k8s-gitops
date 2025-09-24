@@ -30,7 +30,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: "consul"
-          image: "hashicorp/consul:1.21.4"
+          image: "hashicorp/consul:1.21.5"
           imagePullPolicy: "IfNotPresent"
           command:
             - consul
