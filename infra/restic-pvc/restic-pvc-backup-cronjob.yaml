@@ -18,6 +18,7 @@ spec:
             sidecar.istio.io/inject: "false"
         spec:
           restartPolicy: "OnFailure"
+          activeDeadlineSeconds: 43200
           securityContext:
             runAsUser: 16523
             runAsGroup: 16523

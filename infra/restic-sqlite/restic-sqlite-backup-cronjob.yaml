@@ -17,6 +17,7 @@ spec:
             restic/type: "directory"
             sidecar.istio.io/inject: "false"
         spec:
+          activeDeadlineSeconds: 43200
           restartPolicy: "OnFailure"
           securityContext:
             runAsUser: 16523
