@@ -27,7 +27,7 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "restic-backup"
-              image: "ghcr.io/soerenschneider/restic:1.3.0"
+              image: "ghcr.io/soerenschneider/restic:1.4.0"
               imagePullPolicy: "IfNotPresent"
               securityContext:
                 runAsUser: 16523

@@ -27,7 +27,7 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "restic-sqlite-restore"
-              image: "ghcr.io/soerenschneider/restic:1.2.1"
+              image: "ghcr.io/soerenschneider/restic:1.4.0"
               imagePullPolicy: "IfNotPresent"
               command:
                 - sleep
