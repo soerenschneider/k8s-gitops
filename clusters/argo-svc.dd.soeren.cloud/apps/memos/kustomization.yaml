@@ -14,21 +14,21 @@ components:
   - ../../../../apps/memos/components/restic-postgres
 patches:
   - target:
-      kind: VirtualService
-      name: memos
+      kind: "VirtualService"
+      name: "memos"
     patch: |-
-      - op: replace
-        path: /spec/hosts
+      - op: "replace"
+        path: "/spec/hosts"
         value:
-          - memos.svc.dd.soeren.cloud
+          - "memos.svc.dd.soeren.cloud"
   - target:
       kind: "CronJob"
       name: "restic-postgres-backup"
     patch: |-
       - op: "replace"
         path: "/spec/schedule"
-        value: "9 25 * * *"
-      - op: replace
+        value: "35 9 * * *"
+      - op: "replace"
         path: "/spec/timeZone"
         value: "Europe/Berlin"
 configMapGenerator:

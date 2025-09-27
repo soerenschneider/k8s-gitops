@@ -35,22 +35,22 @@ patches:
     patch: |-
       - op: add
         path: /spec/template/spec/priorityClassName
-        value: prod-low-prio
+        value: "prod-low-prio"
   - target:
-      kind: VirtualService
-      name: linkding
+      kind: "VirtualService"
+      name: "linkding"
     patch: |-
-      - op: replace
-        path: /spec/hosts
+      - op: "replace"
+        path: "/spec/hosts"
         value:
-          - linkding.svc.dd.soeren.cloud
+          - "linkding.svc.dd.soeren.cloud"
   - target:
       kind: "CronJob"
       name: "restic-postgres-backup"
     patch: |-
       - op: "replace"
         path: "/spec/schedule"
-        value: "9 30 * * *"
-      - op: replace
+        value: "40 9 * * *"
+      - op: "replace"
         path: "/spec/timeZone"
         value: "Europe/Berlin"
