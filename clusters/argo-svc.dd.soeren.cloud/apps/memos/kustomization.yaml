@@ -21,6 +21,16 @@ patches:
         path: /spec/hosts
         value:
           - memos.svc.dd.soeren.cloud
+  - target:
+      kind: "CronJob"
+      name: "restic-postgres-backup"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "9 25 * * *"
+      - op: replace
+        path: "/spec/timeZone"
+        value: "Europe/Berlin"
 configMapGenerator:
   - name: "memos-restic-postgres"
     options:

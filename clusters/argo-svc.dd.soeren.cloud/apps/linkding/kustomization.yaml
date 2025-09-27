@@ -44,3 +44,13 @@ patches:
         path: /spec/hosts
         value:
           - linkding.svc.dd.soeren.cloud
+  - target:
+      kind: "CronJob"
+      name: "restic-postgres-backup"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "9 30 * * *"
+      - op: replace
+        path: "/spec/timeZone"
+        value: "Europe/Berlin"
