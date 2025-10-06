@@ -7,3 +7,4 @@
 !*-external-secret.y*ml
 *.swp
 /.idea
+/.pre-commit-trivy-cache/
