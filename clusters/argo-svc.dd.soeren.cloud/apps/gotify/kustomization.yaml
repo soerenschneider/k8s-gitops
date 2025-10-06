@@ -7,6 +7,7 @@ resources:
   - ../../../../apps/gotify
 components:
   - ../../../../apps/gotify/components/istio
+  - ../../../../apps/gotify/components/networkpolicy-hermes
 patches:
   - target:
       kind: "VirtualService"
