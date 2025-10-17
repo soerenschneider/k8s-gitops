@@ -27,7 +27,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: "mysqld-exporter"
-          image: "prom/mysqld-exporter:v0.17.2"
+          image: "prom/mysqld-exporter:v0.18.0"
           args:
             - "--mysqld.address=mariadb:3306"
           env:
