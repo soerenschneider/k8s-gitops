@@ -1,0 +1,37 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../unrest
+nameSuffix: "-pvc"
+patches:
+  - target:
+      kind: "CronJob"
+    patch: |
+      - op: "add"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/-"
+        value:
+          name: "data"
+          mountPath: "/pvc-data"
+          readOnly: true
+      - op: "add"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/-"
+        value:
+          name: "data"
+          persistentVolumeClaim:
+            claimName: "unknown"
+#      - op: "replace"
+#        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
+#        value: 666
+#      - op: "replace"
+#        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
+#        value: 666
+#      - op: "replace"
+#        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsUser"
+#        value: 666
+#      - op: "replace"
+#        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsGroup"
+#        value: 666
+#      - op: "replace"
+#        path: "/spec/jobTemplate/spec/template/spec/securityContext/fsGroup"
+#        value: 666

@@ -1,0 +1,70 @@
+---
+apiVersion: "batch/v1"
+kind: "CronJob"
+metadata:
+  name: "unrest-backup"
+spec:
+  schedule: "0 6 * * *"
+  concurrencyPolicy: "Forbid"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: "restic"
+            app.kubernetes.io/name: restic
+            restic/name: "unknown"
+            restic/operation: "backup"
+            sidecar.istio.io/inject: "false"
+        spec:
+          activeDeadlineSeconds: 43200
+          restartPolicy: "OnFailure"
+          securityContext:
+            runAsUser: 16523
+            runAsGroup: 16523
+            fsGroup: 16523
+            runAsNonRoot: true
+          containers:
+            - name: "unrest-backup"
+              image: "cr.svc.dd.soeren.cloud/unrest"
+              command:
+                - sleep
+                - infinity
+              imagePullPolicy: "Always"
+              securityContext:
+                runAsUser: 16523
+                runAsGroup: 16523
+                runAsNonRoot: true
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: "RuntimeDefault"
+                capabilities:
+                  drop:
+                    - "ALL"
+              env:
+                - name: "TMPDIR"
+                  value: "/tmp"
+                - name: "RESTIC_CACHE_DIR"
+                  value: "/tmp/restic-cache"
+                - name: "RESTIC_COMPRESSION"
+                  value: "max"
+              envFrom: []
+              resources:
+                requests:
+                  memory: "256Mi"
+                  cpu: "20m"
+                limits:
+                  memory: "4G"
+              volumeMounts:
+                - name: "tmp"
+                  mountPath: "/tmp"
+                - name: "resticprofile"
+                  mountPath: "/etc/resticprofile"
+          volumes:
+            - name: "tmp"
+              emptyDir: {}
+            - name: "resticprofile"
+              configMap:
+                optional: true
+                name: "resticprofile"
