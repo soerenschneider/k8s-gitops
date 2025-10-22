@@ -1,0 +1,33 @@
+---
+version: "1"
+
+root:
+  initialize: true
+  prometheus-push: "http://pushgateway.monitoring"
+  prometheus-labels:
+    app: linkding
+  retention:
+    after-backup: true
+    prune: true
+    keep-daily: 7
+    keep-weekly: 4
+    keep-monthly: 9
+    keep-yearly: 2
+
+postgres:
+  inherit: root
+  backup:
+    stdin-command: "pg_dump --clean"
+    stdin-filename: "dump.sql"
+    tag:
+      - postgres
+
+blobs:
+  inherit: root
+  backup:
+    tag:
+      - "blobs"
+    source:
+      - "/pvc-data/assets"
+      - "/pvc-data/favicons"
+      - "/pvc-data/previews"

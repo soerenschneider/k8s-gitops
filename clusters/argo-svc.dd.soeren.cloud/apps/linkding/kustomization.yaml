@@ -6,13 +6,15 @@ resources:
   - namespace.yaml
   - external-secret-linkding.yaml
   - external-secret-linkding-postgres.yaml
-  - external-secret-linkding-postgres-restic.yaml
+  - external-secret-linkding-restic.yaml
   - ../../../../apps/linkding
 components:
   - ../../../../apps/linkding/components/istio
   - ../../../../apps/linkding/components/oidc
+  - ../../../../apps/linkding/components/linkding-pvc
   - ../../../../apps/linkding/components/postgres-cloudnativepg
   - ../../../../apps/linkding/components/restic-postgres
+  - ../../../../apps/linkding/components/restic-pvc
 configMapGenerator:
   - name: "linkding"
     behavior: merge
@@ -22,12 +24,17 @@ configMapGenerator:
       - OIDC_OP_USER_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud/protocol/openid-connect/userinfo
       - OIDC_OP_JWKS_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud/protocol/openid-connect/certs
       - OIDC_OP_LOGOUT_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud/protocol/openid-connect/logout
-  - name: "linkding-restic-postgres"
+  - name: "linkding-restic"
     literals:
-      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/linkding-postgres"
-      - "POSTGRES_DATABASE_NAME=linkding"
-      - "POSTGRES_HOST=linkding-r"
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/linkding"
       - "RESTIC_HOST=svc.dd.soeren.cloud"
+      - "PGDATABASE=linkding"
+      - "PGHOST=linkding-rw"
+  - name: "resticprofile"
+    options:
+      disableNameSuffixHash: true
+    files:
+      - "profiles.yaml"
 patches:
   - target:
       kind: Deployment

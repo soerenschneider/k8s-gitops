@@ -1,27 +1,43 @@
 ---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: mealie
+namespace: "mealie"
 resources:
-  - namespace.yaml
-  - external-secret-mealie.yaml
-  - external-secret-mealie-postgres.yaml
-  - ../../../../apps/mealie
+  - "namespace.yaml"
+  - "external-secret-mealie.yaml"
+  - "external-secret-mealie-postgres.yaml"
+  - "external-secret-mealie-restic.yaml"
+  - "../../../../apps/mealie"
 components:
-  - ../../../../apps/mealie/components/istio
-  - ../../../../apps/mealie/components/mealie-pvc
-  - ../../../../apps/mealie/components/oidc
-  - ../../../../apps/mealie/components/postgres-cloudnativepg
+  - "../../../../apps/mealie/components/istio"
+  - "../../../../apps/mealie/components/mealie-pvc"
+  - "../../../../apps/mealie/components/oidc"
+  - "../../../../apps/mealie/components/postgres-cloudnativepg"
+  - "../../../../apps/mealie/components/restic-postgres"
+  - "../../../../apps/mealie/components/restic-pvc"
 patches:
   - target:
-      kind: VirtualService
-      name: mealie
+      kind: "VirtualService"
+      name: "mealie"
     patch: |-
-      - op: replace
-        path: /spec/hosts
+      - op: "replace"
+        path: "/spec/hosts"
         value:
-          - mealie.svc.dd.soeren.cloud
+          - "mealie.svc.dd.soeren.cloud"
 configMapGenerator:
-  - name: mealie-oidc
+  - name: "mealie-oidc"
     literals:
       - "OIDC_CONFIGURATION_URL=https://auth.dd.soeren.cloud/realms/soerencloud/.well-known/openid-configuration"
+  - name: "mealie-restic"
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/mealie"
+      - "RESTIC_HOST=svc.dd.soeren.cloud"
+      - "PGDATABASE=mealie"
+      - "PGHOST=mealie-rw"
+  - name: "resticprofile"
+    options:
+      disableNameSuffixHash: true
+    files:
+      - "profiles.yaml"
