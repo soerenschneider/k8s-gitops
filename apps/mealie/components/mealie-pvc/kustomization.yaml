@@ -8,6 +8,9 @@ patches:
       kind: "Deployment"
       name: "mealie"
     patch: |-
+      - op: "test"
+        path: "/spec/template/spec/volumes/0/name"
+        value: "storage"
       - op: "replace"
         path: "/spec/template/spec/volumes/0"
         value:
