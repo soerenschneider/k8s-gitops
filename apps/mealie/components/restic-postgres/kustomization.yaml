@@ -1,0 +1,21 @@
+---
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ../../../../infra/unrest-postgres
+patches:
+  - target:
+      kind: "CronJob"
+    patch: |
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - secretRef:
+              name: "mealie-restic"
+              optional: true
+          - configMapRef:
+              name: "mealie-restic"
+              optional: true
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
+        value: "mealie"
