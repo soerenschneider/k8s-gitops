@@ -26,3 +26,18 @@ patches:
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/volumes/2/persistentVolumeClaim/claimName"
         value: "linkding"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
+        value: 32525
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
+        value: 32525
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsUser"
+        value: 32525
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsGroup"
+        value: 32525
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/securityContext/fsGroup"
+        value: 32525
