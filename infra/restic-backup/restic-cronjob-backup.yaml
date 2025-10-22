@@ -14,7 +14,6 @@ spec:
             app: "restic"
             app.kubernetes.io/name: restic
             restic/name: "unknown"
-            restic/type: "postgres"
             restic/operation: "backup"
             sidecar.istio.io/inject: "false"
         spec:
@@ -41,12 +40,6 @@ spec:
                   drop:
                     - "ALL"
               env:
-                - name: "PGPASSWORD"
-                  valueFrom:
-                    secretKeyRef:
-                      name: "restic-postgres"
-                      key: "POSTGRES_PASSWORD"
-                      optional: true
                 - name: "PUSHGATEWAY_URL"
                   value: "http://pushgateway.monitoring"
                 - name: "TMPDIR"
