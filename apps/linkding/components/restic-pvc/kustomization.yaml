@@ -12,17 +12,17 @@ patches:
         path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
         value:
           - secretRef:
-              name: "mealie-restic"
+              name: "linkding-restic"
               optional: true
           - configMapRef:
-              name: "mealie-restic"
+              name: "linkding-restic"
               optional: true
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
-        value: "mealie"
+        value: "linkding"
       - op: "test"
         path: "/spec/jobTemplate/spec/template/spec/volumes/2/name"
         value: "data"
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/volumes/2/persistentVolumeClaim/claimName"
-        value: "mealie"
+        value: "linkding"

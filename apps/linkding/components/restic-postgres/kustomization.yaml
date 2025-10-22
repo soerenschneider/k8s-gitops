@@ -11,11 +11,11 @@ patches:
         path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
         value:
           - secretRef:
-              name: "mealie-restic"
+              name: "linkding-restic"
               optional: true
           - configMapRef:
-              name: "mealie-restic"
+              name: "linkding-restic"
               optional: true
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
-        value: "mealie"
+        value: "linkding"
