@@ -10,7 +10,7 @@ root:
   prometheus-push: "http://pushgateway.monitoring"
   prometheus-push-job: "{{ .Env.K8S_NAMESPACE }}-backup-{{ .Profile.Name }}"
   prometheus-labels:
-    app: {{ .Env.K8S_NAMESPACE }}
+    app: "{{ .Env.K8S_NAMESPACE }}"
   retention:
     after-backup: true
     prune: true
