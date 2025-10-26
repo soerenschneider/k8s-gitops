@@ -1,0 +1,17 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1alpha1"
+kind: "Component"
+patches:
+  - target:
+      kind: "CronJob"
+      name: "unrest-backup"
+    patch: |
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/command"
+        value:
+          - "sh"
+          - "-c"
+      - op: replace
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/args"
+        value:
+          - "SLEEP_TIME=$((RANDOM % 600)); echo \"Sleeping for ${SLEEP_TIME} seconds...\"; sleep ${SLEEP_TIME}; echo \"Starting backup process...\"; resticprofile backup"

@@ -15,6 +15,9 @@ components:
   - "../../../../apps/mealie/components/postgres-cloudnativepg"
   - "../../../../apps/mealie/components/restic-postgres"
   - "../../../../apps/mealie/components/restic-pvc"
+  - "../../../../infra/unrest/components/default-config"
+  - "../../../../infra/unrest/components/with-timezone-berlin"
+  - "../../../../infra/unrest/components/with-random-sleep"
 patches:
   - target:
       kind: "VirtualService"
@@ -36,8 +39,8 @@ configMapGenerator:
       - "RESTIC_HOST=svc.dd.soeren.cloud"
       - "PGDATABASE=mealie"
       - "PGHOST=mealie-rw"
-  - name: "resticprofile"
+  - name: "resticprofile-confd"
     options:
       disableNameSuffixHash: true
     files:
-      - "profiles.yaml"
+      - "resticprofile-blob.yaml"

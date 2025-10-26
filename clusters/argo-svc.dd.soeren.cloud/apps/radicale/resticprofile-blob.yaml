@@ -1,0 +1,7 @@
+---
+version: "1"
+
+blobs:
+  backup:
+    source:
+      - "/pvc-data/collections"

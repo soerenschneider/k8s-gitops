@@ -2,27 +2,36 @@
 apiVersion: kustomize.config.k8s.io/v1alpha1
 kind: Component
 resources:
-  - ../../../../infra/restic-pvc
-configMapGenerator:
-  - name: "radicale-restic-pvc"
-    behavior: merge  # TODO: https://github.com/kubernetes-sigs/kustomize/issues/4402
-    literals:
-      - "RETENTION_DAYS=7"
-      - "RETENTION_WEEKS=4"
-      - "RETENTION_MONTHS=6"
-      - "RESTIC_TARGETS=/data"
-      - "RESTIC_BACKUP_ID=radicale"
+  - ../../../../infra/unrest-pvc
 patches:
   - target:
       kind: "CronJob"
-      name: "restic-pvc-backup"
-    patch: |-
+      name: "unrest-backup-pvc"
+    patch: |
       - op: "replace"
-        path: "/spec/schedule"
-        value: "5 6 * * *"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
+        value:
+          - secretRef:
+              name: "radicale-restic"
+              optional: true
+          - configMapRef:
+              name: "radicale-restic"
+              optional: true
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
         value: "radicale"
+      - op: "test"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/3/name"
+        value: "data"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/3/persistentVolumeClaim/claimName"
+        value: "radicale"
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
+        value: 65535
+      - op: "replace"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
+        value: 65535
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/securityContext/runAsUser"
         value: 65535
@@ -32,33 +41,3 @@ patches:
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/securityContext/fsGroup"
         value: 65535
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
-        value: 65535
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
-        value: 65535
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
-        value:
-          - configMapRef:
-              name: "radicale-restic-pvc"
-          - secretRef:
-              name: "radicale-restic-pvc"
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/volumes/0/persistentVolumeClaim/claimName"
-        value: "radicale"
-  - target:
-      kind: "CronJob"
-      name: "restic-pvc-prune"
-    patch: |-
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/metadata/labels/restic~1name"
-        value: "radicale"
-      - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
-        value:
-          - configMapRef:
-              name: "radicale-restic-pvc"
-          - secretRef:
-              name: "radicale-restic-pvc"

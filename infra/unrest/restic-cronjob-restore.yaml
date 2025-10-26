@@ -2,9 +2,10 @@
 apiVersion: "batch/v1"
 kind: "CronJob"
 metadata:
-  name: "unrest-backup"
+  name: "unrest-restore"
 spec:
-  schedule: "0 6 * * *"
+  suspend: true  # this is only meant to run manually
+  schedule: "0 0 31 2 *"  # Impossible date (Feb 31st)
   concurrencyPolicy: "Forbid"
   jobTemplate:
     spec:
@@ -25,12 +26,11 @@ spec:
             fsGroup: 16523
             runAsNonRoot: true
           containers:
-            - name: "unrest-backup"
+            - name: "unrest-restore"
               image: "cr.svc.dd.soeren.cloud/unrest"
               command:
-                - resticprofile
-                - backup
-              args: []
+                - sleep
+                - infinity
               imagePullPolicy: "Always"
               securityContext:
                 runAsUser: 16523
@@ -44,8 +44,6 @@ spec:
                   drop:
                     - "ALL"
               env:
-                - name: "RESTICPROFILE_NAME"
-                  value: "default"
                 - name: "RESTICPROFILE_LOCK_WAIT"
                   value: "180"
                 - name: "TMPDIR"
@@ -54,14 +52,6 @@ spec:
                   value: "/tmp/restic-cache"
                 - name: "RESTIC_COMPRESSION"
                   value: "max"
-                - name: "K8S_NAMESPACE"
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: "metadata.namespace"
-                - name: "K8S_NODE_NAME"
-                  valueFrom:
-                    fieldRef:
-                      fieldPath: "spec.nodeName"
               envFrom: []
               resources:
                 requests:
@@ -74,8 +64,6 @@ spec:
                   mountPath: "/tmp"
                 - name: "resticprofile"
                   mountPath: "/etc/resticprofile"
-                - name: "resticprofile-confd"
-                  mountPath: "/etc/resticprofile.d/"
           volumes:
             - name: "tmp"
               emptyDir: {}
@@ -83,7 +71,3 @@ spec:
               configMap:
                 optional: true
                 name: "resticprofile"
-            - name: "resticprofile-confd"
-              configMap:
-                optional: true
-                name: "resticprofile-confd"

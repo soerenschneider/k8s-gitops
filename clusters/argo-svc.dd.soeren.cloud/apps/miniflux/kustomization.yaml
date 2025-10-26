@@ -7,13 +7,16 @@ resources:
   - external-secret-miniflux.yaml
   - external-secret-miniflux-oidc.yaml
   - external-secret-miniflux-postgres.yaml
-  - external-secret-miniflux-postgres-restic.yaml
+  - external-secret-miniflux-restic.yaml
   - ../../../../apps/miniflux
 components:
   - ../../../../apps/miniflux/components/istio
   - ../../../../apps/miniflux/components/oidc
   - ../../../../apps/miniflux/components/postgres-cloudnativepg
   - ../../../../apps/miniflux/components/restic-postgres
+  - ../../../../infra/unrest/components/default-config
+  - ../../../../infra/unrest/components/with-random-sleep
+  - ../../../../infra/unrest/components/with-timezone-berlin
 patches:
   - target:
       kind: "VirtualService"
@@ -24,20 +27,17 @@ patches:
         value:
           - miniflux.svc.dd.soeren.cloud
 configMapGenerator:
-  - name: miniflux
-    behavior: merge
+  - name: "miniflux"
+    behavior: "merge"
     literals:
-      - CREATE_ADMIN=0
-      - OAUTH2_REDIRECT_URL=https://miniflux.svc.dd.soeren.cloud/oauth2/oidc/callback
-      - OAUTH2_OIDC_DISCOVERY_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud
-      - OAUTH2_USER_CREATION=0
-  - name: miniflux-restic-postgres
+      - "CREATE_ADMIN=0"
+      - "OAUTH2_REDIRECT_URL=https://miniflux.svc.dd.soeren.cloud/oauth2/oidc/callback"
+      - "OAUTH2_OIDC_DISCOVERY_ENDPOINT=https://auth.dd.soeren.cloud/realms/soerencloud"
+      - "OAUTH2_USER_CREATION=0"
+  - name: "miniflux-restic"
     literals:
-      - "RETENTION_DAYS=7"
-      - "RETENTION_WEEKS=4"
-      - "RETENTION_MONTHS=6"
       - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/miniflux"
       - "RESTIC_HOST=svc.dd.soeren.cloud"
-      - "RESTIC_BACKUP_ID=miniflux"
-      - "POSTGRES_HOST=miniflux-r"
-      - "POSTGRES_DATABASE_NAME=miniflux"
+      - "PGHOST=miniflux-rw"
+      - "PGDATABASE=miniflux"
+

@@ -15,6 +15,9 @@ components:
   - ../../../../apps/linkding/components/postgres-cloudnativepg
   - ../../../../apps/linkding/components/restic-postgres
   - ../../../../apps/linkding/components/restic-pvc
+  - ../../../../infra/unrest/components/default-config
+  - ../../../../infra/unrest/components/with-random-sleep
+  - ../../../../infra/unrest/components/with-timezone-berlin
 configMapGenerator:
   - name: "linkding"
     behavior: merge
@@ -30,11 +33,11 @@ configMapGenerator:
       - "RESTIC_HOST=svc.dd.soeren.cloud"
       - "PGDATABASE=linkding"
       - "PGHOST=linkding-rw"
-  - name: "resticprofile"
+  - name: "resticprofile-confd"
     options:
       disableNameSuffixHash: true
     files:
-      - "profiles.yaml"
+      - "resticprofile-blob.yaml"
 patches:
   - target:
       kind: Deployment
@@ -51,13 +54,3 @@ patches:
         path: "/spec/hosts"
         value:
           - "linkding.svc.dd.soeren.cloud"
-  - target:
-      kind: "CronJob"
-      name: "restic-postgres-backup"
-    patch: |-
-      - op: "replace"
-        path: "/spec/schedule"
-        value: "40 9 * * *"
-      - op: "replace"
-        path: "/spec/timeZone"
-        value: "Europe/Berlin"

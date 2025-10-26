@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: "jellyfin"
 resources:
   - namespace.yaml
-  - external-secret-jellyfin-restic-sqlite.yaml
+  - external-secret-jellyfin-restic.yaml
   - external-secret-samba.yaml
   - samba.yaml
   - ../../../../apps/jellyfin
@@ -12,7 +12,11 @@ components:
   - ../../../../apps/jellyfin/components/istio
   - ../../../../apps/jellyfin/components/pvc-config
   - ../../../../apps/jellyfin/components/storage-healthcheck
+  - ../../../../apps/jellyfin/components/restic-pvc
   - ../../../../apps/jellyfin/components/restic-sqlite
+  - ../../../../infra/unrest/components/default-config
+  - ../../../../infra/unrest/components/with-random-sleep
+  - ../../../../infra/unrest/components/with-timezone-berlin
 patches:
   - target:
       kind: "VirtualService"
@@ -23,8 +27,8 @@ patches:
         value:
           - "jellyfin.svc.dd.soeren.cloud"
   - target:
-      kind: StatefulSet
-      name: jellyfin
+      kind: "StatefulSet"
+      name: "jellyfin"
     patch: |
       - op: "test"
         path: "/spec/template/spec/volumes/2/name"
@@ -36,10 +40,11 @@ patches:
           persistentVolumeClaim:
             claimName: "media"
 configMapGenerator:
-  - name: "jellyfin-restic-sqlite"
+  - name: "jellyfin-restic"
     options:
       disableNameSuffixHash: true
     literals:
-      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/jellyfin-sqlite"
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/jellyfin"
       - "RESTIC_HOST=svc.dd.soeren.cloud"
-      - "SQLITE_FILE=/app-data/data/library.db"
+      - "RESTIC_SQLITE_FILE=/app-data/data/library.db"
+

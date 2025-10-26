@@ -1,0 +1,54 @@
+---
+version: "1"
+
+includes:
+  - "/etc/resticprofile.d/*.yaml"
+  - "/etc/resticprofile.d/*.yml"
+
+root:
+  initialize: true
+  prometheus-push: "http://pushgateway.monitoring"
+  prometheus-push-job: "{{ .Env.K8S_NAMESPACE }}-backup-{{ .Profile.Name }}"
+  prometheus-labels:
+    app: {{ .Env.K8S_NAMESPACE }}
+  retention:
+    after-backup: true
+    prune: true
+    keep-daily: 7
+    keep-weekly: 4
+    keep-monthly: 9
+    keep-yearly: 2
+
+mariadb:
+  backup:
+    stdin-command: "mariadb-dump --all-databases --add-drop-database"
+    stdin-filename: '{{ .Env.RESTIC_FILE_NAME | or "dump.sql" }}'
+    tag:
+      - "mariadb"
+      - "db"
+
+sqlite:
+  inherit: "root"
+  backup:
+    stdin-command: "sqlite3 {{ .Env.RESTIC_SQLITE_FILE }} .dump"
+    stdin-filename: '{{ .Env.RESTIC_FILE_NAME | or "dump.sql" }}'
+    tag:
+      - "sqlite"
+      - "db"
+
+postgres:
+  inherit: "root"
+  backup:
+    stdin-command: "pg_dump --clean"
+    stdin-filename: '{{ .Env.RESTIC_FILE_NAME | or "dump.sql" }}'
+    tag:
+      - "postgres"
+      - "db"
+
+blobs:
+  inherit: "root"
+  backup:
+    tag:
+      - "blobs"
+    source:
+      - "/pvc-data/"

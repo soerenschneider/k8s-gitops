@@ -12,6 +12,10 @@ components:
   - ../../../../apps/radicale/components/istio
   - ../../../../apps/radicale/components/istio-proxy
   - ../../../../apps/radicale/components/pvc
+  - ../../../../apps/radicale/components/restic-pvc
+  - ../../../../infra/unrest/components/default-config
+  - ../../../../infra/unrest/components/with-random-sleep
+  - ../../../../infra/unrest/components/with-timezone-berlin
 patches:
   - target:
       kind: VirtualService
@@ -54,3 +58,15 @@ patches:
             items:
               - key: RADICALE_USERS
                 path: users
+configMapGenerator:
+  - name: "radicale-restic"
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/radicale"
+      - "RESTIC_HOST=svc.dd.soeren.cloud"
+  - name: "resticprofile-confd"
+    options:
+      disableNameSuffixHash: true
+    files:
+      - "resticprofile-blob.yaml"

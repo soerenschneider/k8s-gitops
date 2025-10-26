@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../unrest
-nameSuffix: "-pvc"
+nameSuffix: "-sqlite"
 patches:
   - target:
       kind: "CronJob"
@@ -13,7 +13,7 @@ patches:
         value:
           name: "data"
           mountPath: "/pvc-data"
-          readOnly: false
+          readOnly: true
       - op: "add"
         path: "/spec/jobTemplate/spec/template/spec/volumes/-"
         value:
@@ -29,13 +29,13 @@ patches:
         value: "RESTICPROFILE_NAME"
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/containers/0/env/0/value"
-        value: "blobs"
+        value: "sqlite"
       - op: "replace"
         path: "/spec/schedule"
-        value: "0 1 * * *"
+        value: "0 2 * * *"
       - op: "test"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/3/name"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/2/name"
         value: "data"
       - op: "add"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/3/readOnly"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/2/readOnly"
         value: true
