@@ -1,7 +1,5 @@
 ---
 datasources:
-#  - endpoint: https://logs.rs.soeren.cloud
-#    type: logs
   - endpoint: https://radicale.svc.dd.soeren.cloud
     password_file: "/etc/aether-secrets/caldav_password"
     type: caldav
