@@ -40,4 +40,3 @@ configMapGenerator:
       - "RESTIC_HOST=svc.dd.soeren.cloud"
       - "PGHOST=miniflux-rw"
       - "PGDATABASE=miniflux"
-
