@@ -13,7 +13,7 @@ patches:
         value:
           name: "data"
           mountPath: "/pvc-data"
-          readOnly: true
+          readOnly: false
       - op: "add"
         path: "/spec/jobTemplate/spec/template/spec/volumes/-"
         value:
@@ -34,8 +34,8 @@ patches:
         path: "/spec/schedule"
         value: "0 2 * * *"
       - op: "test"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/2/name"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/3/name"
         value: "data"
       - op: "add"
-        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/2/readOnly"
+        path: "/spec/jobTemplate/spec/template/spec/containers/0/volumeMounts/3/readOnly"
         value: true
