@@ -47,4 +47,3 @@ configMapGenerator:
       - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/jellyfin"
       - "RESTIC_HOST=svc.dd.soeren.cloud"
       - "RESTIC_SQLITE_FILE=/app-data/data/library.db"
-
