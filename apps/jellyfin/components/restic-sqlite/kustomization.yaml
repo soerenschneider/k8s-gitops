@@ -6,12 +6,13 @@ resources:
 patches:
   - target:
       kind: "CronJob"
+      name: "unrest-backup-sqlite"
     patch: |
       - op: "test"
-        path: "/spec/jobTemplate/spec/template/spec/volumes/2/name"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/3/name"
         value: "data"
       - op: "replace"
-        path: "/spec/jobTemplate/spec/template/spec/volumes/2/persistentVolumeClaim/claimName"
+        path: "/spec/jobTemplate/spec/template/spec/volumes/3/persistentVolumeClaim/claimName"
         value: "jellyfin-config"
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/containers/0/envFrom"
