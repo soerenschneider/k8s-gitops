@@ -27,11 +27,11 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "unrest-restore"
-              image: "cr.svc.dd.soeren.cloud/unrest"
+              image: "ghcr.io/soerenschneider/unrest:1.1.0"
               command:
                 - sleep
                 - infinity
-              imagePullPolicy: "Always"
+              imagePullPolicy: "IfNotPresent"
               securityContext:
                 runAsUser: 16523
                 runAsGroup: 16523
