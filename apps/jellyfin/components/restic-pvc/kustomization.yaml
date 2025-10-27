@@ -25,7 +25,7 @@ patches:
         value: "data"
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/volumes/3/persistentVolumeClaim/claimName"
-        value: "jellyfin"
+        value: "jellyfin-config"
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsUser"
         value: 45911
