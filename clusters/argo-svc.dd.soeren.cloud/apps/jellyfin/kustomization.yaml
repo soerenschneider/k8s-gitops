@@ -12,7 +12,6 @@ components:
   - ../../../../apps/jellyfin/components/istio
   - ../../../../apps/jellyfin/components/pvc-config
   - ../../../../apps/jellyfin/components/storage-healthcheck
-  - ../../../../apps/jellyfin/components/restic-pvc
   - ../../../../apps/jellyfin/components/restic-sqlite
   - ../../../../infra/unrest/components/default-config
   - ../../../../infra/unrest/components/with-random-sleep
