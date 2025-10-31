@@ -34,7 +34,7 @@ spec:
           type: RuntimeDefault
       initContainers:
         - name: "init"
-          image: "ghcr.io/flaresolverr/flaresolverr:v3.4.2"
+          image: "ghcr.io/flaresolverr/flaresolverr:v3.4.3"
           imagePullPolicy: "IfNotPresent"
           securityContext:
             privileged: false
@@ -63,7 +63,7 @@ spec:
             - name: "app"
               mountPath: "/app-local"
       containers:
-        - image: "ghcr.io/flaresolverr/flaresolverr:v3.4.2"
+        - image: "ghcr.io/flaresolverr/flaresolverr:v3.4.3"
           imagePullPolicy: "IfNotPresent"
           name: "flaresolverr"
           ports:
