@@ -27,7 +27,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: redis
-          image: docker.io/library/redis:7.4.6-alpine
+          image: docker.io/library/redis:7.4.7-alpine
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
