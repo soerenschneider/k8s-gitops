@@ -27,7 +27,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "ghcr.io/dgtlmoon/changedetection.io:0.50.40"
+        - image: "ghcr.io/dgtlmoon/changedetection.io:0.50.42"
           imagePullPolicy: "IfNotPresent"
           name: "changedetection"
           ports:
