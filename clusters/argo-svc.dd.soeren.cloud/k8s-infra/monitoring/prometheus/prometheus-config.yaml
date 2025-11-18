@@ -24,6 +24,13 @@ scrape_configs:
   - job_name: auth
     dns_sd_configs:
       - names: [auth.prom-target.dd.soeren.cloud]
+  - job_name: auth-tls
+    scheme: https
+    tls_config: &default_pki_config
+      cert_file: /certs/tls.crt
+      key_file: /certs/tls.key
+    dns_sd_configs:
+      - names: [auth-tls.prom-target.dd.soeren.cloud]
   - job_name: dbs
     dns_sd_configs:
       - names: [dbs.prom-target.dd.soeren.cloud]
