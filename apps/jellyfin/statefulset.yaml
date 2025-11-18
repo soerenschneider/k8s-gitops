@@ -30,7 +30,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "jellyfin/jellyfin:10.10.7"
+        - image: "ghcr.io/jellyfin/jellyfin:10.11.3"
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -50,7 +50,7 @@ spec:
             - name: "JELLYFIN_DATA_DIR"
               value: "/config"
             - name: "JELLYFIN_CACHE_DIR"
-              value: "/cache"
+              value: "/tmp/jellyfin-cache"
           resources:
             requests:
               memory: 1024Mi
@@ -75,8 +75,8 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /config
-            - name: cache
-              mountPath: /cache
+            - name: tmp
+              mountPath: /tmp
             - name: media
               readOnly: true
               mountPath: /media
@@ -87,7 +87,7 @@ spec:
       volumes:
         - name: config
           emptyDir: {}
-        - name: cache
+        - name: tmp
           emptyDir: {}
         - name: media
           emptyDir: {}
