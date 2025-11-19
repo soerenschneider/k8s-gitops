@@ -6,7 +6,6 @@ components:
   - "../../../../apps/openbao/components/istio"
 resources:
   - "namespace.yaml"
-  - "external-secret-openbao.yaml"
   - "../../../../apps/openbao"
 configMapGenerator:
   - name: "openbao"
