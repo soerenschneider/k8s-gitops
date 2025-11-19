@@ -1,0 +1,81 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "openbao"
+  labels:
+    app.kubernetes.io/name: "openbao"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "openbao"
+  template:
+    metadata:
+      labels:
+        app: "openbao"
+        app.kubernetes.io/name: "openbao"
+        app.kubernetes.io/component: "openbao"
+        app.kubernetes.io/instance: "openbao-prod"
+        app.kubernetes.io/part-of: "openbao"
+    spec:
+      securityContext:
+        runAsUser: 12452
+        runAsGroup: 12452
+        fsGroup: 12452
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "quay.io/openbao/openbao:2.4.3"
+          name: "openbao"
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 12452
+            runAsGroup: 12452
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          envFrom:
+            - configMapRef:
+                name: "openbao"
+                optional: true
+            - secretRef:
+                name: "openbao"
+                optional: true
+          ports:
+            - containerPort: 8200
+              name: "openbao"
+          startupProbe:
+            httpGet:
+              path: "/v1/sys/health?standbyok=true&sealedcode=204&uninitcode=204"
+              port: "openbao"
+            failureThreshold: 60
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: "/v1/sys/health?standbyok=true"
+              port: "openbao"
+          livenessProbe:
+            httpGet:
+              path: "/v1/sys/health"
+              port: "openbao"
+            failureThreshold: 3
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "5m"
+            limits:
+              memory: "128Mi"
+          volumeMounts:
+            - mountPath: "/data/openbao"
+              name: "storage"
+      volumes:
+        - name: "storage"
+          emptyDir:
+            sizeLimit: "1Gi"

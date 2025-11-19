@@ -1,0 +1,11 @@
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "openbao"
+spec:
+  ports:
+    - port: 80
+      targetPort: "openbao"
+  selector:
+    app.kubernetes.io/name: "openbao"
