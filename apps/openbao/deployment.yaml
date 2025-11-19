@@ -41,9 +41,9 @@ spec:
               drop:
                 - "ALL"
           command:
-            - cp
-            - /openbao-plugin-secrets-aws
-            - /plugins/
+            - sh
+            - -c
+            - cat /openbao-plugin-secrets-aws > /plugins/openbao-plugin-secrets-aws && chmod +x /plugins/openbao-plugin-secrets-aws
           volumeMounts:
             - name: plugins
               mountPath: /plugins
