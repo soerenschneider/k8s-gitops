@@ -11,6 +11,7 @@ configMapGenerator:
   - name: "openbao"
     literals:
       - "BAO_DEV_ROOT_TOKEN_ID=test"
+      - 'BAO_LOCAL_CONFIG={"plugin_directory":"/opt/openbao/plugins"}'
 patches:
   - target:
       kind: "VirtualService"
