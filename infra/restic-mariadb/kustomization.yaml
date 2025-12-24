@@ -2,6 +2,31 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ../restic-backup
   - restic-mariadb-backup-cronjob.yaml
   - restic-mariadb-networkpolicy.yaml
   - restic-mariadb-prune-cronjob.yaml
+labels:
+  - pairs:
+      "restic/type": "mariadb"
+nameSuffix: "-mariadb"
+patches:
+  - target:
+      kind: "CronJob"
+      name: "restic-backup"
+    patch: |-
+      - op: "replace"
+        path: "spec/schedule"
+        value: "0 22 * * *"
+      - op: "replace"
+        path: "spec/timeZone"
+        value: "Europe/Berlin"
+      - op: "add"
+        path: "spec/jobTemplate/spec/template/spec/containers/0/env/-"
+        value:
+          - name: "PGPASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: "restic-postgres"
+                key: "POSTGRES_PASSWORD"
+                optional: true

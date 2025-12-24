@@ -28,8 +28,9 @@ spec:
             runAsNonRoot: true
           containers:
             - name: "restic-postgres-restore"
-              image: "ghcr.io/soerenschneider/restic:1.4.1"
-              imagePullPolicy: "IfNotPresent"
+              #image: "ghcr.io/soerenschneider/restic:1.4.1"
+              image: "cr.svc.dd.soeren.cloud/restic:latest"
+              imagePullPolicy: "Always"
               command:
                 - sleep
                 - "7200"

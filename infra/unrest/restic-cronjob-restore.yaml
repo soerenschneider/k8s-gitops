@@ -9,13 +9,14 @@ spec:
   concurrencyPolicy: "Forbid"
   jobTemplate:
     spec:
+      ttlSecondsAfterFinished: 86400
       template:
         metadata:
           labels:
             app: "restic"
             app.kubernetes.io/name: "restic"
             restic/name: "unknown"
-            restic/operation: "backup"
+            restic/operation: "restore"
             sidecar.istio.io/inject: "false"
         spec:
           activeDeadlineSeconds: 43200

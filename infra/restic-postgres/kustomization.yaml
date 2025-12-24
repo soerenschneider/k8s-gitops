@@ -2,7 +2,25 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - restic-postgres-backup-cronjob.yaml
-  - restic-postgres-networkpolicy.yaml
+  - ../restic-backup/restic-cronjob-backup.yaml
+  - ../restic-backup/restic-networkpolicy.yaml
   - restic-postgres-restore-cronjob.yaml
   - restic-postgres-prune-cronjob.yaml
+labels:
+  - pairs:
+      "restic/type": "postgres"
+nameSuffix: "-postgres"
+patches:
+  - target:
+      kind: "CronJob"
+      name: "restic-backup"
+    patch: |-
+      - op: "add"
+        path: "spec/jobTemplate/spec/template/spec/containers/0/env/-"
+        value:
+          - name: "PGPASSWORD"
+            valueFrom:
+              secretKeyRef:
+                name: "restic-postgres"
+                key: "POSTGRES_PASSWORD"
+                optional: true

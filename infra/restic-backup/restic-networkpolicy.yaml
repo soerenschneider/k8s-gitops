@@ -2,12 +2,11 @@
 apiVersion: "networking.k8s.io/v1"
 kind: "NetworkPolicy"
 metadata:
-  name: "restic-postgres"
+  name: "restic"
 spec:
   podSelector:
     matchLabels:
       app: "restic"
-      restic/type: "postgres"
   policyTypes:
     - "Ingress"
   ingress: []
