@@ -1,0 +1,28 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-dns-prod
+  namespace: cert-manager
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  acme:
+    email: letsencrypt@soerensoerensen.de
+    server: https://acme-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: "letsencrypt-account-key-route53"
+    solvers:
+      - selector:
+          dnsZones:
+            - "svc.ez.soeren.cloud"
+        dns01:
+          route53:
+            region: "us-east-1"
+            hostedZoneID: "Z0611530TX14UJTFNM0N"
+            accessKeyIDSecretRef:
+              name: "route53-credentials"
+              key: "access-key-id"
+            secretAccessKeySecretRef:
+              name: "route53-credentials"
+              key: "access-key-secret"

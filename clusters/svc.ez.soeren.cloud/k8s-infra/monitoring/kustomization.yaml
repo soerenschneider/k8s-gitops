@@ -1,0 +1,38 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+resources:
+  - namespace.yaml
+  - blackbox-exporter
+  - karma
+  - kube-state-metrics
+  - prometheus
+  - pushgateway
+  - victoriametrics-operator
+  - vmalert
+components:
+  - ../../../../apps/monitoring/components/tls-client-cert
+  - ../../../../apps/monitoring/components/reverse-proxy
+  - ../../../../apps/monitoring/blackbox_exporter/components/reverse-proxy
+  - ../../../../apps/monitoring/karma/components/reverse-proxy
+  - ../../../../apps/monitoring/prometheus/components/reverse-proxy
+  - ../../../../apps/monitoring/pushgateway/components/reverse-proxy
+  - ../../../../apps/monitoring/vmalert/components/reverse-proxy
+  - ../../../../apps/monitoring/components/reverse-proxy-istio
+patches:
+  - target:
+      kind: VirtualService
+      name: monitoring-reverse-proxy
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "monitoring.svc.ez.soeren.cloud"
+  - target:
+      kind: Issuer
+      name: vault-issuer
+    patch: |-
+      - op: "replace"
+        path: "/spec/vault/auth/kubernetes/mountPath"
+        value: "/v1/auth/svc.ez.soeren.cloud"
