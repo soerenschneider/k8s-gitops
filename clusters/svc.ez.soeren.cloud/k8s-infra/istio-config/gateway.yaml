@@ -32,6 +32,12 @@ spec:
       hosts:
         - "*.svc.ez.soeren.cloud"
     - port:
+        number: 4222
+        name: "nats"
+        protocol: TCP
+      hosts:
+        - "*"
+    - port:
         number: 5671
         name: "amqp-tls"
         protocol: TCP
