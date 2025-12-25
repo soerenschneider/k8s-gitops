@@ -1,9 +1,0 @@
----
-version: "1"
-
-blobs:
-  backup:
-    source:
-      - "/pvc-data/assets"
-      - "/pvc-data/favicons"
-      - "/pvc-data/previews"

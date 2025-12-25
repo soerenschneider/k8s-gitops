@@ -1,0 +1,49 @@
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMAlert
+metadata:
+  name: demo
+spec:
+  datasource:
+    url: "http://prometheus.monitoring"
+
+  notifiers:
+    - url: "http://router.dd.soeren.cloud:9093"
+    - url: "http://router.ez.soeren.cloud:9093"
+
+  # How often the rules are evaluated
+  evaluationInterval: "60s"
+  extraArgs:
+    external.url: "https://monitoring.svc.dd.soeren.cloud/vmalert"
+    http.pathPrefix: "/"
+
+  # Watch VMRule resources in all namespaces
+  selectAllByDefault: true
+
+  securityContext:
+    runAsUser: 65532
+    runAsGroup: 65532
+    fsGroup: 65532
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+---
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: ent-example
+spec:
+  groups:
+    - name: vmalert-1
+      rules:
+        # using enterprise features: Multitenancy
+        # more details about multitenancy you can read on https://docs.victoriametrics.com/victoriametrics/vmalert/#multitenancy
+        - alert: vmalert config reload error
+          expr: (time()-resticprofile_backup_time_seconds{exported_app="miniflux"})/3600 > 24
+          for: 1h
+          labels:
+            severity: major
+            job:  "{{ $labels.job }}"
+          annotations:
+            value: "{{ $value }}"
+            description: 'error reloading vmalert config, reload count for 5 min {{ $value }}'

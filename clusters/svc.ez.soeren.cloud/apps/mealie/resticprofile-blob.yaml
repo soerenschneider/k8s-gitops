@@ -1,9 +1,0 @@
----
-version: "1"
-
-blobs:
-  backup:
-    source:
-      - "/pvc-data/recipes"
-      - "/pvc-data/templates"
-      - "/pvc-data/users"

@@ -9,6 +9,7 @@ resources:
   - kube-state-metrics
   - prometheus
   - pushgateway
+  - victoriametrics-operator
   - vmalert
 components:
   - ../../../../apps/monitoring/components/tls-client-cert
