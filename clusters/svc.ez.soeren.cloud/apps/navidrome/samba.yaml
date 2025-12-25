@@ -15,7 +15,7 @@ spec:
     driver: "smb.csi.k8s.io"
     volumeHandle: "navidrome-media"
     volumeAttributes:
-      source: "//nas.dd.soeren.cloud/music"
+      source: "//nas.ez.soeren.cloud/music"
       options: "vers=3,seal"
     nodeStageSecretRef:
       name: "smbcreds"

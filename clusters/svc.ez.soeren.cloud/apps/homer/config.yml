@@ -165,7 +165,7 @@ services:
     items:
       - name: "Syncthing"
         tag: "other"
-        url: "https://nas.dd.soeren.cloud/syncthing"
+        url: "https://nas.ez.soeren.cloud/syncthing"
         target: "_blank"
 
   - name: "Media"

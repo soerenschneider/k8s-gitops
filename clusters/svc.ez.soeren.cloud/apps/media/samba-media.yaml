@@ -15,7 +15,7 @@ spec:
     driver: "smb.csi.k8s.io"
     volumeHandle: "media-media"
     volumeAttributes:
-      source: "//nas.dd.soeren.cloud/media"
+      source: "//nas.ez.soeren.cloud/media"
       options: "vers=3,seal"
     nodeStageSecretRef:
       name: "smbcreds"
