@@ -1,0 +1,80 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: media
+resources:
+  - namespace.yaml
+  - external-secret-media-postgres.yaml
+  - external-secret-reverse-proxy-oidc.yaml
+  - external-secret-reverse-proxy-oidc-credentials.yaml
+  - external-secret-lidarr.yaml
+  - external-secret-radarr.yaml
+  - external-secret-samba.yaml
+  - external-secret-sonarr.yaml
+  - samba-media.yaml
+  - ../../../../apps/media
+  - ../../../../apps/media/lidarr
+  - ../../../../apps/media/radarr
+  - ../../../../apps/media/sonarr
+  - ../../../../apps/media/prowlarr
+  - ../../../../apps/media/flaresolverr
+components:
+  - ../../../../apps/media/components/postgres-cloudnativepg
+  - ../../../../apps/media/components/reverse-proxy
+  - ../../../../apps/media/components/reverse-proxy-istio
+  - ../../../../apps/media/components/reverse-proxy-oidc
+  - ../../../../apps/media/lidarr/components/postgres
+  - ../../../../apps/media/lidarr/components/reverse-proxy
+  - ../../../../apps/media/radarr/components/postgres
+  - ../../../../apps/media/radarr/components/reverse-proxy
+  - ../../../../apps/media/sonarr/components/postgres
+  - ../../../../apps/media/sonarr/components/reverse-proxy
+  - ../../../../apps/media/prowlarr/components/reverse-proxy
+patches:
+  - target:
+      kind: VirtualService
+      name: media
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - media.svc.ez.soeren.cloud
+  - target:
+      kind: Deployment
+      name: radarr
+    patch: |
+      - op: "test"
+        path: "/spec/template/spec/volumes/1/name"
+        value: "movies"
+      - op: "replace"
+        path: "/spec/template/spec/volumes/1"
+        value:
+          name: "movies"
+          persistentVolumeClaim:
+            claimName: "media"
+  - target:
+      kind: Deployment
+      name: sonarr
+    patch: |
+      - op: "test"
+        path: "/spec/template/spec/volumes/1/name"
+        value: "shows"
+      - op: "replace"
+        path: "/spec/template/spec/volumes/1"
+        value:
+          name: "shows"
+          persistentVolumeClaim:
+            claimName: "media"
+  - target:
+      kind: Deployment
+      name: lidarr
+    patch: |
+      - op: "test"
+        path: "/spec/template/spec/volumes/1/name"
+        value: "music"
+      - op: "replace"
+        path: "/spec/template/spec/volumes/1"
+        value:
+          name: "music"
+          persistentVolumeClaim:
+            claimName: "media"

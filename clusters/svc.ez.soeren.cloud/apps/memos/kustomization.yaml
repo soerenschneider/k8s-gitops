@@ -1,0 +1,45 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: memos
+resources:
+  - namespace.yaml
+  - external-secret-memos.yaml
+  - external-secret-memos-postgres.yaml
+  - external-secret-memos-restic.yaml
+  - ../../../../apps/memos
+components:
+  - ../../../../apps/memos/components/istio
+  - ../../../../apps/memos/components/database-cloudnative-pg
+  - ../../../../apps/memos/components/restic-postgres
+  - ../../../../infra/unrest/components/default-config
+  - ../../../../infra/unrest/components/with-random-sleep
+  - ../../../../infra/unrest/components/with-timezone-berlin
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "memos"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "memos.svc.ez.soeren.cloud"
+  - target:
+      kind: "CronJob"
+      name: "restic-backup"
+    patch: |-
+      - op: "replace"
+        path: "/spec/schedule"
+        value: "35 9 * * *"
+      - op: "replace"
+        path: "/spec/timeZone"
+        value: "Europe/Berlin"
+configMapGenerator:
+  - name: "memos-restic"
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/memos"
+      - "RESTIC_HOST=svc.ez.soeren.cloud"
+      - "PGDATABASE=memos"
+      - "PGHOST=memos-rw"

@@ -1,0 +1,47 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: "jellyfin"
+resources:
+  - namespace.yaml
+  - external-secret-jellyfin-restic.yaml
+  - external-secret-samba.yaml
+  - samba.yaml
+  - ../../../../apps/jellyfin
+components:
+  - ../../../../apps/jellyfin/components/istio
+  - ../../../../apps/jellyfin/components/pvc-config
+  - ../../../../apps/jellyfin/components/storage-healthcheck
+  - ../../../../apps/jellyfin/components/restic-sqlite
+  - ../../../../infra/unrest/components/default-config
+  - ../../../../infra/unrest/components/with-random-sleep
+  - ../../../../infra/unrest/components/with-timezone-berlin
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "jellyfin"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "jellyfin.svc.ez.soeren.cloud"
+  - target:
+      kind: "StatefulSet"
+      name: "jellyfin"
+    patch: |
+      - op: "test"
+        path: "/spec/template/spec/volumes/2/name"
+        value: "media"
+      - op: "replace"
+        path: "/spec/template/spec/volumes/2"
+        value:
+          name: "media"
+          persistentVolumeClaim:
+            claimName: "media"
+configMapGenerator:
+  - name: "jellyfin-restic"
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/jellyfin"
+      - "RESTIC_HOST=svc.ez.soeren.cloud"

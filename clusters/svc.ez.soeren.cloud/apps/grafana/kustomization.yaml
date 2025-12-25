@@ -1,0 +1,25 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: grafana
+resources:
+  - ../../../../apps/grafana
+  - namespace.yaml
+  - external-secret-grafana.yaml
+components:
+  - ../../../../apps/grafana/components/istio
+  - ../../../../apps/grafana/components/oidc
+patches:
+  - target:
+      kind: VirtualService
+      name: grafana
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - grafana.svc.ez.soeren.cloud
+configMapGenerator:
+  - name: grafana-config
+    behavior: merge
+    envs:
+      - grafana.properties
