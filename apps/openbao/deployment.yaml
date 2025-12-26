@@ -48,7 +48,7 @@ spec:
             - name: plugins
               mountPath: /plugins
       containers:
-        - image: "quay.io/openbao/openbao:2.4.3"
+        - image: "quay.io/openbao/openbao:2.4.4"
           name: "openbao"
           securityContext:
             allowPrivilegeEscalation: false
