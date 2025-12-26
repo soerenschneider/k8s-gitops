@@ -31,7 +31,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "ghcr.io/home-operations/sonarr:4.0.16.2943"
+        - image: "ghcr.io/home-operations/sonarr:4.0.16.2946"
           imagePullPolicy: "IfNotPresent"
           name: "sonarr"
           ports:
