@@ -2,3 +2,6 @@
 checks:
   exclude:
     - "unset-cpu-requirements"
+  ignorePaths:
+    - apps/argocd
+    - apps/monitoring/victoriametrics-operator
