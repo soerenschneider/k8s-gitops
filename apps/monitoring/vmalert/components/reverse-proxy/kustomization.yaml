@@ -8,10 +8,10 @@ patches:
     patch: |-
       - op: "add"
         path: "/spec/template/spec/containers/0/args/-"
-        value: "--web.external-url=/vmalert"
+        value: "--external-url=/vmalert"
       - op: "add"
         path: "/spec/template/spec/containers/0/args/-"
-        value: "--web.route-prefix=/"
+        value: "--http.pathPrefix=/"
   - target:
       kind: "NetworkPolicy"
       name: "vmalert"
