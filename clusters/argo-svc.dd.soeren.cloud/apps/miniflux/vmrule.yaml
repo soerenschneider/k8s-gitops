@@ -43,7 +43,7 @@ spec:
           for: 1h
           labels:
             severity: major
-            job:  "{{ $labels.job }}"
+            job: "{{ $labels.job }}"
           annotations:
             value: "{{ $value }}"
             description: 'error reloading vmalert config, reload count for 5 min {{ $value }}'

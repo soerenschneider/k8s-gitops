@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
   - https://github.com/VictoriaMetrics/operator/releases/download/v0.64.0/install-no-webhook.yaml
 
-
