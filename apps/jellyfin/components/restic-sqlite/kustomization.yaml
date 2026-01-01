@@ -41,3 +41,10 @@ patches:
       - op: "replace"
         path: "/spec/jobTemplate/spec/template/spec/containers/0/securityContext/runAsGroup"
         value: 45538
+configMapGenerator:
+  - name: "jellyfin-restic"
+    behavior: "merge"
+    options:
+      disableNameSuffixHash: true
+    literals:
+      - "RESTIC_SQLITE_FILE=/pvc-data/data/jellyfin.db"
