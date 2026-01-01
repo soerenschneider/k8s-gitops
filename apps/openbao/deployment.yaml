@@ -25,28 +25,6 @@ spec:
         fsGroup: 12452
         seccompProfile:
           type: "RuntimeDefault"
-      initContainers:
-        - name: "plugin-installer-secrets-aws"
-          image: "ghcr.io/openbao/openbao-plugin-secrets-aws:v0.2.0"
-          securityContext:
-            allowPrivilegeEscalation: false
-            privileged: false
-            readOnlyRootFilesystem: true
-            runAsNonRoot: true
-            runAsUser: 12452
-            runAsGroup: 12452
-            seccompProfile:
-              type: "RuntimeDefault"
-            capabilities:
-              drop:
-                - "ALL"
-          command:
-            - sh
-            - -c
-            - cat /openbao-plugin-secrets-aws > /plugins/openbao-plugin-secrets-aws && chmod +x /plugins/openbao-plugin-secrets-aws
-          volumeMounts:
-            - name: plugins
-              mountPath: /plugins
       containers:
         - image: "quay.io/openbao/openbao:2.4.3"
           name: "openbao"
