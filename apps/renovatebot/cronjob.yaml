@@ -21,8 +21,8 @@ spec:
         spec:
           securityContext:
             runAsNonRoot: true
-            runAsUser: 42145
-            runAsGroup: 42145
+            runAsUser: 12021
+            runAsGroup: 12021
             seccompProfile:
               type: "RuntimeDefault"
           containers:
@@ -38,8 +38,8 @@ spec:
                 readOnlyRootFilesystem: true
                 privileged: false
                 runAsNonRoot: true
-                runAsUser: 42145
-                runAsGroup: 42145
+                runAsUser: 12021
+                runAsGroup: 12021
                 seccompProfile:
                   type: "RuntimeDefault"
                 capabilities:
