@@ -30,7 +30,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: "microbin"
-          image: "ghcr.io/dvdsk/microbin:2.0.1"
+          image: "ghcr.io/yara-blue/microbin:2.0.2"
           ports:
             - containerPort: 8080
               name: microbin
