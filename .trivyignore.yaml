@@ -33,6 +33,9 @@ misconfigurations:
       - "apps/paperless-ngx/paperless-ngx-deployment.yaml"
       - "apps/immich/components/pgvector/postgres-sts.yaml"
       - "apps/keycloak/deployment.yaml"  # errors if not running as 1000
+  - id: "AVD-KSV-0022"
+    paths:
+      - "apps/code-server/deployment.yaml"
   - id: "AVD-KSV-0023"
     paths:
       - "apps/vector/daemonset.yaml"
@@ -60,6 +63,12 @@ misconfigurations:
   - id: "AVD-KSV-0046"
     paths:
       - "infra/flux/gotk-components.yaml"
+  - id: "AVD-KSV-0105"
+    paths:
+      - "apps/code-server/deployment.yaml"
+  - id: "AVD-KSV-0106"
+    paths:
+      - "apps/code-server/deployment.yaml"
   - id: "AVD-KSV-0109"
     paths:
       - "clusters/common/taskd/configmap-ca.yaml"
