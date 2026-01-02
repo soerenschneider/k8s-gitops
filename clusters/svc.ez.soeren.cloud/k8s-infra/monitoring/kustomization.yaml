@@ -9,6 +9,7 @@ resources:
   - kube-state-metrics
   - prometheus
   - pushgateway
+  - victorialogs
   - victoriametrics-operator
   - vmalert
 components:
@@ -29,6 +30,14 @@ patches:
         path: "/spec/hosts"
         value:
           - "monitoring.svc.ez.soeren.cloud"
+  - target:
+      kind: VirtualService
+      name: victorialogs
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "logs.svc.ez.soeren.cloud"
   - target:
       kind: Issuer
       name: vault-issuer
