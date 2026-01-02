@@ -1,0 +1,14 @@
+- name: Github
+  columns:
+    - size: full
+      widgets:
+        - type: repository
+          repository: "soerenschneider/ansible"
+          pull-requests-limit: 5
+          commits-limit: 3
+          issues-limit: 0
+        - type: repository
+          repository: "soerenschneider/k8s-gitops"
+          pull-requests-limit: 5
+          commits-limit: 3
+          issues-limit: 0

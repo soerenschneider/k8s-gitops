@@ -1,0 +1,89 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "glance"
+  labels:
+    app.kubernetes.io/name: "glance"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "glance"
+  strategy:
+    type: "RollingUpdate"
+  template:
+    metadata:
+      labels:
+        app: "glance"
+        app.kubernetes.io/name: "glance"
+        app.kubernetes.io/instance: "glance-prod"
+        app.kubernetes.io/component: "glance"
+        app.kubernetes.io/part-of: "glance"
+      annotations:
+        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+    spec:
+      securityContext:
+        runAsUser: 11122
+        runAsGroup: 11122
+        fsGroup: 11122
+        runAsNonRoot: true
+        seccompProfile:
+          type: "RuntimeDefault"
+      containers:
+        - image: "glanceapp/glance:v0.8.4"
+          name: "glance"
+          args:
+            - "--config=/config/glance.yaml"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 11122
+            runAsGroup: 11122
+            runAsNonRoot: true
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          imagePullPolicy: "IfNotPresent"
+          envFrom:
+            - configMapRef:
+                name: "glance-config"
+            - secretRef:
+                name: "glance"
+                optional: true
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "3m"
+            limits:
+              memory: "128Mi"
+          ports:
+            - containerPort: 8080
+              name: "glance"
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 1
+          volumeMounts:
+            - name: "config"
+              mountPath: "/config"
+            - name: "tmp"
+              mountPath: "/tmp"
+      volumes:
+        - name: "config"
+          configMap:
+            name: "glance-config"
+        - name: "tmp"
+          emptyDir: {}

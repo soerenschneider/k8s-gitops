@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: glance
+resources:
+  - ../../../../apps/glance
+  - namespace.yaml
+components:
+  - ../../../../apps/glance/components/istio
+patches:
+  - target:
+      kind: VirtualService
+      name: glance
+    patch: |-
+      - op: replace
+        path: /spec/hosts
+        value:
+          - glance.svc.ez.soeren.cloud
+
