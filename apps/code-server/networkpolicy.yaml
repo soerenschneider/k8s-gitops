@@ -1,3 +1,4 @@
+---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -45,11 +46,11 @@ spec:
     # ============================================
     - to:
         - ipBlock:
-            cidr: 172.65.251.0/24   # gitlab.com (Cloudflare)
+            cidr: 172.65.251.0/24
         - ipBlock:
-            cidr: 104.18.0.0/20     # Cloudflare CDN
+            cidr: 104.18.0.0/20
         - ipBlock:
-            cidr: 35.231.145.151/32 # GitLab specific
+            cidr: 35.231.145.151/32
       ports:
         - protocol: TCP
           port: 443

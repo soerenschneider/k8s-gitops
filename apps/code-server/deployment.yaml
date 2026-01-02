@@ -67,7 +67,6 @@ spec:
               mountPath: /run
       containers:
         - image: "cr.svc.ez.soeren.cloud/codeserver:4.107.0-ls310"
-        #- image: "lscr.io/linuxserver/vscodium-web:latest"
           imagePullPolicy: "Always"
           name: "code-server"
           securityContext:
@@ -103,24 +102,16 @@ spec:
           ports:
             - containerPort: 8443
               name: "code-server"
-#          livenessProbe:
-#            httpGet:
-#              path: "/api/health"
-#              port: "code-server"
-#            initialDelaySeconds: 15
-#            timeoutSeconds: 5
-#            failureThreshold: 5
-#          readinessProbe:
-#            httpGet:
-#              path: "/api/health"
-#              port: "code-server"
-#            initialDelaySeconds: 5
-#          startupProbe:
-#            httpGet:
-#              path: "/api/health"
-#              port: "code-server"
-#            failureThreshold: 60
-#            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: "code-server"
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            tcpSocket:
+              port: "code-server"
+            initialDelaySeconds: 5
           volumeMounts:
             - name: "run"
               mountPath: "/run"

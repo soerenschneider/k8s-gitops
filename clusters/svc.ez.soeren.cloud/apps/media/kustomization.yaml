@@ -22,7 +22,6 @@ components:
   - ../../../../apps/media/components/postgres-cloudnativepg
   - ../../../../apps/media/components/reverse-proxy
   - ../../../../apps/media/components/reverse-proxy-istio
-  #- ../../../../apps/media/components/reverse-proxy-oidc
   - ../../../../apps/media/lidarr/components/postgres
   - ../../../../apps/media/lidarr/components/reverse-proxy
   - ../../../../apps/media/radarr/components/postgres
