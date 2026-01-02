@@ -45,3 +45,10 @@ patches:
       - op: "replace"
         path: "/spec/vault/auth/kubernetes/mountPath"
         value: "/v1/auth/svc.ez.soeren.cloud"
+  - target:
+      kind: "Deployment"
+      name: "vmalert"
+    patch: |-
+      - op: "add"
+        path: "/spec/template/spec/containers/0/args/-"
+        value: "-external.url=https://monitoring.svc.ez.soeren.cloud/vmalert"
