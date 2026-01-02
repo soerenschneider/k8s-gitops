@@ -52,6 +52,12 @@ spec:
             - |
               chown 17234:17234 /run
               chmod 755 /run
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "1m"
+            limits:
+              memory: "4G"
           volumeMounts:
             - name: run
               mountPath: /run
@@ -72,7 +78,6 @@ spec:
             capabilities:
               drop:
                 - "ALL"
-
           env:
             - name: "PUID"
               value: "17234"
