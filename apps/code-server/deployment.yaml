@@ -1,0 +1,128 @@
+---
+apiVersion: "apps/v1"
+kind: "Deployment"
+metadata:
+  name: "code-server"
+  labels:
+    app.kubernetes.io/name: "code-server"
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: "code-server"
+  strategy:
+    type: "RollingUpdate"
+  template:
+    metadata:
+      labels:
+        app: "code-server"
+        app.kubernetes.io/name: "code-server"
+        app.kubernetes.io/instance: "code-server-prod"
+        app.kubernetes.io/component: "code-server"
+        app.kubernetes.io/part-of: "code-server"
+      annotations:
+        prometheus.io/port: "3000"
+        prometheus.io/scrape: "true"
+    spec:
+      hostname: "code-server"
+      securityContext:
+        runAsUser: 17234
+        runAsGroup: 17234
+        seccompProfile:
+          type: "RuntimeDefault"
+      initContainers:
+        - name: "chmod"
+          image: "busybox:1.36.1"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsUser: 0
+            runAsNonRoot: false
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop: ["ALL"]
+              add: ["CHOWN", "FOWNER"]
+          command:
+            - sh
+            - -c
+            - |
+              chown 17234:17234 /run
+              chmod 755 /run
+          volumeMounts:
+            - name: run
+              mountPath: /run
+      containers:
+        - image: "cr.svc.ez.soeren.cloud/codeserver:4.107.0-ls310"
+        #- image: "lscr.io/linuxserver/vscodium-web:latest"
+          imagePullPolicy: "Always"
+          name: "code-server"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 17234
+            runAsGroup: 17234
+            runAsNonRoot: true
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+
+          env:
+            - name: "PUID"
+              value: "17234"
+            - name: "PGID"
+              value: "17234"
+          envFrom:
+            - configMapRef:
+                name: "code-server-config"
+                optional: true
+            - secretRef:
+                name: "code-server"
+                optional: true
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "50m"
+            limits:
+              memory: "4G"
+          ports:
+            - containerPort: 8443
+              name: "code-server"
+#          livenessProbe:
+#            httpGet:
+#              path: "/api/health"
+#              port: "code-server"
+#            initialDelaySeconds: 15
+#            timeoutSeconds: 5
+#            failureThreshold: 5
+#          readinessProbe:
+#            httpGet:
+#              path: "/api/health"
+#              port: "code-server"
+#            initialDelaySeconds: 5
+#          startupProbe:
+#            httpGet:
+#              path: "/api/health"
+#              port: "code-server"
+#            failureThreshold: 60
+#            periodSeconds: 10
+          volumeMounts:
+            - name: "run"
+              mountPath: "/run"
+            - name: "config"
+              mountPath: "/config"
+            - name: "tmp"
+              mountPath: "/tmp"
+      volumes:
+        - name: "config"
+          emptyDir: {}
+        - name: "run"
+          emptyDir: {}
+        - name: "tmp"
+          emptyDir: {}

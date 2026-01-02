@@ -4,9 +4,20 @@ misconfigurations:
   - id: "AVD-KSV-0012"
     paths:
       - "apps/vector/daemonset.yaml"
+      - "apps/code-server/deployment.yaml"
   - id: "AVD-KSV-0014"
     paths:
       - "apps/keycloak/deployment.yaml"
+      - "apps/code-server/deployment.yaml"
+  - id: "AVD-KSV-0015"
+    paths:
+      - "apps/code-server/deployment.yaml"
+  - id: "AVD-KSV-0016"
+    paths:
+      - "apps/code-server/deployment.yaml"
+  - id: "AVD-KSV-0018"
+    paths:
+      - "apps/code-server/deployment.yaml"
   - id: "AVD-KSV-0020"
     paths:
       - "apps/vector/daemonset.yaml"
@@ -14,6 +25,7 @@ misconfigurations:
       - "apps/immich/components/pgvector/postgres-sts.yaml"
       - "apps/paperless-ngx/paperless-ngx-deployment.yaml"
       - "apps/keycloak/deployment.yaml"  # errors if not running as 1000
+      - "apps/code-server/deployment.yaml"
   - id: "AVD-KSV-0021"
     paths:
       - "apps/vector/daemonset.yaml"

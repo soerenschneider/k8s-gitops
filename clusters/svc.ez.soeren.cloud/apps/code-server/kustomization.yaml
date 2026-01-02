@@ -1,0 +1,26 @@
+---
+apiVersion: "kustomize.config.k8s.io/v1beta1"
+kind: "Kustomization"
+namespace: "code-server"
+resources:
+  - "namespace.yaml"
+  - "../../../../apps/code-server"
+components:
+  - "../../../../apps/code-server/components/istio"
+  - "../../../../apps/code-server/components/pvc"
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "code-server"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "code-server.svc.ez.soeren.cloud"
+  - target:
+      kind: "Deployment"
+      name: "code-server"
+    patch: |-
+      - op: add
+        path: "/spec/template/spec/hostname"
+        value: "code-server-ez"

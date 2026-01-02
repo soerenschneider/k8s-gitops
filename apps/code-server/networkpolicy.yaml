@@ -1,0 +1,73 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: "code-server"
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - ports:
+        - protocol: "TCP"
+          port: "code-server"
+      from: []
+  egress:
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+    - to:
+        - ipBlock:
+            cidr: 140.82.112.0/20   # github.com
+        - ipBlock:
+            cidr: 143.55.64.0/20    # GitHub
+        - ipBlock:
+            cidr: 192.30.252.0/22   # GitHub
+        - ipBlock:
+            cidr: 185.199.108.0/22  # GitHub Pages
+        - ipBlock:
+            cidr: 20.201.28.0/23    # GitHub (new ranges)
+        - ipBlock:
+            cidr: 20.205.243.0/24   # GitHub
+      ports:
+        - protocol: TCP
+          port: 443   # HTTPS
+        - protocol: TCP
+          port: 22    # SSH for git operations
+
+    # ============================================
+    # GitLab (gitlab.com)
+    # ============================================
+    - to:
+        - ipBlock:
+            cidr: 172.65.251.0/24   # gitlab.com (Cloudflare)
+        - ipBlock:
+            cidr: 104.18.0.0/20     # Cloudflare CDN
+        - ipBlock:
+            cidr: 35.231.145.151/32 # GitLab specific
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 22
+
+    # ============================================
+    # Self-hosted GitLab (adjust to your IPs)
+    # ============================================
+    - to:
+        - ipBlock:
+            cidr: 10.0.0.0/8
+        - ipBlock:
+            cidr: 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 22
