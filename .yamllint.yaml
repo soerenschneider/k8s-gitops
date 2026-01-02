@@ -2,6 +2,9 @@
 extends: default
 rules:
   line-length: disable
+  document-start:
+    ignore:
+      - "apps/glance/glance*.yaml"
 ignore:
   - "*sops*.yaml"
   - ".pre-commit-trivy-cache/*"

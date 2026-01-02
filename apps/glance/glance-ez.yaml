@@ -1,4 +1,3 @@
----
 - name: Erzenhausen
   columns:
     - size: small
@@ -75,10 +74,10 @@
               icon: si:victoriametrics
               alt-status-codes: [200, 400]
             - title: Prometheus
-              url: https://monitoring.svc.ez.soeren.cloud/prometheus
+              url: https://monitoring.svc.ez.soeren.cloud/prometheus/
               icon: si:prometheus
             - title: Blackbox Exporter
-              url: https://monitoring.svc.ez.soeren.cloud/blackbox-exporter
+              url: https://monitoring.svc.ez.soeren.cloud/blackbox-exporter/
               icon: si:prometheus
         # NETWORKING & SECURITY
         - type: monitor
