@@ -1,19 +1,17 @@
+---
 - name: Düsseldorf
   columns:
     - size: small
       widgets:
         - type: "calendar"
-
         - type: "weather"
           location: "Düsseldorf, Germany"
-
         - type: markets
           markets:
             - symbol: "VWCE.DE"
               name: "A2PKXG"
             - symbol: "VGWL.DE"
               name: "A1JX52"
-
         - type: bookmarks
           groups:
             - title: Entertainment
@@ -23,10 +21,8 @@
                   url: https://nas.ez.soeren.cloud/media/
                 - title: Pub
                   url: https://nas.ez.soeren.cloud/pub/
-
     - size: full
       widgets:
-        # MEDIA SERVICES
         - type: monitor
           cache: 1m
           title: Media
@@ -40,8 +36,6 @@
             - title: Photoprism
               url: http://photoprism.local:2342
               icon: si:googlephotos
-        
-        # DOWNLOAD & AUTOMATION
         - type: monitor
           cache: 1m
           title: Downloads & Automation
@@ -58,8 +52,6 @@
             - title: Transmission
               url: https://swiss.soeren.cloud
               icon: si:transmission
-        
-        # PRODUCTIVITY & OFFICE
         - type: monitor
           cache: 1m
           title: Productivity & Office
@@ -79,8 +71,6 @@
             - title: Joplin Server
               url: http://joplin.local:22300
               icon: si:joplin
-        
-        # INFRASTRUCTURE & MONITORING
         - type: monitor
           cache: 1m
           title: Infrastructure & Monitoring
@@ -100,8 +90,6 @@
             - title: Prometheus
               url: http://prometheus.local:9090
               icon: si:prometheus
-        
-        # NETWORKING & SECURITY
         - type: monitor
           cache: 1m
           title: Networking & Security
@@ -112,8 +100,6 @@
             - title: Privatebin
               url: https://privatebin.svc.dd.soeren.cloud
               icon: si:pastebin
-        
-        # HOME AUTOMATION
         - type: monitor
           cache: 1m
           title: Home Automation
@@ -121,8 +107,6 @@
             - title: Home Assistant
               url: http://homeassistant.local:8123
               icon: si:homeassistant
-        
-        # DEVELOPMENT
         - type: monitor
           cache: 1m
           title: Development
@@ -130,11 +114,9 @@
             - title: Microbin
               url: https://microbin.svc.dd.soeren.cloud
               icon: si:microbin
-
             - title: Code-Server
               url: http://code.local:8443
               icon: si:visualstudiocode
-
     - size: small
       widgets:
         - type: search
@@ -143,7 +125,6 @@
             - title: Whoogle
               shortcut: "!w"
               url: https://whoogle.svc.dd.soeren.cloud/search?q={QUERY}
-
         - type: rss
           limit: 10
           collapse-after: 5

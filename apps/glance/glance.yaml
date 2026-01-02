@@ -1,3 +1,4 @@
+---
 pages:
   - $include: glance-ez.yaml
   - $include: glance-dd.yaml
