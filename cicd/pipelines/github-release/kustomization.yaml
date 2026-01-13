@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: cicd
 resources:
   - namespace.yaml
-  - https://api.hub.tekton.dev/v1/resource/tekton/task/git-clone/0.9/raw
+  - https://raw.githubusercontent.com/tektoncd/catalog/refs/heads/main/task/git-clone/0.10/git-clone.yaml
   - task-build.yaml
   - task-signify.yaml
   - task-upload.yaml
