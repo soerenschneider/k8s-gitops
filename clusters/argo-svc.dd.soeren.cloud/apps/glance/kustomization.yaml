@@ -15,7 +15,7 @@ patches:
       - op: replace
         path: /spec/hosts
         value:
-          - glance.svc.ez.soeren.cloud
+          - glance.svc.dd.soeren.cloud
 configMapGenerator:
   - name: glance-config
     behavior: merge

@@ -17,11 +17,12 @@
               color: 10 70 50
               links:
                 - title: NAS
-                  url: https://nas.ez.soeren.cloud/media/
+                  url: https://nas.dd.soeren.cloud/media/
                 - title: Pub
-                  url: https://nas.ez.soeren.cloud/pub/
+                  url: https://nas.dd.soeren.cloud/pub/
     - size: full
       widgets:
+        # MEDIA SERVICES
         - type: monitor
           cache: 1m
           title: Media
@@ -32,9 +33,7 @@
             - title: Navidrome
               url: https://navidrome.svc.dd.soeren.cloud
               icon: si:musicbrainz
-            - title: Photoprism
-              url: http://photoprism.local:2342
-              icon: si:googlephotos
+        # DOWNLOAD & AUTOMATION
         - type: monitor
           cache: 1m
           title: Downloads & Automation
@@ -47,48 +46,40 @@
               icon: si:radarr
             - title: Prowlarr
               url: https://media.svc.dd.soeren.cloud/prowlarr
-              icon: si:prowlarr
+              icon: sh:prowlarr
             - title: Transmission
               url: https://swiss.soeren.cloud
               icon: si:transmission
+        # PRODUCTIVITY & OFFICE
         - type: monitor
           cache: 1m
           title: Productivity & Office
           sites:
-            - title: Nextcloud
-              url: http://nextcloud.local:80
-              icon: si:nextcloud
-            - title: OnlyOffice
-              url: http://onlyoffice.local:80
-              icon: si:onlyoffice
-            - title: Paperless-ngx
-              url: http://paperless.local:8000
-              icon: si:paperspace
-            - title: Bookstack
-              url: http://bookstack.local:80
-              icon: si:bookstack
-            - title: Joplin Server
-              url: http://joplin.local:22300
-              icon: si:joplin
+            - title: Cyberchef
+              url: https://cyberchef.svc.dd.soeren.cloud/
+              icon: si:codechef
+        # INFRASTRUCTURE & MONITORING
         - type: monitor
           cache: 1m
           title: Infrastructure & Monitoring
           sites:
-            - title: Portainer
-              url: http://portainer.local:9000
-              icon: si:portainer
-            - title: Proxmox
-              url: https://proxmox.local:8006
-              icon: si:proxmox
-            - title: Uptime Kuma
-              url: http://uptime.local:3001
-              icon: si:uptimekuma
             - title: Grafana
               url: https://grafana.svc.dd.soeren.cloud
               icon: si:grafana
+            - title: Karma
+              url: https://monitoring.svc.dd.soeren.cloud/karma
+              icon: si:karma
+            - title: Victorialogs
+              url: https://logs.svc.dd.soeren.cloud/
+              icon: si:victoriametrics
+              alt-status-codes: [200, 400]
             - title: Prometheus
-              url: http://prometheus.local:9090
+              url: https://monitoring.svc.dd.soeren.cloud/prometheus/
               icon: si:prometheus
+            - title: Blackbox Exporter
+              url: https://monitoring.svc.dd.soeren.cloud/blackbox-exporter/
+              icon: si:prometheus
+        # NETWORKING & SECURITY
         - type: monitor
           cache: 1m
           title: Networking & Security
@@ -96,26 +87,29 @@
             - title: Vault
               url: https://vault.ha.soeren.cloud
               icon: si:vault
+            - title: Gotify
+              url: https://gotify.svc.dd.soeren.cloud
+              icon: sh:gotify
             - title: Privatebin
               url: https://privatebin.svc.dd.soeren.cloud
               icon: si:pastebin
-        - type: monitor
-          cache: 1m
-          title: Home Automation
-          sites:
-            - title: Home Assistant
-              url: http://homeassistant.local:8123
-              icon: si:homeassistant
+        # DEVELOPMENT
         - type: monitor
           cache: 1m
           title: Development
           sites:
+            - title: VSCode
+              url: https://code-server.svc.dd.soeren.cloud
+              icon: si:vscodium
             - title: Microbin
               url: https://microbin.svc.dd.soeren.cloud
+              icon: si:pastebin
+            - title: Httpbin
+              url: https://httpbin.svc.dd.soeren.cloud
+              icon: si:httpie
+            - title: String-is
+              url: https://string-is.svc.dd.soeren.cloud
               icon: si:microbin
-            - title: Code-Server
-              url: http://code.local:8443
-              icon: si:visualstudiocode
     - size: small
       widgets:
         - type: search

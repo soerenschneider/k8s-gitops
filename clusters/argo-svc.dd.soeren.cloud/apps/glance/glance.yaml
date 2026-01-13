@@ -1,0 +1,9 @@
+---
+pages:
+  - $include: glance-dd.yaml
+  - $include: glance-ez.yaml
+  - $include: glance-dev.yaml
+theme:
+  background-color: 225 14 15
+  primary-color: 157 47 65
+  contrast-multiplier: 1.1

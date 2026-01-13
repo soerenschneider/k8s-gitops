@@ -6,10 +6,10 @@ resources:
   - service.yaml
 configMapGenerator:
   - name: glance-config
+    behavior: create
     options:
       disableNameSuffixHash: true
     files:
-      - glance.yaml
       - glance-dd.yaml
       - glance-ez.yaml
       - glance-dev.yaml
