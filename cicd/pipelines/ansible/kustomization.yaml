@@ -3,7 +3,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: "cicd-ansible"
 resources:
-  - https://api.hub.tekton.dev/v1/resource/tekton/task/git-clone/0.9/raw
+  - https://raw.githubusercontent.com/tektoncd/catalog/refs/heads/main/task/git-clone/0.10/git-clone.yaml
   - namespace.yaml
   - rbac.yaml
   - tekton-task-vault-login.yaml
