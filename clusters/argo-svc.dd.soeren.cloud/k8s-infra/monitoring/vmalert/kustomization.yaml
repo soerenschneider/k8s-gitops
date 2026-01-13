@@ -17,6 +17,6 @@ patches:
         value:
           - "-notifier.url=http://router.dd.soeren.cloud:9093"
           - "-notifier.url=http://router.ez.soeren.cloud:9093"
-          - "-datasource.url=https://victoriametrics.rs.soeren.cloud"
+          - "-datasource.url=http://prometheus.monitoring"
           - "-external.url=https://monitoring.svc.dd.soeren.cloud/vmalert/"
           - "-rule=/rules/*.rules"

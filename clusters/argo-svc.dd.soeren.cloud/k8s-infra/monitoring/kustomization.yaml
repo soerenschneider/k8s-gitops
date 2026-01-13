@@ -9,6 +9,7 @@ resources:
   - kube-state-metrics
   - prometheus
   - pushgateway
+  - victorialogs
   - victoriametrics-operator
   - vmalert
 components:
@@ -36,3 +37,11 @@ patches:
       - op: "replace"
         path: "/spec/vault/auth/kubernetes/mountPath"
         value: "/v1/auth/svc.dd.soeren.cloud"
+  - target:
+      kind: VirtualService
+      name: victorialogs
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "logs.svc.dd.soeren.cloud"
