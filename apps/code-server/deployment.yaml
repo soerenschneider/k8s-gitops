@@ -38,7 +38,7 @@ spec:
           type: "RuntimeDefault"
       initContainers:
         - name: "chmod"
-          image: "busybox:1.36.1"
+          image: "busybox:1.37.0"
           imagePullPolicy: "IfNotPresent"
           securityContext:
             allowPrivilegeEscalation: false
