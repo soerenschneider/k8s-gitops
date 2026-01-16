@@ -28,7 +28,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: httpbin
-          image: mccutchen/go-httpbin:2.19.0
+          image: mccutchen/go-httpbin:2.20.0
           imagePullPolicy: IfNotPresent
           securityContext:
             runAsNonRoot: true
