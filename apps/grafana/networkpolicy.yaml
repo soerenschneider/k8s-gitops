@@ -8,17 +8,7 @@ spec:
   policyTypes:
     - Ingress
     - Egress
-  ingress:
-    - ports:
-        - protocol: TCP
-          port: grafana
-      from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: monitoring
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: prometheus
+  ingress: []
   egress:
     - to:
         - ipBlock:
@@ -33,10 +23,22 @@ spec:
     - to:
         - namespaceSelector:
             matchLabels:
-              name: loki
-          podSelector: {}
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: prometheus
       ports:
-        - port: 3100
+        - port: 9090
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: victorialogs
+      ports:
+        - port: 8428
           protocol: TCP
     - to:
         - namespaceSelector:
