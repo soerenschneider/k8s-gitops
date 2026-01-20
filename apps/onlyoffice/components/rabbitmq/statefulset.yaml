@@ -32,7 +32,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "docker.io/rabbitmq:4.1.4-management-alpine"
+        - image: "docker.io/rabbitmq:4.2.2-management-alpine"
           name: "rabbitmq"
           env:
             - name: "RABBITMQ_CONFIG_FILES"
