@@ -8,7 +8,11 @@ spec:
   policyTypes:
     - Ingress
     - Egress
-  ingress: []
+  ingress:
+    - ports:
+        - protocol: TCP
+          port: grafana
+      from: []
   egress:
     - to:
         - ipBlock:
