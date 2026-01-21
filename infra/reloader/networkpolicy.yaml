@@ -19,4 +19,19 @@ spec:
       ports:
         - protocol: "TCP"
           port: "metrics"
-  egress: []
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              networking/namespace: kube-system
+          podSelector: {}
+      ports:
+        - port: 53
+          protocol: TCP
+        - port: 53
+          protocol: UDP
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
