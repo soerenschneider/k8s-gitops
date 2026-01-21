@@ -1,10 +1,10 @@
-- name: Düsseldorf
+- name: Erzenhausen
   columns:
     - size: small
       widgets:
         - type: "calendar"
         - type: "weather"
-          location: "Düsseldorf, Germany"
+          location: "Erzenhausen, Germany"
         - type: markets
           markets:
             - symbol: "VWCE.DE"
@@ -17,9 +17,9 @@
               color: 10 70 50
               links:
                 - title: NAS
-                  url: https://nas.dd.soeren.cloud/media/
+                  url: https://nas.ez.soeren.cloud/media/
                 - title: Pub
-                  url: https://nas.dd.soeren.cloud/pub/
+                  url: https://nas.ez.soeren.cloud/pub/
     - size: full
       widgets:
         # MEDIA SERVICES
@@ -28,10 +28,10 @@
           title: Media
           sites:
             - title: Jellyfin
-              url: https://jellyfin.svc.dd.soeren.cloud
+              url: https://jellyfin.svc.ez.soeren.cloud
               icon: si:jellyfin
             - title: Navidrome
-              url: https://navidrome.svc.dd.soeren.cloud
+              url: https://navidrome.svc.ez.soeren.cloud
               icon: si:musicbrainz
         # DOWNLOAD & AUTOMATION
         - type: monitor
@@ -39,16 +39,16 @@
           title: Downloads & Automation
           sites:
             - title: Sonarr
-              url: https://media.svc.dd.soeren.cloud/sonarr
+              url: https://media.svc.ez.soeren.cloud/sonarr
               icon: si:sonarr
             - title: Radarr
-              url: https://media.svc.dd.soeren.cloud/radarr
+              url: https://media.svc.ez.soeren.cloud/radarr
               icon: si:radarr
             - title: Prowlarr
-              url: https://media.svc.dd.soeren.cloud/prowlarr
+              url: https://media.svc.ez.soeren.cloud/prowlarr
               icon: sh:prowlarr
             - title: Transmission
-              url: https://swiss.soeren.cloud
+              url: https://ch.soeren.cloud
               icon: si:transmission
         # PRODUCTIVITY & OFFICE
         - type: monitor
@@ -56,7 +56,7 @@
           title: Productivity & Office
           sites:
             - title: Cyberchef
-              url: https://cyberchef.svc.dd.soeren.cloud/
+              url: https://cyberchef.svc.ez.soeren.cloud/
               icon: si:codechef
         # INFRASTRUCTURE & MONITORING
         - type: monitor
@@ -64,20 +64,20 @@
           title: Infrastructure & Monitoring
           sites:
             - title: Grafana
-              url: https://grafana.svc.dd.soeren.cloud
+              url: https://grafana.svc.ez.soeren.cloud
               icon: si:grafana
             - title: Karma
-              url: https://monitoring.svc.dd.soeren.cloud/karma
+              url: https://monitoring.svc.ez.soeren.cloud/karma
               icon: si:karma
             - title: Victorialogs
-              url: https://logs.svc.dd.soeren.cloud/
+              url: https://logs.svc.ez.soeren.cloud/
               icon: si:victoriametrics
               alt-status-codes: [200, 400]
             - title: Prometheus
-              url: https://monitoring.svc.dd.soeren.cloud/prometheus/
+              url: https://monitoring.svc.ez.soeren.cloud/prometheus/
               icon: si:prometheus
             - title: Blackbox Exporter
-              url: https://monitoring.svc.dd.soeren.cloud/blackbox-exporter/
+              url: https://monitoring.svc.ez.soeren.cloud/blackbox-exporter/
               icon: si:prometheus
         # NETWORKING & SECURITY
         - type: monitor
@@ -88,10 +88,10 @@
               url: https://vault.ha.soeren.cloud
               icon: si:vault
             - title: Gotify
-              url: https://gotify.svc.dd.soeren.cloud
+              url: https://gotify.svc.ez.soeren.cloud
               icon: sh:gotify
             - title: Privatebin
-              url: https://privatebin.svc.dd.soeren.cloud
+              url: https://privatebin.svc.ez.soeren.cloud
               icon: si:pastebin
         # DEVELOPMENT
         - type: monitor
@@ -99,25 +99,25 @@
           title: Development
           sites:
             - title: VSCode
-              url: https://code-server.svc.dd.soeren.cloud
+              url: https://code-server.svc.ez.soeren.cloud
               icon: si:vscodium
             - title: Microbin
-              url: https://microbin.svc.dd.soeren.cloud
+              url: https://microbin.svc.ez.soeren.cloud
               icon: si:pastebin
             - title: Httpbin
-              url: https://httpbin.svc.dd.soeren.cloud
+              url: https://httpbin.svc.ez.soeren.cloud
               icon: si:httpie
             - title: String-is
-              url: https://string-is.svc.dd.soeren.cloud
+              url: https://string-is.svc.ez.soeren.cloud
               icon: si:microbin
     - size: small
       widgets:
         - type: search
-          search-engine: https://whoogle.svc.dd.soeren.cloud/search?q={QUERY}
+          search-engine: https://whoogle.svc.ez.soeren.cloud/search?q={QUERY}
           bangs:
             - title: Whoogle
               shortcut: "!w"
-              url: https://whoogle.svc.dd.soeren.cloud/search?q={QUERY}
+              url: https://whoogle.svc.ez.soeren.cloud/search?q={QUERY}
         - type: rss
           limit: 10
           collapse-after: 5

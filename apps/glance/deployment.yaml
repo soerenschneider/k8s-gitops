@@ -36,8 +36,6 @@ spec:
       containers:
         - image: "glanceapp/glance:v0.8.4"
           name: "glance"
-          args:
-            - "--config=/config/glance.yaml"
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
@@ -51,12 +49,6 @@ spec:
               drop:
                 - "ALL"
           imagePullPolicy: "IfNotPresent"
-          envFrom:
-            - configMapRef:
-                name: "glance-config"
-            - secretRef:
-                name: "glance"
-                optional: true
           resources:
             requests:
               memory: "64Mi"
@@ -77,13 +69,8 @@ spec:
               port: 8080
             initialDelaySeconds: 1
           volumeMounts:
-            - name: "config"
-              mountPath: "/config"
             - name: "tmp"
               mountPath: "/tmp"
       volumes:
-        - name: "config"
-          configMap:
-            name: "glance-config"
         - name: "tmp"
           emptyDir: {}

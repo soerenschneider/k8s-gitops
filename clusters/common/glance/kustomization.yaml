@@ -1,0 +1,34 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../apps/glance
+configMapGenerator:
+  - name: glance-config
+    behavior: create
+    options:
+      disableNameSuffixHash: true
+    files:
+      - glance-dd.yaml
+      - glance-ez.yaml
+      - glance-dev.yaml
+patches:
+  - target:
+      kind: Deployment
+      name: glance
+    patch: |-
+      - op: add
+        path: /spec/template/spec/containers/0/volumeMounts/-
+        value:
+          name: "config"
+          mountPath: "/config"
+      - op: add
+        path: /spec/template/spec/volumes/-
+        value:
+          name: "config"
+          configMap:
+            name: "glance-config"
+      - op: add
+        path: /spec/template/spec/containers/0/args
+        value:
+          - "--config=/config/glance.yaml"
