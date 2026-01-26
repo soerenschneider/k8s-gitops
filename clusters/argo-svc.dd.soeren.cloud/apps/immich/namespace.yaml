@@ -1,9 +1,0 @@
----
-kind: Namespace
-apiVersion: v1
-metadata:
-  name: immich
-  labels:
-    name: immich
-    pod-security.kubernetes.io/enforce: baseline
-    pod-security.kubernetes.io/enforce-version: latest
