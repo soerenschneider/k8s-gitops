@@ -6,7 +6,6 @@ resources:
   - "repo-dns-ha.yaml"
   - "repo-fetcharr.yaml"
   - "repo-ip-plz.yaml"
-  - "repo-jellyporter.yaml"
   - "repo-sc.yaml"
   - "repo-sc-agent.yaml"
   - "repo-ssh-aegis.yaml"
