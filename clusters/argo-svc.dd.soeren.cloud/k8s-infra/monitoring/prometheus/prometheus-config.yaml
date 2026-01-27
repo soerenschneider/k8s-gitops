@@ -11,34 +11,25 @@ alerting:
   alertmanagers:
     - scheme: http
       static_configs:
-        - targets: [router.dd.soeren.cloud:9093, router.ez.soeren.cloud:9093, router.pt.soeren.cloud:9093]
+        - targets: [router.dd.soeren.cloud:9093, router.ez.soeren.cloud:9093]
 remote_write:
   - url: https://victoriametrics.rs.soeren.cloud/api/v1/write
 scrape_configs:
   #################################################################
   # Local targets
   #################################################################
-  - job_name: access-points
-    dns_sd_configs:
-      - names: [ap.prom-target.dd.soeren.cloud]
-  - job_name: auth
-    dns_sd_configs:
-      - names: [auth.prom-target.dd.soeren.cloud]
-  - job_name: auth-tls
-    scheme: https
+  - job_name: "auth"
+    scheme: "https"
     tls_config: &default_pki_config
-      cert_file: /certs/tls.crt
-      key_file: /certs/tls.key
+      cert_file: "/certs/tls.crt"
+      key_file: "/certs/tls.key"
     dns_sd_configs:
-      - names: [auth-tls.prom-target.dd.soeren.cloud]
-  - job_name: dbs
-    dns_sd_configs:
-      - names: [dbs.prom-target.dd.soeren.cloud]
-  - job_name: dbs-tls
-    scheme: https
-    tls_config: &default_pki_config
-      cert_file: /certs/tls.crt
-      key_file: /certs/tls.key
+      - names: ["auth-tls.prom-target.dd.soeren.cloud"]
+  - job_name: "dbs"
+    scheme: "https"
+    tls_config:
+      cert_file: "/certs/tls.crt"
+      key_file: "/certs/tls.key"
     dns_sd_configs:
       - names: [dbs-tls.prom-target.dd.soeren.cloud]
   - job_name: k8s-prod
@@ -58,10 +49,6 @@ scrape_configs:
     dns_sd_configs:
       - names: [mpd-tls.prom-target.dd.soeren.cloud]
   - job_name: nas
-    dns_sd_configs:
-      - names: [nas.prom-target.dd.soeren.cloud]
-        refresh_interval: 5m
-  - job_name: nas-tls
     scheme: https
     tls_config: *default_pki_config
     dns_sd_configs:
@@ -134,7 +121,6 @@ scrape_configs:
           - 192.168.200.1
           - 192.168.200.2
           - 192.168.200.3
-          - 192.168.200.4
           - 192.168.200.5
   - job_name: blackbox-icmp-internet
     metrics_path: /probe
@@ -167,7 +153,7 @@ scrape_configs:
     params:
       module: [dns_soerenschneider]
     static_configs:
-      - targets: [192.168.2.3, 192.168.65.1, 192.168.73.1, 192.168.200.1]
+      - targets: [192.168.2.3, 192.168.65.1, 192.168.200.1, 192.168.200.5]
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -175,6 +161,41 @@ scrape_configs:
         target_label: instance
       - target_label: __address__
         replacement: blackbox-exporter:80
+  - job_name: 'blackbox-dns-dot-ffmuc'
+    metrics_path: /probe
+    params:
+      module: [dns_dot_ffmuc]
+    static_configs:
+      - targets:
+          - "185.150.99.255@853#dot.ffmuc.net"
+          - "5.1.66.255@853#dot.ffmuc.net"
+    relabel_configs:
+      # Extract IP:Port for probing
+      - source_labels: [__address__]
+        regex: '([^@]+)@853#(.+)'
+        target_label: __param_target
+      # Extract SNI for TLS
+      - source_labels: [__address__]
+        regex: '[^@]+@853#(.+)'
+        target_label: tls_server_name
+      # Set blackbox exporter as the actual scrape target
+      - target_label: __address__
+        replacement: blackbox-exporter
+  - job_name: 'blackbox-dns-dot-dg'
+    metrics_path: /probe
+    params:
+      module: [dns_dot_dg]
+    static_configs:
+      - targets:
+          - "185.95.218.42"
+          - "185.95.218.43"
+    relabel_configs:
+      # Extract IP:Port for probing
+      - source_labels: [__address__]
+        target_label: __param_target
+      # Set blackbox exporter as the actual scrape target
+      - target_label: __address__
+        replacement: blackbox-exporter
   - job_name: blackbox-http
     metrics_path: /probe
     params:
