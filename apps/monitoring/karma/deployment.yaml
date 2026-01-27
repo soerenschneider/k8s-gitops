@@ -33,7 +33,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: ghcr.io/prymitive/karma:v0.121
+        - image: ghcr.io/prymitive/karma:v0.122
           imagePullPolicy: IfNotPresent
           name: karma
           securityContext:
