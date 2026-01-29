@@ -66,6 +66,8 @@ scrape_configs:
     dns_sd_configs:
       - names: [rs.prom-target.soeren.cloud]
   - job_name: seedbox
+    scheme: https
+    tls_config: *default_pki_config
     dns_sd_configs:
       - names: [ch.prom-target.soeren.cloud]
   - job_name: sensors
