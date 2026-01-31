@@ -50,16 +50,13 @@ scrape_configs:
     scheme: https
     tls_config: *default_pki_config
     dns_sd_configs:
-      - names: [nas-tls.prom-target.dd.soeren.cloud]
+      - names: [nas.prom-target.dd.soeren.cloud]
         refresh_interval: 5m
   - job_name: routers
-    dns_sd_configs:
-      - names: [routers.prom-target.dd.soeren.cloud]
-  - job_name: routers-tls
     scheme: https
     tls_config: *default_pki_config
     dns_sd_configs:
-      - names: [routers-tls.prom-target.dd.soeren.cloud]
+      - names: [routers.prom-target.dd.soeren.cloud]
   - job_name: rootserver
     scheme: https
     tls_config: *default_pki_config
