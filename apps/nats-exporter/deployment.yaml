@@ -33,7 +33,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "natsio/prometheus-nats-exporter:0.18.0"
+        - image: "natsio/prometheus-nats-exporter:0.19.1"
           imagePullPolicy: "IfNotPresent"
           name: "nats"
           args:
