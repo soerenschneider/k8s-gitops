@@ -7,3 +7,4 @@ resources:
 components:
   - ../../../../../apps/monitoring/victorialogs/components/istio
   - ../../../../../apps/monitoring/victorialogs/components/pvc
+  - ../../../../../apps/monitoring/victorialogs/components/vector
