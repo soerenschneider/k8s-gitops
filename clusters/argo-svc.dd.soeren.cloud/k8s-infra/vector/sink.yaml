@@ -1,3 +1,15 @@
+transforms:
+  drop_namespaces:
+    type: filter
+    inputs:
+      - drop_namespaces
+    condition: >-
+      exists(.kubernetes.namespace_name)
+      && !(
+        .kubernetes.namespace_name == "openebs" ||
+        .kubernetes.namespace_name == "openebs"
+      )
+
 sinks:
   vlogs:
     inputs:
