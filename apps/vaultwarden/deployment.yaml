@@ -45,6 +45,10 @@ spec:
           env:
             - name: ROCKET_PORT
               value: "8000"
+          envFrom:
+            - configMapRef:
+                name: "vaultwarden"
+                optional: true
           resources:
             requests:
               memory: "148Mi"
