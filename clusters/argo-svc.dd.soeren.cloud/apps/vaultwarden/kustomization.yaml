@@ -9,6 +9,10 @@ resources:
 components:
   - ../../../../apps/vaultwarden/components/istio
   - ../../../../apps/vaultwarden/components/pvc
+  - ../../../../apps/vaultwarden/components/restic-sqlite
+  - ../../../../infra/unrest/components/default-config
+  - ../../../../infra/unrest/components/with-random-sleep
+  - ../../../../infra/unrest/components/with-timezone-berlin
 patches:
   - target:
       kind: "VirtualService"
@@ -19,14 +23,14 @@ patches:
         value:
           - "vaultwarden.svc.dd.soeren.cloud"
 configMapGenerator:
-  - name: vaultwarden-restic-pvc
+  - name: "vaultwarden"
     options:
       disableNameSuffixHash: true
     literals:
-      - "RETENTION_DAYS=7"
-      - "RETENTION_WEEKS=4"
-      - "RETENTION_MONTHS=6"
-      - "RESTIC_TARGETS=/data"
+      - "DOMAIN=https://vaultwarden.svc.dd.soeren.cloud"
+  - name: "vaultwarden-restic"
+    options:
+      disableNameSuffixHash: true
+    literals:
       - "RESTIC_REPOSITORY=s3:https://s3.amazonaws.com/soerenschneider-restic-prod/vaultwarden"
-      - "RESTIC_BACKUP_ID=vaultwarden"
-      - "SQLITE_FILE=/data/db.sqlite3"
+      - "RESTIC_HOST=svc.dd.soeren.cloud"
