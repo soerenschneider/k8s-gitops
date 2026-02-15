@@ -2,18 +2,14 @@ transforms:
   drop_namespaces:
     type: filter
     inputs:
-      - drop_namespaces
+      - k8s
     condition: >-
-      exists(.kubernetes.namespace_name)
-      && !(
-        .kubernetes.namespace_name == "openebs" ||
-        .kubernetes.namespace_name == "openebs"
-      )
+      exists(.kubernetes.namespace_name) && .kubernetes.namespace_name == "openebs"
 
 sinks:
   vlogs:
     inputs:
-      - k8s
+      - drop_namespaces
     type: elasticsearch
     endpoints:
       - http://victorialogs.monitoring/insert/elasticsearch/
