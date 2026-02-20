@@ -29,7 +29,7 @@ spec:
           type: "RuntimeDefault"
       initContainers:
         - name: "seed"
-          image: "ghcr.io/marcopiovanello/yt-dlp-web-ui:latest@sha256:03a297e75235c42cfdef00ecb6395821903186bcfabcde32eb709c9450de8a97"
+          image: "ghcr.io/marcopiovanello/yt-dlp-web-ui:latest@sha256:5e570d88eea89a8f9a9e37d78ab7c13b6afbdc33e5caf0165a4f6674c72fd736"
           imagePullPolicy: "IfNotPresent"
           command: ["mkdir", "-p", "/storage/downloads"]
           securityContext:
@@ -54,7 +54,7 @@ spec:
               mountPath: "/storage"
       containers:
         - name: "yt-dlp-webui"
-          image: "ghcr.io/marcopiovanello/yt-dlp-web-ui:latest@sha256:03a297e75235c42cfdef00ecb6395821903186bcfabcde32eb709c9450de8a97"
+          image: "ghcr.io/marcopiovanello/yt-dlp-web-ui:latest@sha256:5e570d88eea89a8f9a9e37d78ab7c13b6afbdc33e5caf0165a4f6674c72fd736"
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 44412
