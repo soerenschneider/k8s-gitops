@@ -39,7 +39,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: "redis"
-          image: "docker.io/valkey/valkey:8.1.5-alpine"
+          image: "docker.io/valkey/valkey:8.1.6-alpine"
           ports:
             - containerPort: 6379
               name: "redis"
