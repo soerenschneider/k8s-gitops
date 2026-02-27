@@ -38,7 +38,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: postgres
-          image: postgres:17.4
+          image: postgres:18.3
           securityContext:
             runAsUser: 999
             runAsGroup: 999
