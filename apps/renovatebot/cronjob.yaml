@@ -26,7 +26,7 @@ spec:
             seccompProfile:
               type: "RuntimeDefault"
           containers:
-            - image: "ghcr.io/renovatebot/renovate:42.92.11-full"
+            - image: "ghcr.io/renovatebot/renovate:43.43.2-full"
               name: "renovate"
               env:
                 - name: "RENOVATE_BASE_DIR"
