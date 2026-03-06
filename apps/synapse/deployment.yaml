@@ -26,7 +26,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: synapse
-          image: matrixdotorg/synapse:v1.133.0
+          image: matrixdotorg/synapse:v1.148.0
           ports:
             - containerPort: 8008
               name: http
