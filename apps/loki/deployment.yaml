@@ -32,7 +32,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: "loki"
-          image: "grafana/loki:3.5.8"
+          image: "grafana/loki:3.6.7"
           args: []
           ports:
             - name: "loki"
