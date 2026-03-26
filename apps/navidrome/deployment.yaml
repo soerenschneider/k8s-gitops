@@ -51,16 +51,16 @@ spec:
                 - ALL
           resources:
             requests:
-              memory: 256Mi
-              cpu: 5m
+              memory: "256Mi"
+              cpu: "5m"
             limits:
-              memory: 512Mi
+              memory: "512Mi"
           env:
             - name: "SQLITE_TMPDIR"
               value: "/data"
           envFrom:
             - configMapRef:
-                name: navidrome
+                name: "navidrome"
           ports:
             - containerPort: 4533
               name: "navidrome"
@@ -81,14 +81,19 @@ spec:
               mountPath: "/data"
             - name: "music"
               mountPath: "/music"
+            - name: "tmp"
+              mountPath: "/tmp"
       topologySpreadConstraints:
         - maxSkew: 1
-          topologyKey: location
+          topologyKey: "location"
           whenUnsatisfiable: ScheduleAnyway
       volumes:
         - name: "data"
           emptyDir:
-            sizeLimit: 5Gi
+            sizeLimit: "5Gi"
         - name: "music"
           emptyDir:
-            sizeLimit: 5Gi
+            sizeLimit: "5Gi"
+        - name: "tmp"
+          emptyDir:
+            sizeLimit: "1Gi"
