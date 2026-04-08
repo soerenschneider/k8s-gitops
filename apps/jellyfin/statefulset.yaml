@@ -30,7 +30,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "ghcr.io/jellyfin/jellyfin:10.11.6"
+        - image: "ghcr.io/jellyfin/jellyfin:10.11.8"
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
