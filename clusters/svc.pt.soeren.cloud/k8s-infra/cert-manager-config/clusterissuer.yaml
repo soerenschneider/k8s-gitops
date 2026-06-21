@@ -19,7 +19,7 @@ spec:
         dns01:
           route53:
             region: "us-east-1"
-            hostedZoneID: "Z0237504SXBCD16NK65T"
+            hostedZoneID: "Z04550922PTZDY9ZQCH0Y"
             accessKeyIDSecretRef:
               name: "route53-credentials"
               key: "access-key-id"
