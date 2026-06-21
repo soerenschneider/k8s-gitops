@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: monitoring
+resources:
+  - ../../../../../apps/monitoring/karma
+patches:
+  - target:
+      kind: Deployment
+      name: karma
+    patch: |-
+      - op: add
+        path: /spec/template/spec/priorityClassName
+        value: prod-low-prio
+configMapGenerator:
+  - name: karma-config
+    files:
+      - karma.yaml

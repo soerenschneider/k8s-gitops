@@ -1,0 +1,10 @@
+---
+kind: "Namespace"
+apiVersion: "v1"
+metadata:
+  name: "whoogle"
+  labels:
+    name: "whoogle"
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/warn: restricted

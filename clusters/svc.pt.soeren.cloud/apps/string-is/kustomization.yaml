@@ -1,0 +1,18 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: string-is
+resources:
+  - ../../../../apps/string-is
+  - namespace.yaml
+components:
+  - ../../../../apps/string-is/components/gw
+patches:
+  - target:
+      kind: HTTPRoute
+      name: string-is
+    patch: |-
+      - op: replace
+        path: /spec/hostnames
+        value:
+          - string-is.svc.pt.soeren.cloud
