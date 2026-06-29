@@ -100,6 +100,10 @@ scrape_configs:
   - job_name: vservers
     dns_sd_configs:
       - names: [vservers.prom-target.dd.soeren.cloud]
+  - job_name: ip-plz
+    scheme: http
+    static_configs:
+      - targets: [rs.soeren.cloud:9166, ch.soeren.cloud:9166]
 
   #################################################################
   # Blackbox exporter
