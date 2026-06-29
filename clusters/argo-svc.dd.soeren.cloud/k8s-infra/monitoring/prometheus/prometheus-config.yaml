@@ -104,6 +104,10 @@ scrape_configs:
     scheme: http
     static_configs:
       - targets: [rs.soeren.cloud:9166, ch.soeren.cloud:9166]
+  - job_name: enclave
+    scheme: http
+    static_configs:
+      - targets: [router.pt.soeren.cloud]
 
   #################################################################
   # Blackbox exporter
