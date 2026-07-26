@@ -67,9 +67,12 @@ scrape_configs:
     tls_config: *default_pki_config
     dns_sd_configs:
       - names: [ch.prom-target.soeren.cloud]
-  - job_name: sensors
+  - job_name: "sensors-dd"
     dns_sd_configs:
-      - names: [sensors.prom-target.dd.soeren.cloud]
+      - names: ["sensors.prom-target.dd.soeren.cloud"]
+  - job_name: "sensors-pt"
+    dns_sd_configs:
+      - names: ["sensors.prom-target.pt.soeren.cloud"]
   - job_name: vault-unsealer
     dns_sd_configs:
       - names: [vault-unsealer.prom-target.dd.soeren.cloud]
