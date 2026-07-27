@@ -90,6 +90,9 @@
             - title: Vault
               url: https://vault.ha.soeren.cloud
               icon: si:vault
+            - title: Vaultwarden
+              url: https://vaultwarden.svc.dd.soeren.cloud
+              icon: si:vaultwarden
             - title: Gotify
               url: https://gotify.svc.dd.soeren.cloud
               icon: sh:gotify
