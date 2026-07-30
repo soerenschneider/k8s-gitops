@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: argocd-notifications-secret
+  namespace: argocd
+type: Opaque
+stringData:
+  email-username: "argo@soerensoerensen.de"
+  email-password: "eesh6suDue9ozeThae9d"

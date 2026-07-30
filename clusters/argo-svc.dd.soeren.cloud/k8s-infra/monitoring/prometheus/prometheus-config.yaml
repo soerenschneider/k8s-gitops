@@ -81,6 +81,9 @@ scrape_configs:
     tls_config: *default_pki_config
     dns_sd_configs:
       - names: [vault-unsealer-tls.prom-target.dd.soeren.cloud]
+  - job_name: "switchbox"
+    static_configs:
+      - targets: [192.168.2.112:9865]
   - job_name: vault-prod-api
     metrics_path: /v1/sys/metrics
     params:
