@@ -11,6 +11,14 @@ components:
   - ../../../../apps/grafana/components/oidc
 patches:
   - target:
+      kind: NetworkPolicy
+      name: grafana
+    patch: |-
+      - op: replace
+        path: /spec/policyTypes
+        value:
+          - Ingress
+  - target:
       kind: VirtualService
       name: grafana
     patch: |-
