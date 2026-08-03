@@ -68,9 +68,11 @@ scrape_configs:
     dns_sd_configs:
       - names: [ch.prom-target.soeren.cloud]
   - job_name: "sensors-dd"
+    labels: {location: dd}
     dns_sd_configs:
       - names: ["sensors.prom-target.dd.soeren.cloud"]
   - job_name: "sensors-pt"
+    labels: {location: pt}
     dns_sd_configs:
       - names: ["sensors.prom-target.pt.soeren.cloud"]
   - job_name: vault-unsealer
@@ -82,6 +84,7 @@ scrape_configs:
     dns_sd_configs:
       - names: [vault-unsealer-tls.prom-target.dd.soeren.cloud]
   - job_name: "switchbot"
+    labels: {location: ez}
     static_configs:
       - targets: [192.168.2.112:9865,192.168.2.112:9100,192.168.2.112:9192]
   - job_name: vault-prod-api
