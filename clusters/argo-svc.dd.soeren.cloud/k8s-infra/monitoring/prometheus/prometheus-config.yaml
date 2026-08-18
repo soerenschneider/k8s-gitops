@@ -38,6 +38,9 @@ scrape_configs:
     tls_config: *default_pki_config
     dns_sd_configs:
       - names: [k8s-tls-prod.prom-target.dd.soeren.cloud]
+  - job_name: "aps"
+    dns_sd_configs:
+      - names: [aps.prom-target.dd.soeren.cloud]
   - job_name: mpd
     dns_sd_configs:
       - names: [mpd.prom-target.dd.soeren.cloud]
@@ -70,11 +73,9 @@ scrape_configs:
   - job_name: "sensors-dd"
     dns_sd_configs:
       - names: ["sensors.prom-target.dd.soeren.cloud"]
-        labels: {location: dd}
   - job_name: "sensors-pt"
     dns_sd_configs:
       - names: ["sensors.prom-target.pt.soeren.cloud"]
-        labels: {location: pt}
   - job_name: vault-unsealer
     dns_sd_configs:
       - names: [vault-unsealer.prom-target.dd.soeren.cloud]
@@ -86,7 +87,6 @@ scrape_configs:
   - job_name: "switchbot"
     static_configs:
       - targets: [192.168.2.112:9865,192.168.2.112:9100,192.168.2.112:9192]
-        labels: {location: ez}
   - job_name: vault-prod-api
     metrics_path: /v1/sys/metrics
     params:
