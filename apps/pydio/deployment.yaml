@@ -32,7 +32,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: pydio
-          image: pydio/cells:4.4.17
+          image: pydio/cells:5.0.2
           ports:
             - name: pydio
               containerPort: 8080
