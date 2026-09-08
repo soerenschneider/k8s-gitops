@@ -1,3 +1,4 @@
+---
 - name: Düsseldorf
   columns:
     - size: small
@@ -119,6 +120,17 @@
             - title: String-is
               url: https://string-is.svc.dd.soeren.cloud
               icon: si:microbin
+        # Home Automation SERVICES
+        - type: monitor
+          cache: 1m
+          title: Home Automation
+          sites:
+            - title: "Valetudo"
+              url: "http://valetudo.dd.soeren.cloud"
+              icon: "si:valetudo"
+            - title: "Babycam"
+              url: "http://babycam.dd.soeren.cloud"
+              icon: "mdi:webcam"
     - size: small
       widgets:
         - type: search

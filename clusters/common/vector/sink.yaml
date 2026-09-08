@@ -1,3 +1,4 @@
+---
 transforms:
   drop_namespaces:
     type: filter
