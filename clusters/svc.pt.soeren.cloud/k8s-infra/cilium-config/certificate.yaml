@@ -3,7 +3,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: gateway-cert
-  namespace: kube-system
 spec:
   secretName: gateway-cert
   commonName: '*.svc.pt.soeren.cloud'

@@ -56,10 +56,11 @@ scrape_configs:
       - names: [nas.prom-target.dd.soeren.cloud]
         refresh_interval: 5m
   - job_name: routers
-    scheme: https
-    tls_config: *default_pki_config
     dns_sd_configs:
       - names: [routers.prom-target.dd.soeren.cloud]
+  - job_name: routers-ez
+    dns_sd_configs:
+      - names: [routers.prom-target.ez.soeren.cloud]
   - job_name: rootserver
     scheme: https
     tls_config: *default_pki_config
@@ -86,7 +87,7 @@ scrape_configs:
       - names: [vault-unsealer-tls.prom-target.dd.soeren.cloud]
   - job_name: "switchbot"
     static_configs:
-      - targets: [192.168.2.112:9865,192.168.2.112:9100,192.168.2.112:9192]
+      - targets: [192.168.2.112:9865, 192.168.2.112:9100, 192.168.2.112:9192]
   - job_name: vault-prod-api
     metrics_path: /v1/sys/metrics
     params:
