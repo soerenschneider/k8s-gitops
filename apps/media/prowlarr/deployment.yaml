@@ -31,7 +31,7 @@ spec:
         seccompProfile:
           type: "RuntimeDefault"
       containers:
-        - image: "ghcr.io/home-operations/prowlarr:2.3.7.5365"
+        - image: "ghcr.io/home-operations/prowlarr:2.6.3.5592"
           imagePullPolicy: "IfNotPresent"
           name: "prowlarr"
           ports:
