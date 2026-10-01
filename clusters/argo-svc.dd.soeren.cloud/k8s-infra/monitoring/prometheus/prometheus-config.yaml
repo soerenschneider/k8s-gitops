@@ -88,28 +88,32 @@ scrape_configs:
   - job_name: "switchbot"
     static_configs:
       - targets: [192.168.2.112:9865, 192.168.2.112:9100, 192.168.2.112:9192]
-  - job_name: vault-prod-api
-    metrics_path: /v1/sys/metrics
-    params:
-      format: [prometheus]
+
+  - job_name: openbao-prod-haproxy
     scheme: https
-    authorization:
-      credentials_file: /etc/tokens/vault-token
-    static_configs:
-      - targets: [vault.dd.soeren.cloud:8200]
-  - job_name: vault-prod-tls
-    scheme: https
+    metrics_path: /metrics/haproxy
     tls_config: *default_pki_config
     dns_sd_configs:
-      - names: [vault-prod-tls.prom-target.dd.soeren.cloud]
-        refresh_interval: 5m
-  - job_name: vault-prod
+      - names: [_metrics._tcp.bao.prd.dd.soeren.cloud]
+
+  - job_name: openbao-prod-node
+    scheme: https
+    metrics_path: /metrics/node
+    tls_config: *default_pki_config
     dns_sd_configs:
-      - names: [vault-prod.prom-target.dd.soeren.cloud]
-        refresh_interval: 5m
+      - names: [_metrics._tcp.bao.prd.dd.soeren.cloud]
+
+  - job_name: openbao-prod
+    scheme: https
+    metrics_path: /metrics/openbao
+    tls_config: *default_pki_config
+    dns_sd_configs:
+      - names: [_metrics._tcp.bao.prd.dd.soeren.cloud]
+
   - job_name: vservers
     dns_sd_configs:
-      - names: [vservers.prom-target.dd.soeren.cloud]
+      - names: [_metrics._tcp.vserver.dd.soeren.cloud]
+
   - job_name: ip-plz
     scheme: http
     static_configs:
