@@ -9,7 +9,7 @@ metadata:
 spec:
   provider:
     vault:
-      server: "https://vault.ha.soeren.cloud"
+      server: "https://bao-1.prd.dd.soeren.cloud"
       path: "secret"
       version: "v2"
       auth:
