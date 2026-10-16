@@ -19,7 +19,7 @@ metadata:
 spec:
   vault:
     path: "pki/im_srn/sign/certmanager"
-    server: "https://vault.ha.soeren.cloud"
+    server: "https://bao.prd.soeren.cloud"
     auth:
       kubernetes:
         role: "certmanager"
