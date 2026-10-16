@@ -30,7 +30,7 @@ spec:
                 - name: "VAULT_MOUNT_PATH"
                   value: "kubernetes"
                 - name: "VAULT_ADDR"
-                  value: "https://bao.prd.soeren.cloud"
+                  value: "https://bao.prd.dd.soeren.cloud"
                 - name: "VAULT_ROLE"
                   value: "monitoring"
                 - name: "SECRET_NAMESPACE"
