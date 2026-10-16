@@ -8,18 +8,18 @@ metadata:
     argocd.argoproj.io/sync-wave: "2"
 spec:
   acme:
-    email: letsencrypt@soerensoerensen.de
-    server: https://acme-v02.api.letsencrypt.org/directory
+    email: "letsencrypt@soerensoerensen.de"
+    server: "https://acme-v02.api.letsencrypt.org/directory"
     privateKeySecretRef:
-      name: letsencrypt-account-key-route53
+      name: "letsencrypt-account-key-route53"
     solvers:
       - selector:
           dnsZones:
-            - "svc.dd.soeren.cloud"
+            - "soeren.cloud"
         dns01:
           route53:
             region: us-east-1
-            hostedZoneID: "Z04182991PSOXQND2HK86"
+            hostedZoneID: "Z0237504SXBCD16NK65T"
             accessKeyIDSecretRef:
               name: "route53-credentials"
               key: access-key-id
