@@ -1,0 +1,41 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "nvidia-gpu-operator"
+  namespace: "argocd"
+  finalizers:
+    - "resources-finalizer.argocd.argoproj.io"
+spec:
+  project: "default"
+  source:
+    repoURL: "https://helm.ngc.nvidia.com/nvidia"
+    chart: "gpu-operator"
+    targetRevision: "v26.7.2"
+    helm:
+      values: |
+        # set to false if the NVIDIA driver is already installed on the host
+        driver:
+          enabled: true
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: "gpu-operator"
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true  # Critical for CRD updates
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 10
+  info:
+    - name: Description
+      value: NVIDIA GPU Operator for driver, container toolkit and device plugin management
+    - name: Repository
+      value: https://github.com/NVIDIA/gpu-operator

@@ -8,6 +8,9 @@
   "flux": {
     "fileMatch": [".*y[a]?ml$"]
   },
+  "argocd": {
+    "fileMatch": [".*y[a]?ml$"]
+  },
   "packageRules": [
     {
       "matchPackageNames": ["ghcr.io/dani-garcia/vaultwarden"],

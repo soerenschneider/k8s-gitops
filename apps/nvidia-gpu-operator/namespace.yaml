@@ -1,0 +1,9 @@
+---
+kind: "Namespace"
+apiVersion: "v1"
+metadata:
+  name: "gpu-operator"
+  labels:
+    name: "gpu-operator"
+    # driver, toolkit and device-plugin daemonsets need privileged access
+    pod-security.kubernetes.io/enforce: "privileged"
