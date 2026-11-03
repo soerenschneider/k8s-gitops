@@ -5,3 +5,23 @@ resources:
   - ../../../../infra/nvidia-gpu-operator
 components:
   - ../../../../infra/nvidia-gpu-operator/components/argo
+patches:
+  - target:
+      kind: Application
+      name: nvidia-gpu-operator
+    # no driver container image exists for debian 13, driver is installed on the host.
+    # k0s runs its own containerd with non-default config and socket paths.
+    patch: |-
+      - op: "replace"
+        path: "/spec/source/helm/values"
+        value: |
+          driver:
+            enabled: false
+          toolkit:
+            env:
+              - name: CONTAINERD_CONFIG
+                value: /etc/k0s/containerd.d/nvidia.toml
+              - name: CONTAINERD_SOCKET
+                value: /run/k0s/containerd.sock
+              - name: CONTAINERD_RUNTIME_CLASS
+                value: nvidia
