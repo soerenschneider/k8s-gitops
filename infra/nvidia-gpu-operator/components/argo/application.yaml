@@ -7,7 +7,7 @@ metadata:
   finalizers:
     - "resources-finalizer.argocd.argoproj.io"
 spec:
-  project: "default"
+  project: "k8s-infra"
   source:
     repoURL: "https://helm.ngc.nvidia.com/nvidia"
     chart: "gpu-operator"

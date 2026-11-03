@@ -141,6 +141,12 @@ spec:
     - group: operator.tekton.dev
       kind: TektonConfig
 
+    # NVIDIA GPU Operator
+    - group: nvidia.com
+      kind: '*'
+    - group: nfd.k8s-sigs.io
+      kind: '*'
+
   # Namespace resource whitelist - allows creation of namespaced resources
   namespaceResourceWhitelist:
     - group: '*'
