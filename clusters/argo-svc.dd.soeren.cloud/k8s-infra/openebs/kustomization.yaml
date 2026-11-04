@@ -5,3 +5,4 @@ resources:
   - ../../../../infra/openebs
 components:
   - ../../../../infra/openebs/components/argo
+  - ../../../../infra/openebs/components/storageclass-vdb

@@ -1,0 +1,17 @@
+---
+# Hostpath volumes on a dedicated disk. /dev/vdb has to be formatted and mounted
+# at /mnt/vdb on the node beforehand.
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: openebs-hostpath-vdb
+  annotations:
+    openebs.io/cas-type: local
+    cas.openebs.io/config: |
+      - name: StorageType
+        value: hostpath
+      - name: BasePath
+        value: /mnt/vdb
+provisioner: openebs.io/local
+reclaimPolicy: Delete
+volumeBindingMode: WaitForFirstConsumer
