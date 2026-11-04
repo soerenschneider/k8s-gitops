@@ -1,0 +1,26 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: "ollama"
+resources:
+  - namespace.yaml
+  - ../../../../apps/ollama
+components:
+  - ../../../../apps/ollama/components/istio
+  - ../../../../apps/ollama/components/pvc
+patches:
+  - target:
+      kind: "VirtualService"
+      name: "ollama"
+    patch: |-
+      - op: "replace"
+        path: "/spec/hosts"
+        value:
+          - "ollama.svc.dd.soeren.cloud"
+  - target:
+      kind: "PersistentVolumeClaim"
+      name: "ollama-models"
+    patch: |-
+      - op: "add"
+        path: "/spec/storageClassName"
+        value: "openebs-hostpath-vdb"

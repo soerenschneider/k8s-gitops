@@ -1,0 +1,97 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: ollama
+  labels:
+    app.kubernetes.io/name: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ollama
+  serviceName: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+        app.kubernetes.io/name: ollama
+        app.kubernetes.io/instance: ollama-prod
+        app.kubernetes.io/component: ollama
+        app.kubernetes.io/part-of: ollama
+    spec:
+      runtimeClassName: nvidia
+      securityContext:
+        runAsUser: 47213
+        runAsGroup: 47213
+        fsGroup: 47213
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - image: "docker.io/ollama/ollama:0.40.14"
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsUser: 47213
+            runAsGroup: 47213
+            privileged: false
+            seccompProfile:
+              type: "RuntimeDefault"
+            capabilities:
+              drop:
+                - "ALL"
+          imagePullPolicy: IfNotPresent
+          name: ollama
+          env:
+            - name: "OLLAMA_HOST"
+              value: "0.0.0.0:11434"
+            - name: "OLLAMA_MODELS"
+              value: "/models"
+            # ollama writes its identity key to $HOME/.ollama
+            - name: "HOME"
+              value: "/tmp"
+            - name: "OLLAMA_FLASH_ATTENTION"
+              value: "1"
+            # halves the memory needed for the context compared to f16
+            - name: "OLLAMA_KV_CACHE_TYPE"
+              value: "q8_0"
+            - name: "OLLAMA_CONTEXT_LENGTH"
+              value: "32768"
+            - name: "OLLAMA_KEEP_ALIVE"
+              value: "30m"
+            # chat and autocomplete model stay loaded side by side
+            - name: "OLLAMA_MAX_LOADED_MODELS"
+              value: "2"
+          resources:
+            requests:
+              memory: 2Gi
+              cpu: 500m
+            limits:
+              memory: 16Gi
+              nvidia.com/gpu: 1
+          ports:
+            - containerPort: 11434
+              name: ollama
+          livenessProbe:
+            httpGet:
+              path: /
+              port: ollama
+            initialDelaySeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: ollama
+            initialDelaySeconds: 5
+          volumeMounts:
+            - name: models
+              mountPath: /models
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: models
+          emptyDir: {}
+        - name: tmp
+          emptyDir: {}
