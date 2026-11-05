@@ -28,7 +28,7 @@ spec:
           type: "RuntimeDefault"
       containers:
         - name: "actualbudget"
-          image: "docker.io/actualbudget/actual-server:25.7.1-alpine@sha256:ecb79da91b14284a9ebb0c38fb88b7c43294987f999b5617ebd9c88243427998"
+          image: "docker.io/actualbudget/actual-server:26.11.0-alpine@sha256:01ac24a51c6f585aba287c1bf1e96fcda46ab16a05952817c637415213251aa3"
           imagePullPolicy: "IfNotPresent"
           securityContext:
             readOnlyRootFilesystem: true
