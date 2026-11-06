@@ -29,7 +29,7 @@ spec:
         seccompProfile:
           type: RuntimeDefault
       containers:
-        - image: "docker.io/ollama/ollama:0.40.14"
+        - image: "docker.io/ollama/ollama:0.40.15"
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
